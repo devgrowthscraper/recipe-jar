@@ -78,8 +78,10 @@ export default function RecipeDetailPage() {
     setIsSaved(newSaved);
     if (newSaved) {
       await supabase.from("saved_recipes").insert({ user_id: user.id, recipe_id: recipe.id });
+      toast({ title: "Recipe saved to cookbook!", variant: "success" });
     } else {
       await supabase.from("saved_recipes").delete().eq("user_id", user.id).eq("recipe_id", recipe.id);
+      toast({ title: "Recipe removed from cookbook", variant: "info" });
     }
     setSaveLoading(false);
   }
@@ -88,7 +90,7 @@ export default function RecipeDetailPage() {
     const url = window.location.href;
     try {
       await navigator.clipboard.writeText(url);
-      toast({ title: "Link copied!", description: "Recipe URL copied to clipboard." });
+      toast({ title: "Link copied to clipboard!", variant: "info" });
     } catch {
       toast({ title: "Copy failed", description: "Please copy the URL manually.", variant: "destructive" });
     }
@@ -98,7 +100,7 @@ export default function RecipeDetailPage() {
     if (!recipe) return;
     setDeleting(true);
     await supabase.from("recipes").delete().eq("id", recipe.id);
-    toast({ title: "Recipe deleted." });
+    toast({ title: "Recipe deleted", variant: "info" });
     setLocation("/");
   }
 

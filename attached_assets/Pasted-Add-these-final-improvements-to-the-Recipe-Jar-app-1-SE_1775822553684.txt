@@ -1,0 +1,44 @@
+Add these final improvements to the Recipe Jar app:
+
+1. SEED DATA:
+Create a Supabase Edge Function called "seed-recipes" that:
+- Creates a system user called "RecipeJar Team" in profiles (or uses an existing one).
+- Generates 20 diverse sample recipes using OpenAI API (model: gpt-4o-mini). Send this prompt: "Generate 20 diverse home-cooking recipes as a JSON array. Each recipe should have: title, description (1-2 sentences), ingredients (one per line, 5-8 ingredients), steps (one per line, 4-6 steps), image_url (use https://images.unsplash.com/photo-{id}?w=800 with real Unsplash food photo IDs), cuisine_tag (from: Indian, Italian, Mexican, Chinese, American, Thai, Japanese, Mediterranean), difficulty_tag (from: Easy, Medium, Hard), time_tag (from: Under 15 min, 15-30 min, 30-60 min, Over 1 hour), diet_tag (from: Vegetarian, Vegan, Non-Vegetarian, Pescatarian). Make them realistic, diverse across all cuisines and diet types. Include a good mix of easy quick recipes and more complex ones. Return only the JSON array."
+- Inserts all 20 recipes into the recipes table under the RecipeJar Team user.
+- Call this edge function once from the app (add a hidden admin trigger or just invoke it via curl).
+
+Alternatively, if edge functions are complex, create a SQL seed script that inserts 20 hardcoded sample recipes directly into the database with realistic data and pre-filled tags.
+
+2. TOAST NOTIFICATIONS:
+Add a toast notification system (bottom-right corner, auto-dismiss after 3 seconds) for:
+- "Recipe published!" (success, green)
+- "Recipe saved to cookbook!" (success, green)
+- "Recipe removed from cookbook" (info, blue)
+- "Recipe deleted" (info, blue)
+- "Recipe updated!" (success, green)
+- "Link copied to clipboard!" (info, blue)
+- Error messages (error, red)
+
+3. PAGE TRANSITIONS:
+Add subtle fade-in animations when navigating between pages (opacity transition on route change).
+
+4. SCROLL TO TOP:
+When navigating to a new page, scroll to the top of the page.
+
+5. RESPONSIVE POLISH:
+- Verify all pages look good on mobile (375px width), tablet (768px), and desktop (1280px).
+- The filter bar on the feed should scroll horizontally on mobile if it overflows.
+- The recipe detail action bar should be sticky at the bottom on mobile.
+- Navigation hamburger menu should be smooth slide-in with backdrop overlay.
+
+6. LOADING STATES:
+- Skeleton loaders on the feed page while recipes load.
+- Spinner on buttons while submitting forms.
+- "AI is working..." indicator during tagging and screenshot extraction.
+
+7. SEO & META:
+- Set the page title to "Recipe Jar — Save, Share & Rediscover Recipes".
+- Add a favicon (use an emoji favicon: a jar or cookie emoji).
+
+8. 404 PAGE:
+Create a friendly 404 page with a large illustration-style icon, text "This recipe doesn't exist" and a "Back to Feed" button.

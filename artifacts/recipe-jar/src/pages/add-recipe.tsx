@@ -182,7 +182,7 @@ export default function AddRecipePage() {
       setTagging(false);
     }
 
-    toast({ title: "Recipe published!", description: `"${form.title.trim()}" is live on Recipe Jar.` });
+    toast({ title: "Recipe published!", description: `"${form.title.trim()}" is live on Recipe Jar.`, variant: "success" });
     setLocation("/");
   }
 

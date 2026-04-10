@@ -129,7 +129,7 @@ export default function EditRecipePage() {
       }
     }
 
-    toast({ title: "Recipe updated!" });
+    toast({ title: "Recipe updated!", variant: "success" });
     setLocation(`/recipe/${id}`);
   }
 

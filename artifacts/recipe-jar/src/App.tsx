@@ -1,4 +1,5 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { useEffect } from "react";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +15,14 @@ import ProfilePage from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
+
+function ScrollToTop() {
+  const [location] = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  }, [location]);
+  return null;
+}
 
 function Router() {
   return (
@@ -31,10 +40,12 @@ function Router() {
 }
 
 function Layout() {
+  const [location] = useLocation();
   return (
     <div className="min-h-screen bg-background">
+      <ScrollToTop />
       <Navbar />
-      <main>
+      <main key={location} className="animate-in fade-in duration-150">
         <Router />
       </main>
     </div>

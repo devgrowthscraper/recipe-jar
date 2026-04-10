@@ -32,7 +32,7 @@ function PillGroup({
   return (
     <div>
       <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">{label}</p>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {options.map((opt) => (
           <button
             key={opt}

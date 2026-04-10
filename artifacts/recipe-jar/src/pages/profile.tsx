@@ -93,6 +93,7 @@ export default function ProfilePage() {
   async function handleUnsave(recipeId: string) {
     setFadingIds((prev) => new Set([...prev, recipeId]));
     await supabase.from("saved_recipes").delete().eq("user_id", user.id).eq("recipe_id", recipeId);
+    toast({ title: "Recipe removed from cookbook", variant: "info" });
     setTimeout(() => {
       setSavedRecipes((prev) => prev.filter((r) => r.id !== recipeId));
       setFadingIds((prev) => {
@@ -110,7 +111,7 @@ export default function ProfilePage() {
     setMyRecipes((prev) => prev.filter((r) => r.id !== deleteTargetId));
     setDeleteTargetId(null);
     setDeleting(false);
-    toast({ title: "Recipe deleted." });
+    toast({ title: "Recipe deleted", variant: "info" });
   }
 
   async function handleSaveSettings(e: React.FormEvent) {
@@ -145,7 +146,7 @@ export default function ProfilePage() {
       toast({ title: "Error saving settings", description: error.message, variant: "destructive" });
     } else {
       await refreshProfile();
-      toast({ title: "Profile updated!" });
+      toast({ title: "Profile updated!", variant: "success" });
       setSettingsOpen(false);
     }
     setSavingSettings(false);
