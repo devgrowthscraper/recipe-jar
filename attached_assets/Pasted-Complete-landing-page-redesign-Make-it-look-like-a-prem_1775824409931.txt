@@ -1,0 +1,54 @@
+Complete landing page redesign. Make it look like a premium food app (like Zomato). The page should have multiple sections that tell a story, showcase features, and feel alive even with zero recipes. Use Quicksand font throughout.
+
+SECTION 1 — HERO (slim, no CTA buttons):
+- Full-width warm gradient background (from-orange-50 to-amber-50).
+- Centered text: Heading "Stop losing recipes you love" in text-4xl font-bold text-amber-900.
+- Subtitle: "Screenshot any recipe from Instagram or YouTube. AI organizes it for you." in text-lg text-amber-700/70. No em dashes anywhere.
+- Search bar directly inside the hero section: large, centered, max-w-2xl, rounded-2xl, bg-white, shadow-lg, placeholder "Search by recipe name or ingredient..."
+- Below search: horizontal scrollable chip row: "Quick meals", "Vegetarian", "Vegan", "Indian", "Italian", "Mexican", "Chinese", "Thai", "Easy", "Under 30 min". Same chip styling as before.
+- No buttons, no CTAs in the hero.
+
+SECTION 2 — HOW IT WORKS (3 feature cards in a row):
+- Section heading: "How Recipe Jar works" centered, text-2xl font-bold.
+- Three cards side by side (grid grid-cols-1 md:grid-cols-3 gap-6, max-w-5xl mx-auto):
+  - Card 1: Camera icon (from Lucide) in an orange circle bg. Title: "Screenshot a recipe". Description: "See a recipe on Instagram or YouTube? Just screenshot it and upload. Our AI reads the image and extracts everything."
+  - Card 2: Sparkles icon in a purple circle bg. Title: "AI organizes it for you". Description: "AI automatically tags your recipe by cuisine, difficulty, cook time, and diet type. No manual sorting needed."
+  - Card 3: BookOpen icon in a teal circle bg. Title: "Your personal cookbook". Description: "All your recipes in one place. Search, filter, and find exactly what you want when it is time to cook."
+- Each card: bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100. Icon at top (w-16 h-16 mx-auto rounded-2xl flex items-center justify-center), title in font-bold text-lg mt-4, description in text-sm text-gray-500 mt-2 leading-relaxed.
+
+SECTION 3 — POPULAR RECIPES (the actual feed):
+- Section heading: "Explore recipes" on the left, with recipe count on the right.
+- This is where the recipe card grid lives (moved from the top).
+- Show the responsive grid of recipe cards here.
+- If no recipes exist, show a visually appealing empty state: a large illustration-style warm gradient card (full width, rounded-2xl, p-12) with centered text "The community is just getting started" and subtitle "Be one of the first to share a recipe" with two subtle options below:
+  - "Write a recipe" with a PenLine icon (links to add recipe if logged in, or login if not)
+  - "Import from screenshot" with a Camera icon (links to add recipe screenshot tab if logged in, or login if not)
+  - These should be side-by-side cards (not buttons), each with an icon, title, and short description. Like feature preview cards that hint at what users can do.
+
+SECTION 4 — IMPORT FEATURE SHOWCASE:
+- Light gray background section (bg-gray-50 py-16).
+- Two-column layout (left text, right visual mockup):
+  - Left side: Heading "Import recipes from anywhere" in text-2xl font-bold. Description: "Screenshot a recipe from Instagram, YouTube, or any app. Upload it to Recipe Jar and our AI instantly extracts the title, ingredients, and steps into a clean recipe card." Then three bullet-style feature lines (not actual bullets, use checkmark icons): "Works with Instagram screenshots", "Works with YouTube screenshots", "AI extracts ingredients and steps automatically".
+  - Right side: A stylized mockup card showing a fake phone screenshot being converted to a recipe card. Create this as a simple visual using divs — a tilted gray card (representing a screenshot) with an arrow pointing to a clean white recipe card. Use Tailwind transforms for the tilt (rotate-3). Keep it simple but effective.
+
+SECTION 5 — SIGN UP CTA (only for logged-out users):
+- Full width warm gradient section (from-orange-500 to-amber-500, py-16, rounded-3xl mx-4).
+- White text centered: "Ready to build your cookbook?" text-3xl font-bold.
+- Subtitle: "Join the community and never lose a recipe again." text-lg text-white/80.
+- One "Create Free Account" button: bg-white text-orange-600 font-bold rounded-xl px-8 py-3 shadow-lg hover:shadow-xl transition.
+- Hide this entire section for logged-in users.
+
+SECTION 6 — FOOTER:
+- Simple footer: bg-amber-900 text-white/60 py-8.
+- "Recipe Jar" logo + tagline "Save, share, and rediscover recipes."
+- Small links: Feed, Add Recipe, Sign In.
+- Copyright line.
+
+IMPORTANT RULES:
+- All sections should be on the SAME page (home page), scrolling vertically.
+- The recipe feed grid (Section 3) is the core — search and chips filter this grid.
+- For logged-in users: hide the hero subtitle about sign up, hide Section 5 CTA, show "Add Recipe" and "Import" links directly.
+- For logged-out users: clicking any action (like, save, add recipe, import) shows the auth modal.
+- Remove all em dashes from the entire app. Use periods or commas instead.
+- Smooth scroll between sections.
+- Each section should have generous vertical padding (py-12 to py-16).
