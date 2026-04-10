@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Recipe Jar"
+version = "1.0.0"
+id = "artifacts/recipe-jar"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23134
+
+[services.development]
+run = "pnpm --filter @workspace/recipe-jar run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/recipe-jar", "run", "build" ]
+publicDir = "artifacts/recipe-jar/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23134"
+BASE_PATH = "/"
