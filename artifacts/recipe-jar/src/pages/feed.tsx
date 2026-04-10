@@ -1,59 +1,40 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "wouter";
-import { Search, UtensilsCrossed, Sparkles, X, ArrowUpDown, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { Search, UtensilsCrossed } from "lucide-react";
 import { supabase, Recipe } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
 import { RecipeCard } from "@/components/RecipeCard";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
-const CUISINE_OPTIONS = ["Indian", "Italian", "Mexican", "Chinese", "American", "Thai", "Japanese", "Mediterranean"];
-const DIFFICULTY_OPTIONS = ["Easy", "Medium", "Hard"];
-const TIME_OPTIONS = ["Under 15 min", "15-30 min", "30-60 min", "Over 1 hour"];
-const DIET_OPTIONS = ["Vegetarian", "Vegan", "Non-Vegetarian", "Pescatarian"];
-
-type SortMode = "newest" | "most_liked";
-
-function PillGroup({
-  label,
-  options,
-  selected,
-  onSelect,
-  activeClass,
-  inactiveClass,
-}: {
+// ── Chip definitions ─────────────────────────────────────────────────────────
+type ChipDef = {
+  id: string;
   label: string;
-  options: string[];
-  selected: string;
-  onSelect: (val: string) => void;
-  activeClass: string;
-  inactiveClass: string;
-}) {
-  return (
-    <div>
-      <p className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider mb-1.5">{label}</p>
-      <div className="flex gap-1.5 overflow-x-auto pb-0.5 sm:flex-wrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        {options.map((opt) => (
-          <button
-            key={opt}
-            data-testid={`filter-${label.toLowerCase().replace(/\s/g, "-")}-${opt}`}
-            onClick={() => onSelect(selected === opt ? "" : opt)}
-            className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium border transition-all duration-200 whitespace-nowrap ${
-              selected === opt ? activeClass : inactiveClass
-            }`}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
+  sort?: "most_liked";
+  field?: "cuisine_tag" | "difficulty_tag" | "time_tag" | "diet_tag";
+  value?: string;
+  values?: string[]; // for OR within same field
+};
 
+const CHIPS: ChipDef[] = [
+  { id: "most-liked",   label: "Most Liked",   sort: "most_liked" },
+  { id: "quick",        label: "Quick meals",  field: "time_tag",       value: "Under 15 min" },
+  { id: "vegetarian",   label: "Vegetarian",   field: "diet_tag",       value: "Vegetarian" },
+  { id: "vegan",        label: "Vegan",         field: "diet_tag",       value: "Vegan" },
+  { id: "indian",       label: "Indian",        field: "cuisine_tag",    value: "Indian" },
+  { id: "italian",      label: "Italian",       field: "cuisine_tag",    value: "Italian" },
+  { id: "mexican",      label: "Mexican",       field: "cuisine_tag",    value: "Mexican" },
+  { id: "chinese",      label: "Chinese",       field: "cuisine_tag",    value: "Chinese" },
+  { id: "thai",         label: "Thai",          field: "cuisine_tag",    value: "Thai" },
+  { id: "easy",         label: "Easy",          field: "difficulty_tag", value: "Easy" },
+  { id: "under30",      label: "Under 30 min",  field: "time_tag",       values: ["Under 15 min", "15-30 min"] },
+];
+
+// ── Skeleton card ─────────────────────────────────────────────────────────────
 function SkeletonCard() {
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-black/5 overflow-hidden animate-pulse">
-      <div className="h-48 bg-neutral-100 rounded-t-2xl" />
+    <div className="bg-white rounded-2xl shadow border border-black/5 overflow-hidden animate-pulse">
+      <div className="h-48 bg-neutral-100" />
       <div className="p-5 flex flex-col gap-3">
         <div className="h-5 bg-neutral-100 rounded-full w-3/4" />
         <div className="h-3 bg-neutral-100 rounded-full w-full" />
@@ -71,45 +52,60 @@ function SkeletonCard() {
   );
 }
 
+// ── Page ──────────────────────────────────────────────────────────────────────
 export default function FeedPage() {
   const { user } = useAuth();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [selectedCuisine, setSelectedCuisine] = useState("");
-  const [selectedDifficulty, setSelectedDifficulty] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [selectedDiet, setSelectedDiet] = useState("");
-  const [sortMode, setSortMode] = useState<SortMode>("newest");
+  const [activeChips, setActiveChips] = useState<Set<string>>(new Set());
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
-  const [filtersOpen, setFiltersOpen] = useState(false);
 
+  // Debounce search
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(search), 350);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setDebouncedSearch(search), 350);
+    return () => clearTimeout(t);
   }, [search]);
+
+  // Toggle a chip
+  function toggleChip(id: string) {
+    setActiveChips((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  const isSortedByLiked = activeChips.has("most-liked");
+  const filterChips = CHIPS.filter((c) => !c.sort && activeChips.has(c.id));
 
   const fetchRecipes = useCallback(async () => {
     setLoading(true);
     let query = supabase
       .from("recipes")
       .select("*, profiles(id, username, avatar_url)")
-      .order(sortMode === "newest" ? "created_at" : "likes_count", { ascending: false });
+      .order(isSortedByLiked ? "likes_count" : "created_at", { ascending: false });
 
     if (debouncedSearch) {
       query = query.or(`title.ilike.%${debouncedSearch}%,ingredients.ilike.%${debouncedSearch}%`);
     }
-    if (selectedCuisine) query = query.eq("cuisine_tag", selectedCuisine);
-    if (selectedDifficulty) query = query.eq("difficulty_tag", selectedDifficulty);
-    if (selectedTime) query = query.eq("time_tag", selectedTime);
-    if (selectedDiet) query = query.eq("diet_tag", selectedDiet);
+
+    for (const chip of filterChips) {
+      if (chip.values) {
+        query = (query as any).in(chip.field, chip.values);
+      } else if (chip.field && chip.value) {
+        query = query.eq(chip.field, chip.value);
+      }
+    }
 
     const { data } = await query.limit(30);
     setRecipes(data || []);
     setLoading(false);
-  }, [debouncedSearch, selectedCuisine, selectedDifficulty, selectedTime, selectedDiet, sortMode]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, activeChips]);
 
   const fetchUserInteractions = useCallback(async () => {
     if (!user) return;
@@ -124,167 +120,66 @@ export default function FeedPage() {
   useEffect(() => { fetchRecipes(); }, [fetchRecipes]);
   useEffect(() => { fetchUserInteractions(); }, [fetchUserInteractions]);
 
-  const clearFilters = () => {
-    setSelectedCuisine("");
-    setSelectedDifficulty("");
-    setSelectedTime("");
-    setSelectedDiet("");
-    setSearch("");
-  };
-
-  const tagFilterCount = [selectedCuisine, selectedDifficulty, selectedTime, selectedDiet].filter(Boolean).length;
-  const activeFilterCount = [...[selectedCuisine, selectedDifficulty, selectedTime, selectedDiet], debouncedSearch].filter(Boolean).length;
-  const hasFilters = activeFilterCount > 0;
+  const hasFilters = debouncedSearch || filterChips.length > 0;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
 
-      {/* Hero — shown only for logged-out users */}
+      {/* ── Slim hero (logged-out only) ── */}
       {!user && (
-        <div className="text-center py-10 mb-8 bg-gradient-to-br from-orange-50 to-amber-50 rounded-3xl border border-orange-100/60">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center mx-auto mb-5 shadow-lg shadow-orange-200">
-            <UtensilsCrossed className="w-7 h-7 text-white" />
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-amber-900 mb-2">
-            Your recipes, finally organized.
+        <div className="text-center py-8 mb-6">
+          <h1 className="text-3xl font-bold text-amber-900 mb-2">
+            Screenshot it. Save it. Cook it.
           </h1>
-          <p className="text-neutral-500 text-sm sm:text-base max-w-sm mx-auto mb-7 leading-relaxed">
-            Save recipes from anywhere, find them when you need them.
+          <p className="text-neutral-500 text-base max-w-lg mx-auto leading-relaxed">
+            Turn recipe screenshots into your personal cookbook — powered by AI.
           </p>
-          <Link href="/signup">
-            <Button
-              data-testid="button-get-started"
-              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl px-7 py-2.5 text-sm font-semibold shadow-lg shadow-orange-200 transition-all duration-200 hover:shadow-xl hover:scale-105"
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              Get Started
-            </Button>
-          </Link>
         </div>
       )}
 
-      {/* Search bar */}
+      {/* ── Search bar ── */}
       <div className="relative mb-3">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
         <Input
           type="search"
           data-testid="input-search"
-          placeholder="Search recipes by name or ingredient..."
+          placeholder="Search by recipe name or ingredient..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 rounded-xl border-neutral-200 bg-white shadow-sm h-11"
+          className="pl-10 h-11 rounded-2xl border-neutral-200 bg-white shadow-sm focus:shadow-md transition-shadow"
         />
       </div>
 
-      {/* Toolbar row: Filters toggle + Sort */}
-      <div className="flex items-center justify-between mb-3 gap-3">
-        <div className="flex items-center gap-2">
-          {/* Filters toggle button */}
-          <button
-            data-testid="button-toggle-filters"
-            onClick={() => setFiltersOpen((o) => !o)}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 ${
-              filtersOpen || tagFilterCount > 0
-                ? "bg-orange-500 text-white border-orange-500 shadow-sm"
-                : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
-            }`}
-          >
-            <SlidersHorizontal className="w-3.5 h-3.5" />
-            Filters
-            {tagFilterCount > 0 && (
-              <span className="ml-0.5 bg-white text-orange-600 rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold leading-none">
-                {tagFilterCount}
-              </span>
-            )}
-            <ChevronDown
-              className={`w-3.5 h-3.5 transition-transform duration-200 ${filtersOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-
-          {/* Clear filters badge */}
-          {hasFilters && (
+      {/* ── Chip row ── */}
+      <div className="flex gap-2 overflow-x-auto pb-3 mb-5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        {CHIPS.map((chip) => {
+          const active = activeChips.has(chip.id);
+          return (
             <button
-              data-testid="button-clear-filters"
-              onClick={clearFilters}
-              className="flex items-center gap-1 text-xs font-medium text-neutral-500 hover:text-neutral-700 bg-neutral-100 hover:bg-neutral-200 px-2.5 py-1.5 rounded-full transition-all duration-200"
+              key={chip.id}
+              data-testid={`chip-${chip.id}`}
+              onClick={() => toggleChip(chip.id)}
+              className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
+                active
+                  ? "bg-orange-500 text-white border-orange-500 shadow-sm"
+                  : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
+              }`}
             >
-              <X className="w-3 h-3" />
-              Clear
+              {chip.label}
             </button>
-          )}
-
-          {!loading && !hasFilters && (
-            <p className="text-xs text-neutral-400">{recipes.length} recipe{recipes.length !== 1 ? "s" : ""}</p>
-          )}
-        </div>
-
-        {/* Sort toggle */}
-        <div className="flex items-center gap-1 bg-neutral-100 rounded-xl p-1">
-          <button
-            data-testid="sort-newest"
-            onClick={() => setSortMode("newest")}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
-              sortMode === "newest"
-                ? "bg-white text-orange-600 shadow-sm"
-                : "text-neutral-500 hover:text-neutral-700"
-            }`}
-          >
-            Newest
-          </button>
-          <button
-            data-testid="sort-most-liked"
-            onClick={() => setSortMode("most_liked")}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
-              sortMode === "most_liked"
-                ? "bg-white text-orange-600 shadow-sm"
-                : "text-neutral-500 hover:text-neutral-700"
-            }`}
-          >
-            <ArrowUpDown className="w-3 h-3" />
-            Most Liked
-          </button>
-        </div>
+          );
+        })}
       </div>
 
-      {/* Collapsible filter panel */}
-      {filtersOpen && (
-        <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-4 mb-4 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
-          <PillGroup
-            label="Cuisine"
-            options={CUISINE_OPTIONS}
-            selected={selectedCuisine}
-            onSelect={setSelectedCuisine}
-            activeClass="bg-orange-500 text-white border-orange-500"
-            inactiveClass="bg-orange-50 text-orange-700 border-orange-100 hover:border-orange-300"
-          />
-          <PillGroup
-            label="Difficulty"
-            options={DIFFICULTY_OPTIONS}
-            selected={selectedDifficulty}
-            onSelect={setSelectedDifficulty}
-            activeClass="bg-blue-500 text-white border-blue-500"
-            inactiveClass="bg-blue-50 text-blue-700 border-blue-100 hover:border-blue-300"
-          />
-          <PillGroup
-            label="Cook Time"
-            options={TIME_OPTIONS}
-            selected={selectedTime}
-            onSelect={setSelectedTime}
-            activeClass="bg-purple-500 text-white border-purple-500"
-            inactiveClass="bg-purple-50 text-purple-700 border-purple-100 hover:border-purple-300"
-          />
-          <PillGroup
-            label="Diet"
-            options={DIET_OPTIONS}
-            selected={selectedDiet}
-            onSelect={setSelectedDiet}
-            activeClass="bg-green-500 text-white border-green-500"
-            inactiveClass="bg-green-50 text-green-700 border-green-100 hover:border-green-300"
-          />
-        </div>
+      {/* ── Recipe count / loading info ── */}
+      {!loading && (
+        <p className="text-xs text-neutral-400 mb-5">
+          {recipes.length} recipe{recipes.length !== 1 ? "s" : ""}
+          {hasFilters ? " matching your filters" : ""}
+        </p>
       )}
 
-      {/* Recipe grid */}
+      {/* ── Grid ── */}
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
@@ -297,31 +192,25 @@ export default function FeedPage() {
           {hasFilters ? (
             <>
               <h3 className="text-lg font-semibold text-amber-900 mb-2">No recipes found</h3>
-              <p className="text-neutral-500 text-sm mb-6">Try adjusting your filters!</p>
-              <Button
-                data-testid="button-reset-filters"
-                onClick={clearFilters}
-                variant="outline"
-                className="rounded-xl border-orange-200 text-orange-600 hover:bg-orange-50"
+              <p className="text-neutral-500 text-sm mb-4">Try different filters or clear your search.</p>
+              <button
+                onClick={() => { setSearch(""); setActiveChips(new Set()); }}
+                className="text-sm text-orange-500 hover:text-orange-600 font-semibold underline underline-offset-2 transition-colors"
               >
-                Reset filters
-              </Button>
+                Clear all filters →
+              </button>
             </>
           ) : (
             <>
               <h3 className="text-lg font-semibold text-amber-900 mb-2">No recipes yet</h3>
-              <p className="text-neutral-500 text-sm mb-6">Be the first to share!</p>
+              <p className="text-neutral-500 text-sm mb-4">Be the first to share!</p>
               {user ? (
-                <Link href="/add-recipe">
-                  <Button className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl px-6 font-semibold">
-                    Add a Recipe
-                  </Button>
+                <Link href="/add-recipe" className="text-sm text-orange-500 hover:text-orange-600 font-semibold underline underline-offset-2 transition-colors">
+                  Add a recipe →
                 </Link>
               ) : (
-                <Link href="/signup">
-                  <Button className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl px-6 font-semibold">
-                    Get Started
-                  </Button>
+                <Link href="/signup" className="text-sm text-orange-500 hover:text-orange-600 font-semibold underline underline-offset-2 transition-colors">
+                  Sign up to share →
                 </Link>
               )}
             </>

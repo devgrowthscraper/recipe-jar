@@ -1,0 +1,37 @@
+Major UI overhaul — make this feel like a premium recipe app:
+
+1. FONT: Switch entire app to Quicksand font from Google Fonts. Import: <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">. Set font-family: 'Quicksand', sans-serif globally in Tailwind config and body.
+
+2. HERO SECTION — slim and elegant, NOT a big card:
+   - Remove the current large hero card entirely.
+   - Replace with a slim banner (py-8, no background card, just text on the page background).
+   - Heading: "Screenshot it. Save it. Cook it." — text-3xl font-bold text-brown, centered.
+   - Subtitle: "Turn recipe screenshots into your personal cookbook — powered by AI." — text-gray-500 text-base, centered, max-w-lg mx-auto.
+   - NO buttons, NO CTAs in the hero. The feed below IS the experience.
+   - Show this hero only for logged-out users. Hide for logged-in users.
+
+3. REMOVE ALL DUPLICATE CTAs:
+   - Remove the "Get Started" button from the bottom empty state.
+   - For the empty state when no recipes exist, just show the icon + "No recipes yet" + "Be the first to share!" text. For logged-in users, show a subtle text link "Add a recipe →" (not a big button). For logged-out users, show "Sign up to share →" as a small text link.
+
+4. REPLACE FILTER PANEL WITH HORIZONTAL CHIP ROW:
+   - Remove the entire collapsible filter panel.
+   - Below the search bar, add ONE horizontal scrollable row of filter chips.
+   - Chips to show: "Quick meals", "Vegetarian", "Vegan", "Indian", "Italian", "Mexican", "Chinese", "Thai", "Easy", "Under 30 min"
+   - Each chip: rounded-full, px-4 py-2, text-sm font-medium, bg-white border border-gray-200, text-gray-600.
+   - When tapped/active: bg-orange-500 text-white border-orange-500.
+   - Tapping a chip filters recipes by matching the chip text against any tag field (cuisine_tag, difficulty_tag, time_tag, diet_tag). Tapping again deselects.
+   - Multiple chips can be active at once (AND logic).
+   - The row should scroll horizontally on mobile with overflow-x-auto and hide-scrollbar styling.
+   - Remove the "Newest" and "Most Liked" toggle buttons. Default sort is newest. Add "Most Liked" as just another chip at the beginning of the row.
+
+5. SEARCH BAR IMPROVEMENT:
+   - Change placeholder to "Search by recipe name or ingredient..."
+   - Make it slightly more compact: py-3 instead of py-4, rounded-2xl, subtle shadow-sm on focus.
+
+6. NAVBAR GLASSMORPHISM:
+   - Navbar: sticky top-0, backdrop-blur-xl, bg-white/80, border-b border-gray-100, shadow-sm, z-50.
+   - Logo "Recipe Jar" in Quicksand font-bold.
+
+7. RECIPE CARDS (prepare for when recipes exist):
+   - Cards: rounded-2xl, overflow-hidden, bg-white, bor
