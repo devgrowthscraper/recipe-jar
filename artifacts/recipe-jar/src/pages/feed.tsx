@@ -196,8 +196,8 @@ export default function FeedPage() {
             Screenshot any recipe from Instagram or YouTube. AI organizes it for you instantly.
           </p>
 
-          {/* Search bar */}
-          <div className="relative max-w-2xl mx-auto mb-6">
+          {/* Search bar + filter toggle unified */}
+          <div className="relative max-w-2xl mx-auto mb-4">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
             <input
               type="search"
@@ -205,28 +205,29 @@ export default function FeedPage() {
               placeholder="Search by recipe name or ingredient..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white shadow-lg text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-300 transition-all border border-orange-100"
+              className="w-full pl-12 pr-28 py-4 rounded-2xl bg-white shadow-lg text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-300 transition-all border border-orange-100"
             />
-          </div>
-
-          {/* ── Filter toggle button ── */}
-          <div className="max-w-2xl mx-auto w-full flex justify-start mb-1">
-            <button
-              onClick={() => setShowFilters((v) => !v)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
-                showFilters || activeChips.size > 0
-                  ? "bg-orange-500 text-white border-orange-500 shadow-sm"
-                  : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
-              }`}
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
-              Filters
-              {activeChips.size > 0 && (
-                <span className="ml-0.5 bg-white text-orange-500 rounded-full text-xs font-bold w-4 h-4 flex items-center justify-center">
-                  {activeChips.size}
-                </span>
-              )}
-            </button>
+            {/* Divider + filter button inside the bar */}
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
+              <div className="w-px h-5 bg-neutral-200" />
+              <button
+                onClick={() => setShowFilters((v) => !v)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                  showFilters || activeChips.size > 0
+                    ? "bg-orange-500 text-white shadow-sm"
+                    : "text-neutral-500 hover:text-orange-500 hover:bg-orange-50"
+                }`}
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                {activeChips.size > 0 ? (
+                  <span className={`text-xs font-bold ${showFilters || activeChips.size > 0 ? "text-white" : "text-orange-500"}`}>
+                    {activeChips.size}
+                  </span>
+                ) : (
+                  <span>Filter</span>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* ── Grouped filters ── */}
