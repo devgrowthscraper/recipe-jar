@@ -271,7 +271,7 @@ export default function FeedPage() {
               iconBg="bg-orange-100"
               icon={<Camera className="w-8 h-8 text-orange-500" />}
               title="Capture Recipes"
-              description="See a recipe on Instagram or YouTube? Just screenshot it and upload. Our AI reads the image and extracts everything."
+              description="Spot a recipe anywhere on your phone. Take a screenshot, upload it, and our AI instantly pulls out the title, ingredients, and steps."
             />
             <FeatureCard
               iconBg="bg-purple-100"
@@ -321,7 +321,7 @@ export default function FeedPage() {
               </div>
             ) : (
               <div className="max-w-2xl mx-auto py-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
                   <Link
                     href={user ? "/add-recipe" : "/login"}
                     className="flex items-center gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
@@ -331,7 +331,7 @@ export default function FeedPage() {
                     </div>
                     <div>
                       <p className="font-bold text-amber-900 text-sm mb-0.5">Write A Recipe</p>
-                      <p className="text-xs text-neutral-500 leading-relaxed">Type out a recipe you love and share it with everyone</p>
+                      <p className="text-sm text-neutral-500 leading-relaxed">Type out a recipe you love and share it with everyone</p>
                     </div>
                   </Link>
                   <Link
@@ -343,7 +343,7 @@ export default function FeedPage() {
                     </div>
                     <div>
                       <p className="font-bold text-amber-900 text-sm mb-0.5">Import A Screenshot</p>
-                      <p className="text-xs text-neutral-500 leading-relaxed">Upload a screenshot and AI extracts it into a recipe card</p>
+                      <p className="text-sm text-neutral-500 leading-relaxed">Upload a screenshot and AI extracts it into a recipe card</p>
                     </div>
                   </Link>
                 </div>
