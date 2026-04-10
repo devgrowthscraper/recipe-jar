@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import {
   Search, Camera, Sparkles, BookOpen, PenLine, CheckCircle2,
   ArrowRight, UtensilsCrossed, TrendingUp, Timer, ChefHat,
-  Globe, Flame,
+  Globe, Flame, Leaf, Egg,
 } from "lucide-react";
 import { supabase, Recipe } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
@@ -20,15 +20,30 @@ type ChipDef = {
 };
 
 const CHIPS: ChipDef[] = [
-  { id: "most-liked", label: "Most Liked",   sort: "most_liked" },
-  { id: "quick",      label: "Quick Meals",  field: "time_tag",       value: "Under 15 min" },
-  { id: "under30",    label: "Under 30 Min", field: "time_tag",       values: ["Under 15 min", "15-30 min"] },
-  { id: "easy",       label: "Easy",         field: "difficulty_tag", value: "Easy" },
-  { id: "indian",     label: "Indian",       field: "cuisine_tag",    value: "Indian" },
-  { id: "italian",    label: "Italian",      field: "cuisine_tag",    value: "Italian" },
-  { id: "mexican",    label: "Mexican",      field: "cuisine_tag",    value: "Mexican" },
-  { id: "chinese",    label: "Chinese",      field: "cuisine_tag",    value: "Chinese" },
-  { id: "thai",       label: "Thai",         field: "cuisine_tag",    value: "Thai" },
+  // Sort
+  { id: "most-liked",   label: "Most Liked",   sort: "most_liked" },
+  // Diet
+  { id: "vegan",        label: "Vegan",         field: "diet_tag",       value: "Vegan" },
+  { id: "vegetarian",   label: "Vegetarian",    field: "diet_tag",       value: "Vegetarian" },
+  { id: "eggetarian",   label: "Eggetarian",    field: "diet_tag",       value: "Eggetarian" },
+  { id: "non-veg",      label: "Non-Veg",       field: "diet_tag",       value: "Non-Vegetarian" },
+  // Time
+  { id: "quick",        label: "Quick Meals",   field: "time_tag",       value: "Under 15 min" },
+  { id: "under15",      label: "Under 15 Min",  field: "time_tag",       value: "Under 15 min" },
+  { id: "1530",         label: "15–30 Min",     field: "time_tag",       value: "15-30 min" },
+  { id: "30plus",       label: "30+ Min",       field: "time_tag",       value: "30+ min" },
+  { id: "under30",      label: "Under 30 Min",  field: "time_tag",       values: ["Under 15 min", "15-30 min"] },
+  // Difficulty
+  { id: "easy",         label: "Easy",          field: "difficulty_tag", value: "Easy" },
+  { id: "medium",       label: "Medium",        field: "difficulty_tag", value: "Medium" },
+  { id: "hard",         label: "Hard",          field: "difficulty_tag", value: "Hard" },
+  // Cuisine
+  { id: "indian",       label: "Indian",        field: "cuisine_tag",    value: "Indian" },
+  { id: "italian",      label: "Italian",       field: "cuisine_tag",    value: "Italian" },
+  { id: "mexican",      label: "Mexican",       field: "cuisine_tag",    value: "Mexican" },
+  { id: "chinese",      label: "Chinese",       field: "cuisine_tag",    value: "Chinese" },
+  { id: "thai",         label: "Thai",          field: "cuisine_tag",    value: "Thai" },
+  { id: "japanese",     label: "Japanese",      field: "cuisine_tag",    value: "Japanese" },
 ];
 
 // ── Diet filter tiles ─────────────────────────────────────────────────────────
@@ -231,10 +246,13 @@ export default function FeedPage() {
                   }`}
                 >
                   {chip.id === "most-liked" && <TrendingUp className="w-3.5 h-3.5" />}
-                  {chip.id === "quick" && <Flame className="w-3.5 h-3.5" />}
-                  {chip.id === "under30" && <Timer className="w-3.5 h-3.5" />}
-                  {chip.id === "easy" && <ChefHat className="w-3.5 h-3.5" />}
-                  {["indian","italian","mexican","chinese","thai"].includes(chip.id) && <Globe className="w-3.5 h-3.5" />}
+                  {chip.id === "quick"      && <Flame className="w-3.5 h-3.5" />}
+                  {["under30","under15","1530","30plus"].includes(chip.id) && <Timer className="w-3.5 h-3.5" />}
+                  {["easy","medium","hard"].includes(chip.id) && <ChefHat className="w-3.5 h-3.5" />}
+                  {["indian","italian","mexican","chinese","thai","japanese"].includes(chip.id) && <Globe className="w-3.5 h-3.5" />}
+                  {["vegan","vegetarian"].includes(chip.id) && <Leaf className="w-3.5 h-3.5" />}
+                  {chip.id === "eggetarian" && <Egg className="w-3.5 h-3.5" />}
+                  {chip.id === "non-veg"    && <UtensilsCrossed className="w-3.5 h-3.5" />}
                   {chip.label}
                 </button>
               );
