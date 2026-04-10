@@ -87,7 +87,7 @@ function FeatureCard({
         {icon}
       </div>
       <h3 className="font-bold text-lg mt-4 text-amber-900">{title}</h3>
-      <p className="text-sm text-neutral-700 mt-2 leading-relaxed">{description}</p>
+      <p className="text-sm text-neutral-700 mt-2 leading-relaxed font-medium">{description}</p>
     </div>
   );
 }
@@ -270,7 +270,7 @@ export default function FeedPage() {
             <FeatureCard
               iconBg="bg-orange-100"
               icon={<Camera className="w-8 h-8 text-orange-500" />}
-              title="Screenshot A Recipe"
+              title="Capture Recipes"
               description="See a recipe on Instagram or YouTube? Just screenshot it and upload. Our AI reads the image and extracts everything."
             />
             <FeatureCard
@@ -297,7 +297,7 @@ export default function FeedPage() {
 
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-amber-900">Start Your Recipe Journey</h2>
-            <p className="text-gray-600 text-center mt-2">Create your own recipes or instantly import from a screenshot</p>
+            <p className="text-gray-600 text-center mt-2 font-medium">Create your own recipes or instantly import from a screenshot</p>
           </div>
 
           {loading ? (
