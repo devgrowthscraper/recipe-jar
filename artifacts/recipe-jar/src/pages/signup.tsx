@@ -41,25 +41,22 @@ export default function SignupPage() {
     if (!userId) return;
     setLoading(true);
 
-    // Check if username is taken
-    const { data: existing } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("username", username.trim())
-      .single();
-
-    if (existing) {
-      toast({ title: "Username taken", description: "Please choose a different username.", variant: "destructive" });
-      setLoading(false);
-      return;
-    }
-
-    const { error } = await supabase
-      .from("profiles")
-      .insert({ id: userId, username: username.trim() });
+    // Use a SECURITY DEFINER RPC so this works even when email confirmation
+    // is enabled and there is no active session yet.
+    const { error } = await supabase.rpc("set_profile_username", {
+      p_user_id: userId,
+      p_username: username.trim(),
+    });
 
     if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      const isUsernameTaken = error.message?.includes("username_taken");
+      toast({
+        title: isUsernameTaken ? "Username taken" : "Error",
+        description: isUsernameTaken
+          ? "Please choose a different username."
+          : error.message,
+        variant: "destructive",
+      });
       setLoading(false);
       return;
     }
