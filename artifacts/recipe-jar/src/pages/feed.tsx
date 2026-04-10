@@ -331,7 +331,7 @@ export default function FeedPage() {
                     </div>
                     <div>
                       <p className="font-bold text-amber-900 text-sm mb-0.5">Write a Recipe</p>
-                      <p className="text-sm text-neutral-500 leading-relaxed">Type out a recipe you love and share it with everyone</p>
+                      <p className="text-sm text-neutral-500 leading-relaxed font-semibold">Type out a recipe you love and share it with everyone</p>
                     </div>
                   </Link>
                   <Link
@@ -343,7 +343,7 @@ export default function FeedPage() {
                     </div>
                     <div>
                       <p className="font-bold text-amber-900 text-sm mb-0.5">Import a Screenshot</p>
-                      <p className="text-sm text-neutral-500 leading-relaxed">Upload a screenshot and AI extracts it into a recipe card</p>
+                      <p className="text-sm text-neutral-500 leading-relaxed font-semibold">Upload a screenshot and AI extracts it into your recipe card</p>
                     </div>
                   </Link>
                 </div>
