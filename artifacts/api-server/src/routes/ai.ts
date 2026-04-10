@@ -33,7 +33,7 @@ router.post("/tag-recipe", async (req, res) => {
         {
           role: "user",
           content: `You are a recipe analyzer. Given a recipe title, ingredients and steps, return ONLY a JSON object (no markdown, no explanation) with these exact keys:
-- cuisine_tag: one of Indian/Italian/Mexican/Chinese/American/Thai/Japanese/Mediterranean/Other
+- cuisine_tag: one of Indian/Italian/Mexican/Chinese/American/Thai/Japanese/Other
 - difficulty_tag: one of Easy/Medium/Hard
 - time_tag: one of "Under 15 min"/"15-30 min"/"30-60 min"/"Over 1 hour"
 - diet_tag: one of Vegetarian/Vegan/Non-Vegetarian/Eggetarian

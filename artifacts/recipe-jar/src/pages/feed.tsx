@@ -42,10 +42,13 @@ const FILTER_GROUPS: FilterGroup[] = [
   {
     label: "Cuisine",
     chips: [
-      { id: "indian",  label: "Indian",  field: "cuisine_tag", value: "Indian" },
-      { id: "italian", label: "Italian", field: "cuisine_tag", value: "Italian" },
-      { id: "chinese", label: "Chinese", field: "cuisine_tag", value: "Chinese" },
-      { id: "thai",    label: "Thai",    field: "cuisine_tag", value: "Thai" },
+      { id: "indian",    label: "Indian",    field: "cuisine_tag", value: "Indian" },
+      { id: "italian",   label: "Italian",   field: "cuisine_tag", value: "Italian" },
+      { id: "mexican",   label: "Mexican",   field: "cuisine_tag", value: "Mexican" },
+      { id: "chinese",   label: "Chinese",   field: "cuisine_tag", value: "Chinese" },
+      { id: "thai",      label: "Thai",      field: "cuisine_tag", value: "Thai" },
+      { id: "american",  label: "American",  field: "cuisine_tag", value: "American" },
+      { id: "japanese",  label: "Japanese",  field: "cuisine_tag", value: "Japanese" },
     ],
   },
   {
@@ -196,37 +199,38 @@ export default function FeedPage() {
             Screenshot any recipe from Instagram or YouTube. AI organizes it for you instantly.
           </p>
 
-          {/* Search bar + filter toggle unified */}
-          <div className="relative max-w-2xl mx-auto mb-4">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
-            <input
-              type="search"
-              data-testid="input-search"
-              placeholder="Search by recipe name or ingredient..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-28 py-4 rounded-2xl bg-white shadow-lg text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-300 transition-all border border-orange-100"
-            />
-            {/* Divider + filter button inside the bar */}
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <div className="w-px h-5 bg-neutral-200" />
-              <button
-                onClick={() => setShowFilters((v) => !v)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                  showFilters || activeChips.size > 0
-                    ? "bg-orange-500 text-white shadow-sm"
-                    : "text-neutral-500 hover:text-orange-500 hover:bg-orange-50"
-                }`}
-              >
-                <SlidersHorizontal className="w-4 h-4" />
-                {activeChips.size > 0 ? (
-                  <span className={`text-xs font-bold ${showFilters || activeChips.size > 0 ? "text-white" : "text-orange-500"}`}>
-                    {activeChips.size}
-                  </span>
-                ) : (
-                  <span>Filter</span>
-                )}
-              </button>
+          {/* Filter button (left) + Search bar (right) */}
+          <div className="flex items-center gap-3 max-w-2xl mx-auto mb-4">
+            {/* Filter button — left */}
+            <button
+              onClick={() => setShowFilters((v) => !v)}
+              className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-4 rounded-2xl text-sm font-semibold border transition-all duration-200 bg-white shadow-lg ${
+                showFilters || activeChips.size > 0
+                  ? "bg-orange-500 border-orange-500 text-white shadow-sm"
+                  : "border-orange-100 text-neutral-500 hover:text-orange-500 hover:bg-orange-50"
+              }`}
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+              {activeChips.size > 0 ? (
+                <span className="text-xs font-bold">
+                  {activeChips.size}
+                </span>
+              ) : (
+                <span>Filter</span>
+              )}
+            </button>
+
+            {/* Search bar — right */}
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
+              <input
+                type="search"
+                data-testid="input-search"
+                placeholder="Search by recipe name or ingredient..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white shadow-lg text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-300 transition-all border border-orange-100"
+              />
             </div>
           </div>
 
