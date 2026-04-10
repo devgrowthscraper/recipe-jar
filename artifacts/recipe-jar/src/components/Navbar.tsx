@@ -32,17 +32,17 @@ export function Navbar() {
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
 
-          {/* Feed — always visible */}
+          {/* Recipes — always visible */}
           <Link
-            href="/"
-            data-testid="nav-link-feed"
+            href="/recipes"
+            data-testid="nav-link-recipes"
             className={`text-sm font-medium transition-all duration-200 relative pb-0.5 ${
-              isActive("/")
+              isActive("/recipes")
                 ? "text-orange-500 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-orange-500 after:rounded-full"
                 : "text-neutral-600 hover:text-orange-500"
             }`}
           >
-            Feed
+            Recipes
           </Link>
 
           {/* Logged-in links */}
@@ -125,13 +125,13 @@ export function Navbar() {
 
               <div className="flex flex-col gap-2">
                 <Link
-                  href="/"
+                  href="/recipes"
                   onClick={() => setOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                    isActive("/") ? "bg-orange-50 text-orange-600" : "text-neutral-600 hover:bg-orange-50 hover:text-orange-500"
+                    isActive("/recipes") ? "bg-orange-50 text-orange-600" : "text-neutral-600 hover:bg-orange-50 hover:text-orange-500"
                   }`}
                 >
-                  Feed
+                  Recipes
                 </Link>
 
                 {user && (

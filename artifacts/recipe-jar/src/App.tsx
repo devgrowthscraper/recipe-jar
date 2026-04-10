@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/lib/auth-context";
 import { Navbar } from "@/components/Navbar";
 import FeedPage from "@/pages/feed";
+import RecipesPage from "@/pages/recipes";
 import LoginPage from "@/pages/login";
 import SignupPage from "@/pages/signup";
 import RecipeDetailPage from "@/pages/recipe-detail";
@@ -28,6 +29,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={FeedPage} />
+      <Route path="/recipes" component={RecipesPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/signup" component={SignupPage} />
       <Route path="/recipe/:id" component={RecipeDetailPage} />

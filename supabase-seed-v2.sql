@@ -19,14 +19,14 @@ BEGIN
     'team@recipejar.internal', '',
     now(), now(), now(),
     '{"provider":"email","providers":["email"]}'::jsonb,
-    '{"username":"RecipeJarTeam"}'::jsonb,
+    '{"username":"Recipe Jar Team"}'::jsonb,
     false
   ) ON CONFLICT (id) DO NOTHING;
 
   -- Ensure team profile exists
   INSERT INTO public.profiles (id, username)
-  VALUES (team_id, 'RecipeJarTeam')
-  ON CONFLICT (id) DO NOTHING;
+  VALUES (team_id, 'Recipe Jar Team')
+  ON CONFLICT (id) DO UPDATE SET username = 'Recipe Jar Team';
 
   -- Delete all existing recipes
   DELETE FROM public.recipes;
