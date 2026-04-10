@@ -330,7 +330,7 @@ export default function FeedPage() {
                       <PenLine className="w-5 h-5 text-orange-500 group-hover:text-white transition-colors" />
                     </div>
                     <div>
-                      <p className="font-bold text-amber-900 text-sm mb-0.5">Write A Recipe</p>
+                      <p className="font-bold text-amber-900 text-sm mb-0.5">Write a Recipe</p>
                       <p className="text-sm text-neutral-500 leading-relaxed">Type out a recipe you love and share it with everyone</p>
                     </div>
                   </Link>
