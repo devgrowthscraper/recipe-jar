@@ -1,0 +1,34 @@
+Create a profile page at /profile that is only accessible to logged-in users.
+
+PROFILE HEADER:
+- A warm gradient banner at the top (from-orange-400 to-amber-500, h-32 rounded-b-3xl).
+- Overlapping avatar: A large circle (w-24 h-24) positioned halfway below the banner. The circle has a white border (ring-4 ring-white), orange gradient background, and the first letter of the username in white, text-3xl font-bold.
+- Below the avatar: Username in text-2xl font-bold, and "Member since [month year]" in text-sm text-gray-400.
+
+STATS ROW:
+- Three stat cards in a row (grid grid-cols-3 gap-4, mt-6):
+  - Card 1: UtensilsCrossed icon + count + "Recipes Posted" — query count of recipes by this user.
+  - Card 2: Bookmark icon + count + "Recipes Saved" — query count of saved_recipes by this user.
+  - Card 3: Heart icon + count + "Likes Received" — query sum of likes_count across all recipes by this user.
+- Each stat card: bg-white rounded-2xl shadow-sm p-4 text-center. The count number should be text-2xl font-bold text-orange-500. The label is text-xs text-gray-500 uppercase tracking-wider.
+
+TABS BELOW STATS:
+Two tabs styled as pill toggles (same style as Add Recipe tabs):
+- "My Recipes" (default) — shows all recipes posted by this user.
+- "Saved Recipes" — shows all recipes saved/bookmarked by this user.
+
+MY RECIPES TAB:
+- Same card grid as the public feed (responsive 1/2/3 columns).
+- Each card shows edit and delete icon buttons in the top-right corner of the card image area (small semi-transparent dark circles with white icons, position absolute).
+- If no recipes posted, show an empty state: A large Plus icon in a dashed circle, with text "Share your first recipe" and an "Add Recipe" button linking to /add-recipe.
+
+SAVED RECIPES TAB:
+- Same card grid as the public feed.
+- Each card shows an "Unsave" button (filled orange bookmark icon). On click, remove from saved_recipes and remove the card from the view with a smooth fade-out animation.
+- If no saved recipes, show an empty state: A large Bookmark icon in a dashed circle, with text "Your cookbook is empty" and subtitle "Browse the feed and save recipes you love!" with a "Browse Recipes" button linking to /.
+
+SETTINGS SECTION (below the tabs, collapsible):
+- A subtle "Settings" link/accordion that expands to show:
+  - Edit username field.
+  - Edit avatar URL field with preview.
+  - Save button.
