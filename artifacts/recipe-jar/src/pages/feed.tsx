@@ -124,10 +124,9 @@ export default function FeedPage() {
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearch(search), 350);
-    return () => clearTimeout(t);
-  }, [search]);
+  function handleSearch() {
+    setDebouncedSearch(search);
+  }
 
   function toggleChip(id: string) {
     setActiveChips((prev) => {
@@ -199,38 +198,49 @@ export default function FeedPage() {
             Screenshot any recipe from Instagram or YouTube. AI organizes it for you instantly.
           </p>
 
-          {/* Filter button (left) + Search bar (right) */}
-          <div className="flex items-center gap-3 max-w-2xl mx-auto mb-4">
-            {/* Filter button — left */}
-            <button
-              onClick={() => setShowFilters((v) => !v)}
-              className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-4 rounded-2xl text-sm font-semibold border transition-all duration-200 bg-white shadow-lg ${
-                showFilters || activeChips.size > 0
-                  ? "bg-orange-500 border-orange-500 text-white shadow-sm"
-                  : "border-orange-100 text-neutral-500 hover:text-orange-500 hover:bg-orange-50"
-              }`}
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-              {activeChips.size > 0 ? (
-                <span className="text-xs font-bold">
-                  {activeChips.size}
-                </span>
-              ) : (
-                <span>Filter</span>
-              )}
-            </button>
+          {/* Unified search + filter bar */}
+          <div className="max-w-2xl mx-auto mb-4">
+            <div className="flex items-center bg-white rounded-2xl shadow-lg overflow-hidden">
 
-            {/* Search bar — right */}
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
+              {/* Filter area — far left */}
+              <button
+                onClick={() => setShowFilters((v) => !v)}
+                className={`flex-shrink-0 flex items-center gap-2 px-5 py-4 border-r border-gray-200 text-sm font-semibold transition-colors duration-200 ${
+                  showFilters || activeChips.size > 0
+                    ? "text-orange-500"
+                    : "text-neutral-500 hover:text-orange-500"
+                }`}
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                {activeChips.size > 0 ? (
+                  <span className="text-xs font-bold text-orange-500">{activeChips.size}</span>
+                ) : (
+                  <span>Filter</span>
+                )}
+              </button>
+
+              {/* Search input — middle */}
               <input
-                type="search"
+                type="text"
                 data-testid="input-search"
-                placeholder="Search by recipe name or ingredient..."
+                placeholder="Search butter chicken, pasta, tofu..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white shadow-lg text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-300 transition-all border border-orange-100"
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  if (!e.target.value) setDebouncedSearch("");
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                className="flex-1 px-4 py-4 text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none bg-transparent"
               />
+
+              {/* Search icon — far right */}
+              <button
+                onClick={handleSearch}
+                className="flex-shrink-0 mx-3 w-10 h-10 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center transition-colors duration-200"
+              >
+                <Search className="w-4 h-4 text-white" />
+              </button>
+
             </div>
           </div>
 
