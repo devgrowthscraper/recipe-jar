@@ -1,0 +1,45 @@
+The search and filters are not working because there are no recipes in the database and the Add Recipe functionality is not built yet. Let's fix both:
+
+1. ADD RECIPE PAGE at /add-recipe (only for logged-in users):
+   Create a page with TWO TABS styled as modern pill toggles:
+   
+   Tab 1 "Write recipe":
+   - Form fields: Title (required), Description (optional), Image URL (optional, show preview when entered), Ingredients (textarea, one per line), Steps (textarea, one per line)
+   - "Publish recipe" button with Sparkles icon
+   - On submit: save to Supabase recipes table, then call OpenAI API (gpt-4o-mini) to auto-tag the recipe. Send the title + ingredients + steps to OpenAI with this prompt: "You are a recipe analyzer. Given a recipe title, ingredients and steps, return ONLY a JSON object with: cuisine_tag (Indian/Italian/Mexican/Chinese/American/Thai/Japanese/Mediterranean/Other), difficulty_tag (Easy/Medium/Hard), time_tag (Under 15 min/15-30 min/30-60 min/Over 1 hour), diet_tag (Vegetarian/Vegan/Non-Vegetarian/Pescatarian). Return only JSON."
+   - Update the recipe with the returned tags
+   - Show "AI is tagging your recipe..." loading state
+   - After success, redirect to feed
+
+   Tab 2 "Import from screenshot":
+   - Drag and drop upload area for images (jpg, png, webp)
+   - When image uploaded, send it as base64 to OpenAI (gpt-4o-mini with vision) with prompt: "Look at this screenshot of a recipe. Extract: title, description (1-2 sentences), ingredients (one per line), steps (one per line). Return ONLY JSON. If no recipe found, return {error: 'No recipe found'}."
+   - After extraction, populate Tab 1 form with the extracted data so user can review and edit before publishing
+   - Show "AI is reading your recipe..." loading state
+
+   For the OpenAI calls, create a server-side API route (not edge function) that handles the OpenAI call so the API key stays secret. Store the OPENAI_API_KEY in Replit Secrets (environment variables).
+
+2. SEED DATA - Add 15 sample recipes:
+   Create a seed script or directly insert 15 diverse sample recipes into the database through a one-time server endpoint. Include:
+   - 3 Indian recipes (butter chicken, paneer butter masala, dal tadka)
+   - 2 Italian recipes (pasta carbonara, margherita pizza)
+   - 2 Mexican recipes (chicken tacos, guacamole)
+   - 2 Chinese recipes (fried rice, kung pao chicken)
+   - 2 Thai recipes (pad thai, green curry)
+   - 2 American recipes (mac and cheese, grilled cheese sandwich)
+   - 2 Japanese recipes (miso soup, teriyaki chicken)
+   Each recipe should have: realistic title, description, 5-8 ingredients, 4-6 steps, pre-filled cuisine_tag, difficulty_tag, time_tag, diet_tag. Use real Unsplash food image URLs for each (search unsplash.com for each dish name and use the direct image URL).
+   Insert these under a "Recipe Jar Team" profile.
+
+3. SEARCH FUNCTIONALITY:
+   Make the search bar work. When a user types in the search bar, filter recipes by matching the search text against recipe title AND ingredients (case-insensitive). Use Supabase .ilike() or .or() with .ilike() on both columns. Add debounce (300ms) so it does not query on every keystroke.
+
+4. FILTER CHIPS:
+   Make the filter chips actually filter recipes. When a chip is tapped:
+   - "Vegetarian" chip: filter where diet_tag = 'Vegetarian'
+   - "Vegan" chip: filter where diet_tag = 'Vegan'
+   - "Indian", "Italian", "Mexican", "Chinese", "Thai" chips: filter where cuisine_tag matches
+   - "Easy" chip: filter where difficulty_tag = 'Easy'
+   - "Quick meals" or "Under 30 min" chip: filter where time_tag IN ('Under 15 min', '15-30 min')
+   - "Most Liked" chip: sort by likes_count descending instead of created_at
+   Multiple chips can be active (AND logic). Tapping an active chip deselects it.

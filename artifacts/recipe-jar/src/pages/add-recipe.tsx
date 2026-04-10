@@ -98,11 +98,14 @@ export default function AddRecipePage() {
         reader.readAsDataURL(screenshot);
       });
 
-      const { data, error } = await supabase.functions.invoke("extract-recipe-from-image", {
-        body: { imageBase64: base64, mimeType: screenshot.type },
+      const res = await fetch("/api/ai/extract-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64: base64, mimeType: screenshot.type }),
       });
+      const data = await res.json();
 
-      if (error || data?.error) {
+      if (!res.ok || data?.error) {
         throw new Error(data?.error || "Extraction failed");
       }
 
@@ -160,15 +163,18 @@ export default function AddRecipePage() {
     // 2. Auto-tag via edge function
     setTagging(true);
     try {
-      const { data: tags, error: tagError } = await supabase.functions.invoke("auto-tag-recipe", {
-        body: {
+      const tagRes = await fetch("/api/ai/tag-recipe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           title: form.title.trim(),
           ingredients: form.ingredients.trim(),
           steps: form.steps.trim(),
-        },
+        }),
       });
+      const tags = tagRes.ok ? await tagRes.json() : null;
 
-      if (!tagError && tags && !tags.error) {
+      if (tags && !tags.error) {
         await supabase.from("recipes").update({
           cuisine_tag: tags.cuisine_tag || null,
           difficulty_tag: tags.difficulty_tag || null,
