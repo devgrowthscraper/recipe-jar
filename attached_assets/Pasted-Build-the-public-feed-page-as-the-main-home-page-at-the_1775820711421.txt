@@ -1,0 +1,33 @@
+Build the public feed page as the main home page at the root route /.
+
+RECIPE CARDS in a responsive grid:
+- 1 column on mobile, 2 columns on tablet (md:), 3 columns on desktop (lg:).
+- Gap of 24px between cards (gap-6).
+
+Each recipe card displays:
+- Image area at the top: If image_url exists, show the image with object-cover and rounded-t-2xl. If no image, show a warm gradient background (from-orange-100 to-amber-50) with a large UtensilsCrossed icon from Lucide in the center, muted orange color.
+- Below the image, card body with p-5:
+  - Title: text-lg font-bold text-brown truncate to 1 line.
+  - Description: text-sm text-gray-500, truncated to 2 lines (line-clamp-2).
+  - Tags row: Display all four tags as pill badges in a flex-wrap row with gap-2. Only show tags that exist (not null). Cuisine badge = orange-50 bg with orange-700 text. Difficulty badge = blue-50 bg with blue-700 text. Time badge = purple-50 bg with purple-700 text. Diet badge = green-50 bg with green-700 text.
+  - Bottom row: flex justify-between items-center. Left side: heart icon + likes count. Right side: bookmark icon. Below: "by username" in text-xs text-gray-400 and relative time (e.g., "2 hours ago").
+  - Heart icon: If liked by current user, filled red (fill-current text-red-500). If not, outlined gray. On click, toggle like. If not logged in, show the auth modal.
+  - Bookmark icon: If saved by current user, filled orange. If not, outlined gray. On click, toggle save. If not logged in, show the auth modal.
+
+FILTER BAR at the top of the feed (below hero if logged out, at top if logged in):
+- A search input with a Search icon, placeholder "Search recipes by name or ingredient...", rounded-xl with subtle border. Search filters recipes by title or ingredients text match.
+- A row of filter dropdowns styled as rounded-xl select boxes or clickable pill-group toggles (pill toggles are more modern — a row of options where clicking one highlights it in orange):
+  - Cuisine: All, Indian, Italian, Mexican, Chinese, American, Thai, Japanese, Mediterranean
+  - Difficulty: All, Easy, Medium, Hard
+  - Cook Time: All, Under 15 min, 15-30 min, 30-60 min, Over 1 hour
+  - Diet: All, Vegetarian, Vegan, Non-Vegetarian, Pescatarian
+- Filters combine with AND logic.
+- An "Active filters" indicator showing how many filters are applied, with a "Clear all" button.
+- Sort toggle: "Newest" (default) and "Most Liked" as two small toggle buttons.
+
+LOADING & EMPTY STATES:
+- While loading, show 6 skeleton cards (animated pulse effect) matching the card layout.
+- If no recipes match the filters, show a friendly empty state: "No recipes found. Try adjusting your filters!" with a reset filters button.
+- If the database is completely empty, show: "No recipes yet. Be the first to share!" with a link to Add Recipe.
+
+All Supabase queries should efficiently fetch recipes with pagination or a reasonable limit (e.g., 30 recipes). Include the username from the profiles table via a join.

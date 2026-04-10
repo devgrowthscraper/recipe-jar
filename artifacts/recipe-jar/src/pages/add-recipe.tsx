@@ -10,10 +10,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const CUISINE_TAGS = ["Italian", "Mexican", "Asian", "Indian", "Mediterranean", "American", "French", "Japanese"];
+const CUISINE_TAGS = ["Indian", "Italian", "Mexican", "Chinese", "American", "Thai", "Japanese", "Mediterranean"];
 const DIFFICULTY_TAGS = ["Easy", "Medium", "Hard"];
-const TIME_TAGS = ["Under 15 min", "Under 30 min", "Under 1 hour", "Over 1 hour"];
-const DIET_TAGS = ["Vegetarian", "Vegan", "Gluten-free", "Dairy-free", "Keto", "Paleo"];
+const TIME_TAGS = ["Under 15 min", "15-30 min", "30-60 min", "Over 1 hour"];
+const DIET_TAGS = ["Vegetarian", "Vegan", "Non-Vegetarian", "Pescatarian"];
 
 export default function AddRecipePage() {
   const [, setLocation] = useLocation();
