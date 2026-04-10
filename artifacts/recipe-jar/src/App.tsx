@@ -9,6 +9,7 @@ import LoginPage from "@/pages/login";
 import SignupPage from "@/pages/signup";
 import RecipeDetailPage from "@/pages/recipe-detail";
 import AddRecipePage from "@/pages/add-recipe";
+import EditRecipePage from "@/pages/edit-recipe";
 import ProfilePage from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/signup" component={SignupPage} />
       <Route path="/recipe/:id" component={RecipeDetailPage} />
       <Route path="/add-recipe" component={AddRecipePage} />
+      <Route path="/edit-recipe/:id" component={EditRecipePage} />
       <Route path="/profile" component={ProfilePage} />
       <Route component={NotFound} />
     </Switch>

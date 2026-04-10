@@ -1,0 +1,39 @@
+Create a recipe detail page at /recipe/:id that displays the full recipe.
+
+LAYOUT:
+- Max width container (max-w-3xl mx-auto) centered on the page.
+- Back button at the top left: a subtle "← Back to Feed" link.
+
+HERO IMAGE:
+- If image_url exists: full-width image with rounded-2xl, max-height 400px, object-cover.
+- If no image: a warm gradient banner (from-orange-100 via-amber-50 to-yellow-50) with a large UtensilsCrossed icon centered, height 200px, rounded-2xl.
+
+RECIPE CONTENT (below image, in a white card with rounded-2xl shadow-lg p-8):
+- Title: text-3xl font-bold text-brown.
+- Tags row: All four tags as pill badges (same style as feed cards), with gap-2, margin-top mt-3.
+- Description: text-gray-600 leading-relaxed, mt-4.
+- Divider line: a subtle hr with my-6.
+
+- INGREDIENTS SECTION:
+  - Heading: "Ingredients" with a ShoppingBasket icon from Lucide, text-xl font-bold.
+  - Each ingredient on its own line, with a small orange circle bullet point (not browser default bullets). Use a custom styled list. Each ingredient row should have slight padding (py-1.5) and alternate row shading (even rows have bg-orange-50/30).
+
+- STEPS SECTION:
+  - Heading: "Steps" with a ChefHat icon from Lucide, text-xl font-bold.
+  - Each step numbered with large orange circled numbers (1, 2, 3...). Each step in its own row with the number on the left (w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center text-sm font-bold) and the step text to the right. Gap of 16px between steps.
+
+- ACTION BAR (sticky at the bottom on mobile, or below content on desktop):
+  - Like button: Heart icon + count. Red fill if liked, outlined if not. Toggles on click.
+  - Save button: Bookmark icon + "Save" or "Saved" text. Orange fill if saved, outlined if not. Toggles on click.
+  - Share button: Share icon. On click, copy the recipe URL to clipboard and show a toast "Link copied!"
+  - If the recipe belongs to the logged-in user, also show:
+    - Edit button (Pencil icon) — navigates to /edit-recipe/:id (same form as Add Recipe, pre-filled with existing data).
+    - Delete button (Trash icon, red) — shows a confirmation modal: "Delete this recipe? This cannot be undone." with Cancel and Delete buttons. On confirm, delete from Supabase and redirect to feed with a toast "Recipe deleted."
+
+- POSTED BY section at the bottom:
+  - Small avatar circle (first letter of username) + "Posted by [username]" + relative date.
+
+EDIT RECIPE page at /edit-recipe/:id:
+- Same form layout as the Write Recipe tab on Add Recipe page.
+- Pre-filled with existing recipe data.
+- On submit, update the recipe in Supabase. If the title or ingredients changed, re-run the auto-tag edge function to update tags. Redirect to the recipe detail page with a toast "Recipe updated!"
