@@ -1,0 +1,73 @@
+Create a full-stack web application called "Recipe Jar" using React with Vite for the frontend, Tailwind CSS for styling, and Supabase for the backend database and authentication. Use Lucide React for all icons.
+
+DESIGN SYSTEM (apply everywhere):
+- Color palette: Primary orange (#F97316), deep brown (#78350F) for headings, warm cream (#FFFBEB) for page backgrounds, white (#FFFFFF) for cards.
+- Cards: rounded-2xl corners, soft shadow (shadow-lg with slight warm tint), 1px border in rgba(0,0,0,0.05), hover state with subtle scale(1.02) transform and elevated shadow.
+- Buttons: rounded-xl, primary buttons use orange gradient (from-orange-500 to-orange-600) with white text, hover darkens slightly. Secondary buttons use white with orange text and orange border.
+- Typography: Use Inter font from Google Fonts. Headings bold, body text in neutral gray. Good line spacing (leading-relaxed).
+- Spacing: Generous padding and margins. Cards have p-6, page sections have py-12 px-6. Nothing should feel cramped.
+- Transitions: All interactive elements have transition-all duration-200 ease-in-out.
+- Glassmorphism on the navigation bar: backdrop-blur-lg with semi-transparent white background.
+- Tag badges: Small pill-shaped (rounded-full, px-3 py-1, text-xs font-medium). Each tag type has a distinct soft pastel background with darker text of the same color family: Cuisine = orange tint, Difficulty = blue tint, Time = purple tint, Diet = green tint.
+- Empty states: Friendly illustrations or large icons with warm, encouraging text.
+- Mobile-first: Design for mobile first, then scale up. Everything must look great on phones.
+
+SUPABASE DATABASE — Create these tables:
+
+1. profiles table:
+   - id (uuid, references auth.users, primary key)
+   - username (text, unique, not null)
+   - avatar_url (text, nullable)
+   - created_at (timestamp with time zone, default now())
+
+2. recipes table:
+   - id (uuid, primary key, default gen_random_uuid())
+   - user_id (uuid, references profiles.id, not null)
+   - title (text, not null)
+   - description (text, nullable)
+   - ingredients (text, not null)
+   - steps (text, not null)
+   - image_url (text, nullable)
+   - cuisine_tag (text, nullable)
+   - difficulty_tag (text, nullable)
+   - time_tag (text, nullable)
+   - diet_tag (text, nullable)
+   - likes_count (integer, default 0)
+   - created_at (timestamp with time zone, default now())
+
+3. saved_recipes table:
+   - id (uuid, primary key, default gen_random_uuid())
+   - user_id (uuid, references profiles.id, not null)
+   - recipe_id (uuid, references recipes.id, not null)
+   - saved_at (timestamp with time zone, default now())
+   - UNIQUE constraint on (user_id, recipe_id)
+
+4. likes table:
+   - id (uuid, primary key, default gen_random_uuid())
+   - user_id (uuid, references profiles.id, not null)
+   - recipe_id (uuid, references recipes.id, not null)
+   - created_at (timestamp with time zone, default now())
+   - UNIQUE constraint on (user_id, recipe_id)
+
+ROW LEVEL SECURITY (enable on all tables):
+- profiles: Anyone can read all profiles. Users can insert their own profile on signup. Users can update only their own profile.
+- recipes: Anyone (including non-logged-in users) can read all recipes. Authenticated users can insert their own. Users can update and delete only their own.
+- saved_recipes: Users can read, insert, and delete only their own.
+- likes: Anyone can read all likes. Authenticated users can insert and delete only their own.
+
+AUTHENTICATION:
+- Build a login page and a signup page using Supabase Auth with email and password.
+- After signup, show a "Set your username" step before proceeding.
+- The public feed should be accessible WITHOUT logging in. Anyone can browse, search, and filter recipes without an account.
+- If a non-logged-in user clicks like, save, or add recipe, show a modal that says "Sign in to save recipes you love" with Login and Sign Up buttons. After login, redirect them back to where they were.
+
+NAVIGATION BAR:
+- Sticky top navigation with glassmorphism effect (backdrop-blur-lg, bg-white/70, border-b border-white/20).
+- Left side: "Recipe Jar" logo text in deep brown with a cookie/jar icon from Lucide React.
+- Center/right navigation links:
+  - For logged-out users: "Feed" and a "Sign In" button (primary orange style).
+  - For logged-in users: "Feed", "Add Recipe", "My Profile". Show a small avatar circle with the first letter of username, and a logout icon button.
+- Mobile: Hamburger menu icon that opens a slide-out drawer with all navigation links.
+- The active page link should have an orange underline indicator.
+
+Create a simple landing hero section at the top of the feed page for logged-out users: "Your recipes, finally organized." with a subtitle "Save recipes from anywhere, find them when you need them." and a "Get Started" button. Hide this hero for logged-in users.
