@@ -43,10 +43,10 @@ type DietTile = {
 };
 
 const DIET_TILES: DietTile[] = [
-  { id: "vegetarian", emoji: "🥗", label: "Vegetarian",   field: "diet_tag", value: "Vegetarian",  bg: "bg-green-50",  activeBg: "bg-green-500" },
-  { id: "vegan",      emoji: "🌱", label: "Vegan",         field: "diet_tag", value: "Vegan",       bg: "bg-teal-50",   activeBg: "bg-teal-500" },
-  { id: "egg-free",   emoji: "🥚", label: "Egg-Free",      field: "diet_tag", value: "Egg-Free",    bg: "bg-yellow-50", activeBg: "bg-yellow-500" },
-  { id: "gluten-free",emoji: "🌾", label: "Gluten-Free",   field: "diet_tag", value: "Gluten-Free", bg: "bg-amber-50",  activeBg: "bg-amber-500" },
+  { id: "non-veg",      emoji: "🍗", label: "Non-Veg",      field: "diet_tag", value: "Non-Vegetarian", bg: "bg-red-50",    activeBg: "bg-red-500"   },
+  { id: "eggetarian",   emoji: "🍳", label: "Eggetarian",   field: "diet_tag", value: "Eggetarian",     bg: "bg-yellow-50", activeBg: "bg-yellow-500"},
+  { id: "vegetarian",   emoji: "🥗", label: "Vegetarian",   field: "diet_tag", value: "Vegetarian",     bg: "bg-green-50",  activeBg: "bg-green-500" },
+  { id: "vegan",        emoji: "🌱", label: "Vegan",         field: "diet_tag", value: "Vegan",          bg: "bg-teal-50",   activeBg: "bg-teal-500"  },
 ];
 
 // All filter defs combined for query building
@@ -325,37 +325,38 @@ export default function FeedPage() {
                 </button>
               </div>
             ) : (
-              <div className="py-10 text-center max-w-2xl mx-auto">
-                <div className="text-7xl mb-5">🫙</div>
-                <h3 className="text-xl font-bold text-amber-900 mb-2">
-                  The Jar Is Empty For Now
-                </h3>
-                <p className="text-amber-700/70 mb-8 text-sm leading-relaxed">
-                  Be one of the first to share a recipe with the community.
-                </p>
+              <div className="max-w-2xl mx-auto py-6">
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-bold text-amber-900 mb-2">
+                    Add Your First Recipe
+                  </h3>
+                  <p className="text-neutral-600 text-sm leading-relaxed">
+                    Choose how you would like to get started. Write one from scratch or let AI do the heavy lifting from a screenshot.
+                  </p>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Link
                     href={user ? "/add-recipe" : "/login"}
-                    className="flex items-center gap-4 bg-white rounded-2xl px-5 py-4 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
+                    className="flex items-center gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
                   >
-                    <div className="w-11 h-11 rounded-xl bg-orange-100 flex-shrink-0 flex items-center justify-center group-hover:bg-orange-500 transition-colors">
+                    <div className="w-12 h-12 rounded-xl bg-orange-100 flex-shrink-0 flex items-center justify-center group-hover:bg-orange-500 transition-colors">
                       <PenLine className="w-5 h-5 text-orange-500 group-hover:text-white transition-colors" />
                     </div>
                     <div>
-                      <p className="font-semibold text-amber-900 text-sm">Write A Recipe</p>
-                      <p className="text-xs text-neutral-500 mt-0.5">Share your favourite dish</p>
+                      <p className="font-bold text-amber-900 text-sm mb-0.5">Write A Recipe</p>
+                      <p className="text-xs text-neutral-500 leading-relaxed">Type out a recipe you love and share it with everyone</p>
                     </div>
                   </Link>
                   <Link
                     href={user ? "/add-recipe" : "/login"}
-                    className="flex items-center gap-4 bg-white rounded-2xl px-5 py-4 text-left shadow-sm border border-purple-100 hover:shadow-md hover:border-purple-300 transition-all group"
+                    className="flex items-center gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-purple-100 hover:shadow-md hover:border-purple-300 transition-all group"
                   >
-                    <div className="w-11 h-11 rounded-xl bg-purple-100 flex-shrink-0 flex items-center justify-center group-hover:bg-purple-500 transition-colors">
+                    <div className="w-12 h-12 rounded-xl bg-purple-100 flex-shrink-0 flex items-center justify-center group-hover:bg-purple-500 transition-colors">
                       <Camera className="w-5 h-5 text-purple-500 group-hover:text-white transition-colors" />
                     </div>
                     <div>
-                      <p className="font-semibold text-amber-900 text-sm">Import A Screenshot</p>
-                      <p className="text-xs text-neutral-500 mt-0.5">AI extracts it automatically</p>
+                      <p className="font-bold text-amber-900 text-sm mb-0.5">Import A Screenshot</p>
+                      <p className="text-xs text-neutral-500 leading-relaxed">Upload a screenshot and AI extracts it into a recipe card</p>
                     </div>
                   </Link>
                 </div>
@@ -381,13 +382,13 @@ export default function FeedPage() {
       {/* ════════════════════════════════════════════════════════════════
           SECTION 4 — IMPORT FEATURE SHOWCASE
       ════════════════════════════════════════════════════════════════ */}
-      <section className="bg-amber-50/50 py-16 px-4 border-t border-amber-100">
+      <section className="bg-gradient-to-br from-orange-500 to-amber-500 py-16 px-4">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-2xl font-bold text-amber-900 mb-4">
+            <h2 className="text-2xl font-bold text-white mb-4">
               Import Recipes From Anywhere
             </h2>
-            <p className="text-neutral-700 leading-relaxed mb-6">
+            <p className="text-white/85 leading-relaxed mb-6">
               Screenshot a recipe from Instagram, YouTube, or any app. Upload it and our AI
               instantly extracts the title, ingredients, and steps into a clean recipe card.
             </p>
@@ -397,15 +398,15 @@ export default function FeedPage() {
                 "Works with YouTube screenshots",
                 "AI extracts ingredients and steps automatically",
               ].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-sm text-amber-900 font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                <li key={item} className="flex items-center gap-3 text-sm text-white/85 font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-white flex-shrink-0" />
                   {item}
                 </li>
               ))}
             </ul>
             <Link
               href={user ? "/add-recipe" : "/login"}
-              className="inline-flex items-center gap-2 mt-8 text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors"
+              className="inline-flex items-center gap-2 mt-8 px-5 py-2.5 rounded-xl bg-white text-orange-500 font-bold text-sm hover:bg-orange-50 transition-colors shadow-md"
             >
               Try It Now <ArrowRight className="w-4 h-4" />
             </Link>
