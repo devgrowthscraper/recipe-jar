@@ -1,5 +1,5 @@
 -- ============================================================
--- Recipe Jar — Seed Data v2 (50 recipes)
+-- Recipe Jar - Seed Data v2 (50 recipes)
 -- Run this in your Supabase SQL Editor AFTER running supabase-setup.sql
 -- WARNING: This deletes ALL existing recipes before inserting new ones.
 -- ============================================================
@@ -39,13 +39,13 @@ BEGIN
      cuisine_tag, difficulty_tag, time_tag, diet_tag, likes_count)
   VALUES
 
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
   -- INDIAN (10)
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
 
   (team_id,
    'Butter Chicken',
-   'A velvety, mildly spiced tomato and cream curry with tender chicken — the dish that made Indian food famous worldwide.',
+   'A velvety, mildly spiced tomato and cream curry with tender chicken - the dish that made Indian food famous worldwide.',
    '500g chicken thighs, boneless
 1 cup tomato puree
 1/2 cup heavy cream
@@ -64,7 +64,7 @@ Serve with naan or basmati rice',
 
   (team_id,
    'Paneer Butter Masala',
-   'Soft cubes of paneer simmered in a rich, velvety tomato-cashew gravy — a vegetarian showstopper.',
+   'Soft cubes of paneer simmered in a rich, velvety tomato-cashew gravy - a vegetarian showstopper.',
    '250g paneer, cubed
 1 cup tomato puree
 2 tbsp cashew paste
@@ -74,7 +74,7 @@ Serve with naan or basmati rice',
 1 tsp sugar
 Salt to taste',
    'Lightly fry paneer cubes until golden, set aside
-Melt butter and sauté onions until soft and golden
+Melt butter and saute onions until soft and golden
 Add tomato puree and cook for 8 minutes
 Stir in cashew paste and cream until smooth
 Add paneer and simmer for 5 minutes
@@ -102,7 +102,7 @@ Pour entire tadka over the dal and serve immediately',
 
   (team_id,
    'Chole Bhature',
-   'Fluffy, puffed deep-fried bread served alongside spiced chickpea curry — the ultimate Punjabi street food.',
+   'Fluffy, puffed deep-fried bread served alongside spiced chickpea curry - the ultimate Punjabi street food.',
    '2 cups chickpeas, soaked overnight
 2 onions, finely chopped
 3 tomatoes, pureed
@@ -111,7 +111,7 @@ Pour entire tadka over the dal and serve immediately',
 Oil for deep frying
 Fresh coriander and lemon to serve',
    'Pressure cook soaked chickpeas until tender
-Sauté onions until deep golden, add tomato puree
+Saute onions until deep golden, add tomato puree
 Add spices and cook until oil separates
 Add chickpeas with water, simmer 15 minutes
 For bhature, knead flour with yogurt and rest 30 minutes
@@ -120,7 +120,7 @@ Roll and deep fry until puffed and golden',
 
   (team_id,
    'Chicken Biryani',
-   'Fragrant basmati rice layered with spiced chicken, caramelised onions, and saffron — slow-cooked to perfection.',
+   'Fragrant basmati rice layered with spiced chicken, caramelised onions, and saffron - slow-cooked to perfection.',
    '500g chicken, bone-in pieces
 2 cups basmati rice
 2 large onions, thinly sliced
@@ -159,7 +159,7 @@ Garnish with fresh coriander and serve',
 
   (team_id,
    'Palak Paneer',
-   'Creamy spinach curry with soft paneer — a classic that''s as nutritious as it is delicious.',
+   'Creamy spinach curry with soft paneer - a classic that''s as nutritious as it is delicious.',
    '250g paneer, cubed
 400g fresh spinach
 1 onion, chopped
@@ -171,7 +171,7 @@ Garnish with fresh coriander and serve',
 2 tbsp cream',
    'Blanch spinach in boiling water for 2 minutes, refresh in cold water
 Blend spinach into a smooth puree
-Sauté onion, garlic, and ginger until soft
+Saute onion, garlic, and ginger until soft
 Add tomatoes and cook until pulpy
 Add spinach puree and simmer for 5 minutes
 Add paneer and cream, cook 3 more minutes',
@@ -179,7 +179,7 @@ Add paneer and cream, cook 3 more minutes',
 
   (team_id,
    'Masala Dosa',
-   'Crispy fermented rice crepe filled with spiced potato masala — South India''s most iconic breakfast.',
+   'Crispy fermented rice crepe filled with spiced potato masala - South India''s most iconic breakfast.',
    '2 cups dosa batter (fermented rice and lentil)
 3 potatoes, boiled and mashed
 1 onion, sliced
@@ -189,7 +189,7 @@ Add paneer and cream, cook 3 more minutes',
 2 green chillies
 Oil for cooking',
    'Make potato masala: fry mustard seeds and curry leaves in oil
-Add onion, green chilli, and turmeric, sauté until soft
+Add onion, green chilli, and turmeric, saute until soft
 Mix in mashed potato and cook 3 minutes, set aside
 Pour a ladle of dosa batter on a hot griddle and spread thin
 Drizzle oil on edges and cook until golden and crisp
@@ -198,7 +198,7 @@ Place potato masala in centre, fold and serve with chutney',
 
   (team_id,
    'Samosa',
-   'Golden, crispy pastry shells stuffed with spiced potato and pea filling — the king of Indian street snacks.',
+   'Golden, crispy pastry shells stuffed with spiced potato and pea filling - the king of Indian street snacks.',
    '2 cups all-purpose flour for pastry
 3 large potatoes, boiled and mashed
 1/2 cup green peas
@@ -217,7 +217,7 @@ Serve hot with mint chutney and tamarind sauce',
 
   (team_id,
    'Rajma Chawal',
-   'Hearty red kidney beans in a thick, aromatic onion-tomato gravy — the ultimate comfort food with steamed rice.',
+   'Hearty red kidney beans in a thick, aromatic onion-tomato gravy - the ultimate comfort food with steamed rice.',
    '1.5 cups red kidney beans, soaked overnight
 2 onions, finely chopped
 3 tomatoes, pureed
@@ -227,20 +227,20 @@ Serve hot with mint chutney and tamarind sauce',
 2 tbsp oil
 Steamed basmati rice to serve',
    'Pressure cook soaked rajma with salt until very tender
-Sauté onions in oil until deep golden brown
+Saute onions in oil until deep golden brown
 Add ginger-garlic paste and cook 2 minutes
 Add tomato puree and all spices, cook until oil separates
 Add cooked rajma with 1 cup water, simmer 20 minutes
 Mash a few beans for thickness, serve over rice',
    null, 'Indian', 'Medium', '30-60 min', 'Vegan', 0),
 
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
   -- ITALIAN (7)
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
 
   (team_id,
    'Pasta Carbonara',
-   'The classic Roman pasta — silky egg and pecorino sauce clings to spaghetti with crispy guanciale and cracked pepper.',
+   'The classic Roman pasta - silky egg and pecorino sauce clings to spaghetti with crispy guanciale and cracked pepper.',
    '200g spaghetti
 100g guanciale or pancetta, diced
 2 large eggs + 2 yolks
@@ -259,14 +259,14 @@ Serve immediately with extra cheese and pepper',
 
   (team_id,
    'Margherita Pizza',
-   'The original Neapolitan pizza — thin charred crust, crushed San Marzano tomatoes, fresh mozzarella, and basil.',
+   'The original Neapolitan pizza - thin charred crust, crushed San Marzano tomatoes, fresh mozzarella, and basil.',
    '250g pizza dough
 1/2 cup San Marzano tomato sauce
 125g fresh mozzarella, torn
 Fresh basil leaves
 2 tbsp extra virgin olive oil
 Flaky salt',
-   'Preheat oven to 250°C with a pizza stone or heavy tray inside
+   'Preheat oven to 250 degrees C with a pizza stone or heavy tray inside
 Stretch dough into a thin 30cm round by hand
 Spread tomato sauce leaving a 2cm border
 Scatter torn mozzarella evenly
@@ -285,7 +285,7 @@ Top with fresh basil and a drizzle of olive oil',
 100ml dry white wine
 50g parmesan, grated
 2 tbsp butter',
-   'Sauté onion and garlic in butter until soft, add rice and toast 2 minutes
+   'Saute onion and garlic in butter until soft, add rice and toast 2 minutes
 Add wine and stir until absorbed
 Add warm stock one ladle at a time, stirring constantly
 Meanwhile fry mushrooms separately in butter until golden
@@ -312,26 +312,26 @@ Pile generously onto the garlicky toast and serve at once',
 
   (team_id,
    'Lasagna al Forno',
-   'Classic baked lasagna with rich bolognese, creamy béchamel, and melted mozzarella — comfort food at its finest.',
+   'Classic baked lasagna with rich bolognese, creamy bechamel, and melted mozzarella - comfort food at its finest.',
    '12 lasagna sheets
 500g ground beef
 400g canned crushed tomatoes
 1 onion, diced
 2 garlic cloves
-For béchamel: 50g butter, 50g flour, 500ml milk
+For bechamel: 50g butter, 50g flour, 500ml milk
 200g mozzarella, grated
 50g parmesan',
    'Make bolognese: brown beef, add onion and garlic, add tomatoes, simmer 30 minutes
-Make béchamel: melt butter, whisk in flour, gradually add milk until thick
+Make bechamel: melt butter, whisk in flour, gradually add milk until thick
 Cook lasagna sheets or use no-boil sheets
-Layer in baking dish: bolognese, pasta, béchamel, repeat
+Layer in baking dish: bolognese, pasta, bechamel, repeat
 Top with mozzarella and parmesan
-Bake at 180°C for 40 minutes until golden and bubbling',
+Bake at 180 degrees C for 40 minutes until golden and bubbling',
    null, 'Italian', 'Hard', '30-60 min', 'Non-Vegetarian', 0),
 
   (team_id,
    'Pesto Pasta',
-   'Bright, fragrant homemade basil pesto tossed with al dente pasta — ready in under 20 minutes.',
+   'Bright, fragrant homemade basil pesto tossed with al dente pasta - ready in under 20 minutes.',
    '300g trofie or penne pasta
 2 cups fresh basil leaves, packed
 3 tbsp pine nuts, toasted
@@ -349,7 +349,7 @@ Add a splash of pasta water to loosen if needed',
 
   (team_id,
    'Tiramisu',
-   'The iconic Italian dessert — espresso-soaked ladyfingers layered with mascarpone cream and dusted with cocoa.',
+   'The iconic Italian dessert - espresso-soaked ladyfingers layered with mascarpone cream and dusted with cocoa.',
    '250g mascarpone cheese
 3 eggs, separated
 80g caster sugar
@@ -366,9 +366,9 @@ Spread half the cream, repeat with more biscuits and cream
 Refrigerate at least 4 hours, dust with cocoa before serving',
    null, 'Italian', 'Medium', '30-60 min', 'Vegetarian', 0),
 
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
   -- MEXICAN (8)
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
 
   (team_id,
    'Chicken Tacos',
@@ -392,19 +392,19 @@ Assemble tacos with chicken, pico de gallo, crema, and coriander',
 
   (team_id,
    'Guacamole',
-   'Creamy, fresh guacamole with perfectly ripe avocados, jalapeño, red onion, and lime — done in 10 minutes.',
+   'Creamy, fresh guacamole with perfectly ripe avocados, jalapeno, red onion, and lime - done in 10 minutes.',
    '3 ripe avocados
 1 lime, juiced
 1/2 small red onion, finely diced
-1 jalapeño, seeded and minced
+1 jalapeno, seeded and minced
 2 tbsp fresh coriander, chopped
 1/2 tsp salt
 Tortilla chips to serve',
    'Halve avocados, remove pit, and scoop flesh into a bowl
-Mash to your preferred consistency — chunky or smooth
+Mash to your preferred consistency - chunky or smooth
 Add lime juice immediately to prevent browning
-Fold in red onion, jalapeño, and coriander
-Season with salt and taste — adjust lime if needed
+Fold in red onion, jalapeno, and coriander
+Season with salt and taste - adjust lime if needed
 Serve immediately with tortilla chips',
    null, 'Mexican', 'Easy', 'Under 15 min', 'Vegan', 0),
 
@@ -429,7 +429,7 @@ Finish with a squeeze of lime and fresh coriander',
 
   (team_id,
    'Quesadilla',
-   'Crispy flour tortillas stuffed with melted cheese, black beans, and peppers — golden and gooey in 15 minutes.',
+   'Crispy flour tortillas stuffed with melted cheese, black beans, and peppers - golden and gooey in 15 minutes.',
    '4 large flour tortillas
 1.5 cups cheddar or Oaxaca cheese, grated
 1/2 cup black beans, drained
@@ -460,7 +460,7 @@ Oil for deep frying
    'Boil water with butter, sugar, and salt
 Add flour all at once and stir vigorously into a smooth dough
 Transfer to a piping bag with a star nozzle
-Pipe 12cm lengths into hot oil (180°C) and fry until golden
+Pipe 12cm lengths into hot oil (180 degrees C) and fry until golden
 Drain and immediately roll in cinnamon sugar
 Melt chocolate with warm cream for dipping sauce',
    null, 'Mexican', 'Medium', '30-60 min', 'Vegetarian', 0),
@@ -480,30 +480,30 @@ Warm tortillas briefly so they're pliable
 Fill each tortilla with chicken mixture and roll tightly
 Place seam-down in a greased baking dish
 Pour remaining enchilada sauce over the top
-Cover with cheese and bake at 180°C for 20 minutes until bubbly',
+Cover with cheese and bake at 180 degrees C for 20 minutes until bubbly',
    null, 'Mexican', 'Medium', '30-60 min', 'Non-Vegetarian', 0),
 
   (team_id,
    'Loaded Nachos',
-   'Crispy tortilla chips loaded with melted cheese, jalapeños, black beans, pico de gallo, and sour cream.',
+   'Crispy tortilla chips loaded with melted cheese, jalapenos, black beans, pico de gallo, and sour cream.',
    '200g tortilla chips
 1.5 cups cheddar or Monterey Jack, grated
 1 can black beans, drained
-1/2 cup pickled jalapeño slices
+1/2 cup pickled jalapeno slices
 1 cup pico de gallo
 1/2 cup sour cream
 1 avocado, diced',
-   'Preheat oven to 200°C
+   'Preheat oven to 200 degrees C
 Spread chips in a single layer on a large baking tray
 Scatter beans evenly, then cover generously with cheese
-Add jalapeño slices on top
+Add jalapeno slices on top
 Bake 10 minutes until cheese is fully melted and bubbling
 Top with pico de gallo, avocado, and sour cream before serving',
    null, 'Mexican', 'Easy', 'Under 15 min', 'Vegetarian', 0),
 
   (team_id,
    'Elote (Mexican Street Corn)',
-   'Charred corn on the cob slathered in crema, cotija cheese, chilli powder, and lime — irresistible street food.',
+   'Charred corn on the cob slathered in crema, cotija cheese, chilli powder, and lime - irresistible street food.',
    '4 corn cobs
 3 tbsp mayonnaise or Mexican crema
 1/2 cup cotija cheese (or feta), crumbled
@@ -519,13 +519,13 @@ Squeeze lime generously over each cob
 Garnish with coriander and serve immediately',
    null, 'Mexican', 'Easy', '15-30 min', 'Vegetarian', 0),
 
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
   -- CHINESE (6)
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
 
   (team_id,
    'Egg Fried Rice',
-   'Quick wok-tossed rice with scrambled eggs, spring onions, and soy sauce — a Chinese staple in 10 minutes.',
+   'Quick wok-tossed rice with scrambled eggs, spring onions, and soy sauce - a Chinese staple in 10 minutes.',
    '3 cups cooked jasmine rice (day-old is best)
 3 eggs, beaten
 3 tbsp light soy sauce
@@ -564,7 +564,7 @@ Toss everything together and fold in peanuts last',
 
   (team_id,
    'Vegetable Spring Rolls',
-   'Crispy golden rolls filled with glass noodles, cabbage, carrots, and mushrooms — a dim sum classic.',
+   'Crispy golden rolls filled with glass noodles, cabbage, carrots, and mushrooms - a dim sum classic.',
    '12 spring roll wrappers
 100g glass noodles, soaked and drained
 2 cups shredded cabbage
@@ -577,13 +577,13 @@ Oil for deep frying',
 Add glass noodles, soy sauce, and sesame oil, toss and cool completely
 Place 2 tablespoons filling on each wrapper, fold sides in and roll tightly
 Seal edges with a flour-water paste
-Deep fry in batches at 180°C until deeply golden and crisp
+Deep fry in batches at 180 degrees C until deeply golden and crisp
 Serve with sweet chilli sauce or soy dipping sauce',
    null, 'Chinese', 'Medium', '30-60 min', 'Vegan', 0),
 
   (team_id,
    'Gobi Manchurian',
-   'Crispy cauliflower florets tossed in a tangy, spicy Sino-Indian sauce — a popular Indo-Chinese street dish.',
+   'Crispy cauliflower florets tossed in a tangy, spicy Sino-Indian sauce - a popular Indo-Chinese street dish.',
    '1 medium cauliflower, cut into florets
 1/2 cup all-purpose flour
 1/4 cup cornstarch
@@ -595,7 +595,7 @@ Spring onions to garnish
 Oil for frying',
    'Make batter with flour, cornstarch, salt, and water; coat cauliflower
 Deep fry cauliflower until golden and crispy, set aside
-Sauté onion, garlic, and green chilli in 2 tbsp oil
+Saute onion, garlic, and green chilli in 2 tbsp oil
 Add soy sauce, ketchup, and chilli sauce, stir to combine
 Add 1/4 cup water and bring to a simmer
 Toss fried cauliflower in sauce, garnish with spring onions',
@@ -630,7 +630,7 @@ For sauce: 3 tbsp rice vinegar, 3 tbsp ketchup, 2 tbsp sugar, 1 tbsp soy sauce
 1 red and 1 green pepper, chunked
 1 cup pineapple chunks
 Oil for frying',
-   'Coat chicken in beaten egg then cornstarch, deep fry at 180°C until golden
+   'Coat chicken in beaten egg then cornstarch, deep fry at 180 degrees C until golden
 Drain chicken on paper towel and set aside
 Mix vinegar, ketchup, sugar, and soy sauce into a sauce
 Stir-fry peppers for 2 minutes, add pineapple and sauce
@@ -638,13 +638,13 @@ Bring to a simmer until sauce thickens slightly
 Toss fried chicken in the sauce and serve immediately over rice',
    null, 'Chinese', 'Medium', '30-60 min', 'Non-Vegetarian', 0),
 
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
   -- THAI (5)
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
 
   (team_id,
    'Pad Thai',
-   'Thailand''s iconic noodle dish — rice noodles with egg, tamarind sauce, bean sprouts, and crushed peanuts.',
+   'Thailand''s iconic noodle dish - rice noodles with egg, tamarind sauce, bean sprouts, and crushed peanuts.',
    '200g flat rice noodles
 200g shrimp or firm tofu, cubed
 2 eggs
@@ -664,7 +664,7 @@ Add bean sprouts and spring onions, toss briefly and serve with peanuts',
 
   (team_id,
    'Thai Green Curry',
-   'Fragrant coconut curry with green curry paste, vegetables, and Thai basil — aromatic and gently spicy.',
+   'Fragrant coconut curry with green curry paste, vegetables, and Thai basil - aromatic and gently spicy.',
    '2 tbsp green curry paste
 400ml coconut milk
 300g chicken or firm tofu
@@ -676,7 +676,7 @@ Add bean sprouts and spring onions, toss briefly and serve with peanuts',
 Jasmine rice to serve',
    'Fry green curry paste in a splash of oil until very fragrant
 Pour in coconut milk and stir to combine, bring to a simmer
-Add protein and cook through — about 8 minutes for chicken
+Add protein and cook through - about 8 minutes for chicken
 Add zucchini and spinach, simmer 3 more minutes
 Season with fish sauce and palm sugar to balance
 Stir in Thai basil, remove from heat, and serve over jasmine rice',
@@ -697,14 +697,14 @@ Fresh red chilli and coriander to finish',
    'Bring broth to a boil with lemongrass, galangal, and lime leaves
 Simmer 5 minutes to fully infuse the aromatics
 Add mushrooms and cook 3 minutes
-Add shrimp and cook until pink — about 2-3 minutes
+Add shrimp and cook until pink - about 2-3 minutes
 Season with fish sauce and lime juice, taste and adjust
 Serve topped with sliced red chilli and fresh coriander',
    null, 'Thai', 'Easy', '15-30 min', 'Non-Vegetarian', 0),
 
   (team_id,
    'Thai Basil Fried Rice',
-   'Quick, fragrant fried rice with holy basil, garlic, chilli, and a runny fried egg — a Thai street food favourite.',
+   'Quick, fragrant fried rice with holy basil, garlic, chilli, and a runny fried egg - a Thai street food favourite.',
    '3 cups cooked jasmine rice (day-old)
 2 eggs
 3 tbsp fish sauce
@@ -724,7 +724,7 @@ Serve topped with the fried egg',
 
   (team_id,
    'Mango Sticky Rice',
-   'Sweet glutinous rice bathed in coconut cream, served with fresh sliced mango — Thailand''s most loved dessert.',
+   'Sweet glutinous rice bathed in coconut cream, served with fresh sliced mango - Thailand''s most loved dessert.',
    '2 cups glutinous sticky rice
 400ml coconut milk
 3 tbsp sugar
@@ -739,19 +739,19 @@ Slice mangoes and arrange beside the rice
 Drizzle remaining coconut cream over the rice and garnish with sesame seeds',
    null, 'Thai', 'Medium', '30-60 min', 'Vegan', 0),
 
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
   -- AMERICAN (7)
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
 
   (team_id,
    'Mac and Cheese',
-   'The ultimate stovetop mac and cheese with a cheddar and gruyère béchamel sauce — rich, creamy, and nostalgic.',
+   'The ultimate stovetop mac and cheese with a cheddar and gruyere bechamel sauce - rich, creamy, and nostalgic.',
    '250g macaroni
 2 tbsp butter
 2 tbsp all-purpose flour
 2 cups whole milk
 1 cup sharp cheddar, grated
-1/2 cup gruyère, grated
+1/2 cup gruyere, grated
 1/2 tsp mustard powder
 Salt and pepper',
    'Cook macaroni in salted water until al dente, drain and set aside
@@ -764,15 +764,15 @@ Fold macaroni into the cheese sauce and serve hot',
 
   (team_id,
    'Grilled Cheese Sandwich',
-   'Perfectly golden, buttery toasted sourdough with melted cheddar and gruyère — the ultimate 10-minute comfort food.',
+   'Perfectly golden, buttery toasted sourdough with melted cheddar and gruyere - the ultimate 10-minute comfort food.',
    '2 thick slices sourdough bread
 3 slices sharp cheddar
-2 slices gruyère
+2 slices gruyere
 2 tbsp softened unsalted butter
 1 tsp Dijon mustard (optional)',
    'Spread softened butter generously on the outside of both bread slices
 Spread Dijon on the inside of one slice if using
-Layer cheddar and gruyère on the non-buttered side
+Layer cheddar and gruyere on the non-buttered side
 Close sandwich, buttered sides facing out
 Place in a cold non-stick pan over medium-low heat
 Cook 4-5 minutes per side until deeply golden and cheese is fully melted',
@@ -780,7 +780,7 @@ Cook 4-5 minutes per side until deeply golden and cheese is fully melted',
 
   (team_id,
    'Fluffy Buttermilk Pancakes',
-   'Thick, cloud-like pancakes with crispy edges and a melt-in-your-mouth interior — best with maple syrup.',
+   'Thick, cloud-like pancakes with crispy edges and a melt-in-your-mouth interior - best with maple syrup.',
    '2 cups all-purpose flour
 2 tbsp sugar
 1 tsp baking powder
@@ -791,7 +791,7 @@ Cook 4-5 minutes per side until deeply golden and cheese is fully melted',
 Maple syrup and extra butter to serve',
    'Whisk together flour, sugar, baking powder, baking soda, and a pinch of salt
 Beat eggs with buttermilk and melted butter in another bowl
-Fold wet ingredients into dry until just combined — lumps are fine, do not overmix
+Fold wet ingredients into dry until just combined - lumps are fine, do not overmix
 Let batter rest 5 minutes
 Cook spoonfuls on a medium-low buttered non-stick pan for 2-3 minutes until bubbles form
 Flip once and cook 1 minute more',
@@ -804,7 +804,7 @@ Flip once and cook 1 minute more',
 50g parmesan, shaved
 For dressing: 1 garlic clove, 2 anchovy fillets, 1 egg yolk, 2 tbsp lemon juice, 1 tsp Worcestershire sauce, 1/2 cup olive oil
 For croutons: 2 slices sourdough, olive oil, salt',
-   'Make croutons: cube bread, toss in oil and salt, bake at 200°C for 10 minutes until golden
+   'Make croutons: cube bread, toss in oil and salt, bake at 200 degrees C for 10 minutes until golden
 Make dressing: blend garlic, anchovies, and egg yolk, slowly whisk in olive oil to emulsify
 Add lemon juice, Worcestershire sauce, and season to taste
 Toss romaine in dressing until well coated
@@ -813,7 +813,7 @@ Pile onto plates, scatter Parmesan shards and croutons generously',
 
   (team_id,
    'Buffalo Wings',
-   'Crispy baked chicken wings tossed in fiery butter-hot sauce — sticky, spicy, and impossible to stop eating.',
+   'Crispy baked chicken wings tossed in fiery butter-hot sauce - sticky, spicy, and impossible to stop eating.',
    '1kg chicken wings, split at joint
 3 tbsp baking powder (for extra crispiness)
 1 tsp salt
@@ -822,7 +822,7 @@ Pile onto plates, scatter Parmesan shards and croutons generously',
 Blue cheese dip and celery to serve',
    'Toss wings in baking powder and salt, place on a wire rack
 Refrigerate uncovered for at least 1 hour or overnight to dry the skin
-Bake at 220°C for 40-45 minutes, flipping halfway, until very crispy
+Bake at 220 degrees C for 40-45 minutes, flipping halfway, until very crispy
 Make buffalo sauce: whisk hot sauce into melted butter
 Toss hot wings in buffalo sauce to coat
 Serve immediately with blue cheese dip and celery sticks',
@@ -861,19 +861,19 @@ Flaky sea salt for topping',
    'Brown butter in a saucepan until nutty and amber, pour into bowl and cool 10 minutes
 Whisk in both sugars until combined, then beat in eggs, yolk, and vanilla
 Fold in flour, baking soda, and salt until just combined
-Fold in chocolate chips — do not overmix
+Fold in chocolate chips - do not overmix
 Scoop large balls onto lined trays, refrigerate 30 minutes
-Bake at 180°C for 11-12 minutes until golden at edges but soft in centre
+Bake at 180 degrees C for 11-12 minutes until golden at edges but soft in centre
 Immediately sprinkle with flaky salt',
    null, 'American', 'Medium', '30-60 min', 'Vegetarian', 0),
 
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
   -- JAPANESE (5)
-  -- ══════════════════════════════════════════════════════
+  -- ======================================================
 
   (team_id,
    'Miso Soup',
-   'Simple, warming Japanese miso soup with silken tofu, wakame seaweed, and spring onions — ready in 10 minutes.',
+   'Simple, warming Japanese miso soup with silken tofu, wakame seaweed, and spring onions - ready in 10 minutes.',
    '4 cups dashi stock (or vegetable stock)
 3 tbsp white miso paste
 150g silken tofu, cubed
@@ -882,7 +882,7 @@ Immediately sprinkle with flaky salt',
    'Soak wakame in cold water for 5 minutes until rehydrated, drain
 Heat dashi stock until just below a boil
 Dissolve miso paste in a ladle of warm stock, then stir back into pot
-Do not boil after adding miso — it loses flavour
+Do not boil after adding miso - it loses flavour
 Add tofu and wakame, warm for 1 minute
 Ladle into bowls and top with spring onions',
    null, 'Japanese', 'Easy', 'Under 15 min', 'Vegan', 0),
@@ -908,7 +908,7 @@ Rest 2 minutes, slice, and serve over rice with sesame seeds and spring onions',
 
   (team_id,
    'Spicy Tuna Sushi Roll',
-   'Inside-out sushi roll with spicy tuna, cucumber, and avocado — fresh, vibrant, and better than takeout.',
+   'Inside-out sushi roll with spicy tuna, cucumber, and avocado - fresh, vibrant, and better than takeout.',
    '2 cups sushi rice, cooked and seasoned with rice vinegar
 200g sushi-grade tuna, diced
 2 tbsp sriracha mayonnaise
@@ -919,7 +919,7 @@ Soy sauce, pickled ginger, and wasabi to serve',
    'Mix diced tuna with sriracha mayo and season with soy sauce
 Place a nori sheet on a bamboo mat, shiny side down
 Spread sushi rice in an even layer leaving a 2cm border
-Flip — rice side down — onto a damp surface
+Flip - rice side down - onto a damp surface
 Place tuna, avocado, and cucumber along the nori
 Roll tightly using the mat, seal with a damp finger
 Slice into 8 pieces with a sharp wet knife',
@@ -946,7 +946,7 @@ Finish with sesame seeds and a drizzle of chilli oil if desired',
 
   (team_id,
    'Gyoza (Pan-Fried Dumplings)',
-   'Crispy-bottomed Japanese dumplings with a juicy pork and cabbage filling — the perfect appetiser.',
+   'Crispy-bottomed Japanese dumplings with a juicy pork and cabbage filling - the perfect appetiser.',
    '30 gyoza wrappers
 250g ground pork
 1 cup napa cabbage, finely chopped and salted
