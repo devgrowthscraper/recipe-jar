@@ -52,9 +52,27 @@ Run `supabase-setup.sql` in the Supabase SQL Editor to create all tables and RLS
 3. `saved_recipes` — user saved recipes (many-to-many)
 4. `likes` — user recipe likes (many-to-many)
 
-### Required Env Secrets:
+### Required Env Secrets (Replit):
 - `VITE_SUPABASE_URL` — Supabase project URL
 - `VITE_SUPABASE_ANON_KEY` — Supabase anon/public key
+
+### Supabase Edge Functions
+
+Located in `supabase/functions/`:
+- **`extract-recipe-from-image`** — Receives a base64 image, sends to GPT-4o-mini vision, returns extracted recipe JSON fields (title, description, ingredients, steps)
+- **`auto-tag-recipe`** — Receives recipe title/ingredients/steps, uses GPT-4o-mini to classify cuisine, difficulty, time, and diet tags
+
+#### Deploying edge functions:
+```bash
+supabase functions deploy extract-recipe-from-image
+supabase functions deploy auto-tag-recipe
+```
+
+#### Setting the OpenAI key as a Supabase secret (never exposed to frontend):
+```bash
+supabase secrets set OPENAI_API_KEY=sk-...
+```
+Or via Supabase Dashboard → Project Settings → Edge Functions → Secrets.
 
 ## Key Commands
 

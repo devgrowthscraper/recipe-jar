@@ -1,0 +1,40 @@
+Create an "Add Recipe" page at /add-recipe. This page is only accessible to logged-in users. If a non-logged-in user navigates here, redirect to login.
+
+The page has TWO TABS at the top, styled as modern pill toggles (not browser-default tabs):
+- Tab 1: "Write Recipe" (manual entry) — default active
+- Tab 2: "Import from Screenshot" (AI-powered)
+
+TAB 1 — WRITE RECIPE:
+A clean form with these fields:
+- Title (text input, required, placeholder: "e.g., Grandma's Butter Chicken")
+- Description (textarea, optional, placeholder: "A short description of this recipe...", max 3 rows)
+- Image URL (text input, optional, placeholder: "Paste an image URL"). When a URL is entered, show a live image preview below the input with rounded-xl and max height 200px. If the URL is broken, show a subtle error message.
+- Ingredients (textarea, required, placeholder: "Enter one ingredient per line\n\n1 cup rice\n2 tbsp oil\n1 onion, chopped"). Give it at least 6 rows of height.
+- Steps (textarea, required, placeholder: "Enter one step per line\n\nWash and soak the rice\nHeat oil in a pan\nSaute onions until golden"). Give it at least 6 rows of height.
+- All inputs should have: rounded-xl borders, focus:ring-2 focus:ring-orange-300 focus:border-orange-400, clean label text above each field in font-medium text-sm text-gray-700.
+- A large "Publish Recipe" button at the bottom, full width on mobile, orange gradient, with a Sparkles icon from Lucide. Disable the button while submitting.
+
+TAB 2 — IMPORT FROM SCREENSHOT:
+- A large drag-and-drop upload area: dashed border (border-2 border-dashed border-gray-300), rounded-2xl, centered content with an Upload icon from Lucide, text "Drop a screenshot here or click to upload", and a subtitle "Works with Instagram, YouTube, or any recipe screenshot".
+- Accept image files only (jpg, png, webp).
+- Also include a regular file input button as fallback.
+- When an image is uploaded, show a preview of the screenshot on the left side and a loading state on the right that says "AI is reading your recipe..." with a spinning loader.
+- Call a Supabase Edge Function called "extract-recipe-from-image" that:
+  1. Receives the image as base64.
+  2. Sends it to OpenAI API (model: gpt-4o-mini) with this prompt: "You are a recipe extraction assistant. Look at this screenshot of a recipe from social media or a website. Extract the recipe and return ONLY a JSON object with these fields: title (string), description (string, 1-2 sentences), ingredients (string, one ingredient per line), steps (string, one step per line). If you cannot find a clear recipe in the image, return JSON with an error field: {error: 'Could not find a recipe in this image'}. Return only JSON, no other text."
+  3. Returns the extracted recipe JSON to the frontend.
+- After extraction, populate the Write Recipe form (Tab 1) with the extracted data and automatically switch to Tab 1 so the user can review and edit before publishing. Show a green success banner: "Recipe extracted! Review and edit below, then publish."
+- If extraction fails, show a friendly error: "Couldn't read this screenshot clearly. Try a different image or write the recipe manually."
+
+ON SUBMIT (both tabs end here):
+1. Save the recipe to the Supabase recipes table with the logged-in user's id.
+2. Call a Supabase Edge Function called "auto-tag-recipe" that:
+   - Receives the recipe title, ingredients, and steps as text.
+   - Calls OpenAI API (model: gpt-4o-mini) with this system prompt: "You are a recipe analyzer. Given a recipe's title, ingredients, and steps, return ONLY a JSON object with these four fields: cuisine_tag (one of: Indian, Italian, Mexican, Chinese, American, Thai, Japanese, Mediterranean, Other), difficulty_tag (one of: Easy, Medium, Hard), time_tag (one of: Under 15 min, 15-30 min, 30-60 min, Over 1 hour), diet_tag (one of: Vegetarian, Vegan, Non-Vegetarian, Pescatarian). Return only the JSON, no other text."
+   - Returns the tags as JSON.
+3. Update the recipe row in Supabase with the returned tags.
+4. Show a loading overlay on the form that says "AI is tagging your recipe..." with a Sparkles animation while the edge function runs.
+5. After success, show a toast notification "Recipe published!" and redirect to the feed page.
+6. If tagging fails, still save the recipe without tags and redirect (tags are nice-to-have, not blocking).
+
+Store the OPENAI_API_KEY as a Supabase secret. Never expose it to the frontend.
