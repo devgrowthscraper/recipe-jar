@@ -369,13 +369,13 @@ export default function FeedPage() {
       {/* ════════════════════════════════════════════════════════════════
           SECTION 4 — IMPORT FEATURE SHOWCASE
       ════════════════════════════════════════════════════════════════ */}
-      <section className="bg-gradient-to-br from-orange-500 to-amber-500 py-16 px-4">
+      <section className="bg-white py-16 px-4 border-t border-gray-100">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-amber-900 mb-4">
               Import Recipes From Anywhere
             </h2>
-            <p className="text-white/85 leading-relaxed mb-6">
+            <p className="text-neutral-600 leading-relaxed mb-6">
               Screenshot a recipe from Instagram, YouTube, or any app. Upload it and our AI
               instantly extracts the title, ingredients, and steps into a clean recipe card.
             </p>
@@ -385,22 +385,22 @@ export default function FeedPage() {
                 "Works with YouTube screenshots",
                 "AI extracts ingredients and steps automatically",
               ].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-sm text-white/85 font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-white flex-shrink-0" />
+                <li key={item} className="flex items-center gap-3 text-sm text-neutral-600 font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-orange-500 flex-shrink-0" />
                   {item}
                 </li>
               ))}
             </ul>
             <Link
               href={user ? "/add-recipe" : "/login"}
-              className="inline-flex items-center gap-2 mt-8 px-5 py-2.5 rounded-xl bg-white text-orange-500 font-bold text-sm hover:bg-orange-50 transition-colors shadow-md"
+              className="inline-flex items-center gap-2 mt-8 px-5 py-2.5 rounded-xl bg-orange-500 text-white font-bold text-sm hover:bg-orange-600 transition-colors shadow-md"
             >
               Try It Now <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
           {/* Visual mockup */}
-          <div className="flex items-center justify-center gap-5 select-none">
+          <div className="flex items-center justify-center gap-5 select-none bg-orange-50/60 rounded-3xl p-8">
             <div className="relative">
               <div className="w-36 bg-neutral-200 rounded-2xl p-3 rotate-3 shadow-md border border-neutral-300">
                 <div className="h-2.5 bg-neutral-400 rounded-full w-3/4 mb-2 opacity-60" />
