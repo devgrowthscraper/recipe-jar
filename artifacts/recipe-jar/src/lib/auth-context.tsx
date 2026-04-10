@@ -2,6 +2,12 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { Session, User } from "@supabase/supabase-js";
 import { supabase, Profile } from "./supabase";
 
+/** Derive a safe username from a User object */
+function deriveUsername(u: User): string {
+  const base = (u.email?.split("@")[0] ?? "").replace(/[^a-zA-Z0-9_]/g, "");
+  return base.length >= 3 ? base : `user_${u.id.slice(0, 8)}`;
+}
+
 type AuthContextType = {
   session: Session | null;
   user: User | null;
@@ -26,17 +32,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  async function fetchProfile(userId: string) {
-    const { data } = await supabase
+  /** Fetch the profile, and auto-create it if it doesn't exist yet */
+  async function ensureProfile(u: User) {
+    const { data: existing } = await supabase
       .from("profiles")
       .select("*")
-      .eq("id", userId)
+      .eq("id", u.id)
       .single();
-    setProfile(data);
+
+    if (existing) {
+      setProfile(existing);
+      return;
+    }
+
+    // Profile missing — create it now (happens after first sign-up)
+    const { data: created } = await supabase
+      .from("profiles")
+      .upsert({ id: u.id, username: deriveUsername(u) }, { onConflict: "id" })
+      .select()
+      .single();
+
+    setProfile(created ?? null);
   }
 
   async function refreshProfile() {
-    if (user) await fetchProfile(user.id);
+    if (user) await ensureProfile(user);
   }
 
   useEffect(() => {
@@ -44,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        fetchProfile(session.user.id).finally(() => setLoading(false));
+        ensureProfile(session.user).finally(() => setLoading(false));
       } else {
         setLoading(false);
       }
@@ -54,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        fetchProfile(session.user.id);
+        ensureProfile(session.user);
       } else {
         setProfile(null);
       }

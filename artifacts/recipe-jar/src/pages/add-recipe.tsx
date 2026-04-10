@@ -139,6 +139,15 @@ export default function AddRecipePage() {
 
     setSubmitting(true);
 
+    // Safety net: ensure profile row exists before inserting recipe
+    {
+      const base = (user.email?.split("@")[0] ?? "").replace(/[^a-zA-Z0-9_]/g, "");
+      const username = base.length >= 3 ? base : `user_${user.id.slice(0, 8)}`;
+      await supabase
+        .from("profiles")
+        .upsert({ id: user.id, username }, { onConflict: "id", ignoreDuplicates: true });
+    }
+
     // 1. Insert recipe (without tags first)
     const { data: recipe, error: insertError } = await supabase
       .from("recipes")
