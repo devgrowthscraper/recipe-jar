@@ -124,23 +124,15 @@ export default function FeedPage() {
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
 
-  function scrollToResults() {
-    document.getElementById("explore")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  // Debounce: auto-search 350ms after typing stops, then scroll to results
+  // Debounce: auto-search 350ms after typing stops
   useEffect(() => {
-    const t = setTimeout(() => {
-      setDebouncedSearch(search);
-      if (search.trim()) scrollToResults();
-    }, 350);
+    const t = setTimeout(() => setDebouncedSearch(search), 350);
     return () => clearTimeout(t);
   }, [search]);
 
   // Explicit trigger: icon click or Enter key
   function handleSearch() {
     setDebouncedSearch(search);
-    if (search.trim()) scrollToResults();
   }
 
   function toggleChip(id: string) {
@@ -150,7 +142,6 @@ export default function FeedPage() {
       else next.add(id);
       return next;
     });
-    scrollToResults();
   }
 
   const isSortedByLiked = activeChips.has("most-liked");
@@ -314,6 +305,40 @@ export default function FeedPage() {
             </div>
           )}
         </div>
+
+        {/* ── Recipe grid — directly below search bar ── */}
+        <div className="max-w-6xl mx-auto mt-6 px-0">
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
+            </div>
+          ) : recipes.length === 0 && hasFilters ? (
+            <div className="text-center py-10">
+              <p className="text-neutral-500 font-medium mb-3">
+                No recipes found{debouncedSearch ? ` for "${debouncedSearch}"` : ""}
+              </p>
+              <button
+                onClick={() => { setSearch(""); setDebouncedSearch(""); setActiveChips(new Set()); }}
+                className="px-4 py-2 rounded-xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600 transition-colors"
+              >
+                Clear filters
+              </button>
+            </div>
+          ) : recipes.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {recipes.map((recipe) => (
+                <RecipeCard
+                  key={recipe.id}
+                  recipe={recipe}
+                  isSaved={savedIds.has(recipe.id)}
+                  isLiked={likedIds.has(recipe.id)}
+                  onLikeToggle={fetchUserInteractions}
+                  onSaveToggle={fetchUserInteractions}
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
       </section>
 
       {/* ════════════════════════════════════════════════════════════════
@@ -348,92 +373,36 @@ export default function FeedPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════════════════
-          SECTION 3 — EXPLORE RECIPES
+          SECTION 3 — WRITE / IMPORT CTA CARDS
       ════════════════════════════════════════════════════════════════ */}
-      <section className="py-12 px-4 bg-background" id="explore">
-        <div className="max-w-6xl mx-auto">
-
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-amber-900">
-              {hasFilters ? "Search Results" : "Start Your Recipe Journey"}
-            </h2>
-            {hasFilters && !loading ? (
-              <p className="text-orange-500 text-sm font-semibold mt-2">
-                {recipes.length === 0
-                  ? "No recipes found"
-                  : `${recipes.length} recipe${recipes.length !== 1 ? "s" : ""} found`}
-                {debouncedSearch && (
-                  <span className="text-neutral-400 font-normal"> for "{debouncedSearch}"</span>
-                )}
-              </p>
-            ) : (
-              <p className="text-gray-600 text-center mt-2 font-medium">Create your own recipes or instantly import from a screenshot</p>
-            )}
+      <section className="py-10 px-4 bg-white">
+        <div className="max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Link
+              href={user ? "/add-recipe" : "/login"}
+              className="flex items-start gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-orange-100 flex-shrink-0 flex items-center justify-center group-hover:bg-orange-500 transition-colors">
+                <PenLine className="w-5 h-5 text-orange-500 group-hover:text-white transition-colors" />
+              </div>
+              <div>
+                <p className="font-bold text-amber-900 text-base mb-0.5">Write a Recipe</p>
+                <p className="text-sm text-neutral-500 leading-relaxed font-semibold">Type out a recipe you love and share it with everyone</p>
+              </div>
+            </Link>
+            <Link
+              href={user ? "/add-recipe" : "/login"}
+              className="flex items-start gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-purple-100 hover:shadow-md hover:border-purple-300 transition-all group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-purple-100 flex-shrink-0 flex items-center justify-center group-hover:bg-purple-500 transition-colors">
+                <Camera className="w-5 h-5 text-purple-500 group-hover:text-white transition-colors" />
+              </div>
+              <div>
+                <p className="font-bold text-amber-900 text-base mb-0.5">Import a Screenshot</p>
+                <p className="text-sm text-neutral-500 leading-relaxed font-semibold">Upload a screenshot and AI extracts it into your recipe card</p>
+              </div>
+            </Link>
           </div>
-
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
-            </div>
-          ) : recipes.length === 0 ? (
-            hasFilters ? (
-              <div className="text-center py-20 max-w-sm mx-auto">
-                <div className="text-6xl mb-5">🔍</div>
-                <h3 className="text-lg font-bold text-amber-900 mb-2">No Recipes Found</h3>
-                <p className="text-neutral-500 text-sm mb-5 leading-relaxed">
-                  No recipes match your current filters. Try adjusting or clearing them.
-                </p>
-                <button
-                  onClick={() => { setSearch(""); setActiveChips(new Set()); }}
-                  className="px-5 py-2.5 rounded-xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600 transition-colors shadow-sm"
-                >
-                  Clear All Filters
-                </button>
-              </div>
-            ) : (
-              <div className="max-w-2xl mx-auto py-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1">
-                  <Link
-                    href={user ? "/add-recipe" : "/login"}
-                    className="flex items-start gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-orange-100 flex-shrink-0 flex items-center justify-center group-hover:bg-orange-500 transition-colors">
-                      <PenLine className="w-5 h-5 text-orange-500 group-hover:text-white transition-colors" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-amber-900 text-base mb-0.5">Write a Recipe</p>
-                      <p className="text-sm text-neutral-500 leading-relaxed font-semibold">Type out a recipe you love and share it with everyone</p>
-                    </div>
-                  </Link>
-                  <Link
-                    href={user ? "/add-recipe" : "/login"}
-                    className="flex items-start gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-purple-100 hover:shadow-md hover:border-purple-300 transition-all group"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-purple-100 flex-shrink-0 flex items-center justify-center group-hover:bg-purple-500 transition-colors">
-                      <Camera className="w-5 h-5 text-purple-500 group-hover:text-white transition-colors" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-amber-900 text-base mb-0.5">Import a Screenshot</p>
-                      <p className="text-sm text-neutral-500 leading-relaxed font-semibold">Upload a screenshot and AI extracts it into your recipe card</p>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            )
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  recipe={recipe}
-                  isSaved={savedIds.has(recipe.id)}
-                  isLiked={likedIds.has(recipe.id)}
-                  onLikeToggle={fetchUserInteractions}
-                  onSaveToggle={fetchUserInteractions}
-                />
-              ))}
-            </div>
-          )}
         </div>
       </section>
 
