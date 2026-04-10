@@ -296,13 +296,8 @@ export default function FeedPage() {
         <div className="max-w-6xl mx-auto">
 
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-amber-900">Explore Recipes</h2>
-            {!loading && (
-              <p className="text-sm text-neutral-500 mt-1">
-                {recipes.length} recipe{recipes.length !== 1 ? "s" : ""}
-                {hasFilters ? " found" : " in the community"}
-              </p>
-            )}
+            <h2 className="text-2xl font-bold text-amber-900">Start Your Recipe Journey</h2>
+            <p className="text-gray-600 text-center mt-2">Create your own recipes or instantly import from a screenshot</p>
           </div>
 
           {loading ? (
@@ -326,15 +321,7 @@ export default function FeedPage() {
               </div>
             ) : (
               <div className="max-w-2xl mx-auto py-6">
-                <div className="text-center mb-8">
-                  <h3 className="text-xl font-bold text-amber-900 mb-2">
-                    Add Your First Recipe
-                  </h3>
-                  <p className="text-neutral-600 text-sm leading-relaxed">
-                    Choose how you would like to get started. Write one from scratch or let AI do the heavy lifting from a screenshot.
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
                   <Link
                     href={user ? "/add-recipe" : "/login"}
                     className="flex items-center gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
