@@ -124,6 +124,13 @@ export default function FeedPage() {
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
 
+  // Debounce: auto-search 350ms after typing stops
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search), 350);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  // Explicit trigger: icon click or Enter key
   function handleSearch() {
     setDebouncedSearch(search);
   }
