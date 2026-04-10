@@ -124,15 +124,23 @@ export default function FeedPage() {
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
 
-  // Debounce: auto-search 350ms after typing stops
+  function scrollToResults() {
+    document.getElementById("explore")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // Debounce: auto-search 350ms after typing stops, then scroll to results
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearch(search), 350);
+    const t = setTimeout(() => {
+      setDebouncedSearch(search);
+      if (search.trim()) scrollToResults();
+    }, 350);
     return () => clearTimeout(t);
   }, [search]);
 
   // Explicit trigger: icon click or Enter key
   function handleSearch() {
     setDebouncedSearch(search);
+    if (search.trim()) scrollToResults();
   }
 
   function toggleChip(id: string) {
@@ -142,6 +150,7 @@ export default function FeedPage() {
       else next.add(id);
       return next;
     });
+    scrollToResults();
   }
 
   const isSortedByLiked = activeChips.has("most-liked");
@@ -345,8 +354,21 @@ export default function FeedPage() {
         <div className="max-w-6xl mx-auto">
 
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-amber-900">Start Your Recipe Journey</h2>
-            <p className="text-gray-600 text-center mt-2 font-medium">Create your own recipes or instantly import from a screenshot</p>
+            <h2 className="text-2xl font-bold text-amber-900">
+              {hasFilters ? "Search Results" : "Start Your Recipe Journey"}
+            </h2>
+            {hasFilters && !loading ? (
+              <p className="text-orange-500 text-sm font-semibold mt-2">
+                {recipes.length === 0
+                  ? "No recipes found"
+                  : `${recipes.length} recipe${recipes.length !== 1 ? "s" : ""} found`}
+                {debouncedSearch && (
+                  <span className="text-neutral-400 font-normal"> for "{debouncedSearch}"</span>
+                )}
+              </p>
+            ) : (
+              <p className="text-gray-600 text-center mt-2 font-medium">Create your own recipes or instantly import from a screenshot</p>
+            )}
           </div>
 
           {loading ? (
