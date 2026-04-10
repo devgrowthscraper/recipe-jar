@@ -19,55 +19,59 @@ type ChipDef = {
   values?: string[];
 };
 
-const CHIPS: ChipDef[] = [
-  // Sort
-  { id: "most-liked",   label: "Most Liked",   sort: "most_liked" },
-  // Diet
-  { id: "vegan",        label: "Vegan",         field: "diet_tag",       value: "Vegan" },
-  { id: "vegetarian",   label: "Vegetarian",    field: "diet_tag",       value: "Vegetarian" },
-  { id: "eggetarian",   label: "Eggetarian",    field: "diet_tag",       value: "Eggetarian" },
-  { id: "non-veg",      label: "Non-Veg",       field: "diet_tag",       value: "Non-Vegetarian" },
-  // Time
-  { id: "quick",        label: "Quick Meals",   field: "time_tag",       value: "Under 15 min" },
-  { id: "under15",      label: "Under 15 Min",  field: "time_tag",       value: "Under 15 min" },
-  { id: "1530",         label: "15–30 Min",     field: "time_tag",       value: "15-30 min" },
-  { id: "30plus",       label: "30+ Min",       field: "time_tag",       value: "30+ min" },
-  { id: "under30",      label: "Under 30 Min",  field: "time_tag",       values: ["Under 15 min", "15-30 min"] },
-  // Difficulty
-  { id: "easy",         label: "Easy",          field: "difficulty_tag", value: "Easy" },
-  { id: "medium",       label: "Medium",        field: "difficulty_tag", value: "Medium" },
-  { id: "hard",         label: "Hard",          field: "difficulty_tag", value: "Hard" },
-  // Cuisine
-  { id: "indian",       label: "Indian",        field: "cuisine_tag",    value: "Indian" },
-  { id: "italian",      label: "Italian",       field: "cuisine_tag",    value: "Italian" },
-  { id: "mexican",      label: "Mexican",       field: "cuisine_tag",    value: "Mexican" },
-  { id: "chinese",      label: "Chinese",       field: "cuisine_tag",    value: "Chinese" },
-  { id: "thai",         label: "Thai",          field: "cuisine_tag",    value: "Thai" },
-  { id: "japanese",     label: "Japanese",      field: "cuisine_tag",    value: "Japanese" },
+// ── Quick filters (always-visible top row) ────────────────────────────────────
+const QUICK_CHIPS: ChipDef[] = [
+  { id: "most-liked", label: "Most Liked", sort: "most_liked" },
+  { id: "quick",      label: "Quick Meals", field: "time_tag", value: "Under 15 min" },
+  { id: "under30",    label: "Under 30 Min", field: "time_tag", values: ["Under 15 min", "15-30 min"] },
 ];
 
-// ── Diet filter tiles ─────────────────────────────────────────────────────────
-type DietTile = {
-  id: string;
-  emoji: string;
-  label: string;
-  field: "diet_tag";
-  value: string;
-  bg: string;
-  activeBg: string;
-};
+// ── Grouped filter sections ───────────────────────────────────────────────────
+type FilterGroup = { label: string; chips: ChipDef[] };
 
-const DIET_TILES: DietTile[] = [
-  { id: "non-veg",      emoji: "🍗", label: "Non-Veg",      field: "diet_tag", value: "Non-Vegetarian", bg: "bg-red-50",    activeBg: "bg-red-500"   },
-  { id: "eggetarian",   emoji: "🍳", label: "Eggetarian",   field: "diet_tag", value: "Eggetarian",     bg: "bg-yellow-50", activeBg: "bg-yellow-500"},
-  { id: "vegetarian",   emoji: "🥗", label: "Vegetarian",   field: "diet_tag", value: "Vegetarian",     bg: "bg-green-50",  activeBg: "bg-green-500" },
-  { id: "vegan",        emoji: "🌱", label: "Vegan",         field: "diet_tag", value: "Vegan",          bg: "bg-teal-50",   activeBg: "bg-teal-500"  },
+const FILTER_GROUPS: FilterGroup[] = [
+  {
+    label: "Diet",
+    chips: [
+      { id: "vegan",      label: "Vegan",       field: "diet_tag", value: "Vegan" },
+      { id: "vegetarian", label: "Vegetarian",   field: "diet_tag", value: "Vegetarian" },
+      { id: "eggetarian", label: "Eggetarian",   field: "diet_tag", value: "Eggetarian" },
+      { id: "non-veg",    label: "Non-Veg",      field: "diet_tag", value: "Non-Vegetarian" },
+    ],
+  },
+  {
+    label: "Cuisine",
+    chips: [
+      { id: "indian",   label: "Indian",   field: "cuisine_tag", value: "Indian" },
+      { id: "italian",  label: "Italian",  field: "cuisine_tag", value: "Italian" },
+      { id: "mexican",  label: "Mexican",  field: "cuisine_tag", value: "Mexican" },
+      { id: "chinese",  label: "Chinese",  field: "cuisine_tag", value: "Chinese" },
+      { id: "thai",     label: "Thai",     field: "cuisine_tag", value: "Thai" },
+      { id: "japanese", label: "Japanese", field: "cuisine_tag", value: "Japanese" },
+    ],
+  },
+  {
+    label: "Difficulty",
+    chips: [
+      { id: "easy",   label: "Easy",   field: "difficulty_tag", value: "Easy" },
+      { id: "medium", label: "Medium", field: "difficulty_tag", value: "Medium" },
+      { id: "hard",   label: "Hard",   field: "difficulty_tag", value: "Hard" },
+    ],
+  },
+  {
+    label: "Cook Time",
+    chips: [
+      { id: "under15", label: "Under 15 Min", field: "time_tag", value: "Under 15 min" },
+      { id: "1530",    label: "15–30 Min",    field: "time_tag", value: "15-30 min" },
+      { id: "30plus",  label: "30+ Min",      field: "time_tag", value: "30+ min" },
+    ],
+  },
 ];
 
 // All filter defs combined for query building
 const ALL_FILTERS: ChipDef[] = [
-  ...CHIPS,
-  ...DIET_TILES.map((d) => ({ id: d.id, label: d.label, field: d.field, value: d.value })),
+  ...QUICK_CHIPS,
+  ...FILTER_GROUPS.flatMap((g) => g.chips),
 ];
 
 // ── Skeleton card ─────────────────────────────────────────────────────────────
@@ -206,33 +210,9 @@ export default function FeedPage() {
             />
           </div>
 
-          {/* ── Diet filter tiles ── */}
-          <div className="flex justify-center gap-3 mb-5 flex-wrap">
-            {DIET_TILES.map((tile) => {
-              const active = activeChips.has(tile.id);
-              return (
-                <button
-                  key={tile.id}
-                  data-testid={`chip-${tile.id}`}
-                  onClick={() => toggleChip(tile.id)}
-                  className={`flex flex-col items-center gap-1.5 w-20 py-3 rounded-2xl border-2 transition-all duration-200 group ${
-                    active
-                      ? "border-orange-400 bg-orange-50 shadow-md"
-                      : "border-neutral-200 bg-white hover:border-orange-300 hover:bg-orange-50/50"
-                  }`}
-                >
-                  <span className="text-2xl leading-none">{tile.emoji}</span>
-                  <span className={`text-xs font-semibold leading-tight ${active ? "text-orange-600" : "text-neutral-600 group-hover:text-orange-500"}`}>
-                    {tile.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* ── Cuisine / time / sort chips ── */}
-          <div className="max-w-2xl mx-auto flex gap-2 overflow-x-auto pb-1 justify-center flex-wrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {CHIPS.map((chip) => {
+          {/* ── Quick filters row ── */}
+          <div className="flex justify-center gap-2 flex-wrap mb-4">
+            {QUICK_CHIPS.map((chip) => {
               const active = activeChips.has(chip.id);
               return (
                 <button
@@ -247,16 +227,47 @@ export default function FeedPage() {
                 >
                   {chip.id === "most-liked" && <TrendingUp className="w-3.5 h-3.5" />}
                   {chip.id === "quick"      && <Flame className="w-3.5 h-3.5" />}
-                  {["under30","under15","1530","30plus"].includes(chip.id) && <Timer className="w-3.5 h-3.5" />}
-                  {["easy","medium","hard"].includes(chip.id) && <ChefHat className="w-3.5 h-3.5" />}
-                  {["indian","italian","mexican","chinese","thai","japanese"].includes(chip.id) && <Globe className="w-3.5 h-3.5" />}
-                  {["vegan","vegetarian"].includes(chip.id) && <Leaf className="w-3.5 h-3.5" />}
-                  {chip.id === "eggetarian" && <Egg className="w-3.5 h-3.5" />}
-                  {chip.id === "non-veg"    && <UtensilsCrossed className="w-3.5 h-3.5" />}
+                  {chip.id === "under30"    && <Timer className="w-3.5 h-3.5" />}
                   {chip.label}
                 </button>
               );
             })}
+          </div>
+
+          {/* ── Grouped filters ── */}
+          <div className="max-w-2xl mx-auto flex flex-col gap-3 text-left">
+            {FILTER_GROUPS.map((group) => (
+              <div key={group.label} className="flex items-start gap-3">
+                <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wide pt-2 w-16 flex-shrink-0 text-right">
+                  {group.label}
+                </span>
+                <div className="flex gap-2 flex-wrap">
+                  {group.chips.map((chip) => {
+                    const active = activeChips.has(chip.id);
+                    return (
+                      <button
+                        key={chip.id}
+                        data-testid={`chip-${chip.id}`}
+                        onClick={() => toggleChip(chip.id)}
+                        className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
+                          active
+                            ? "bg-orange-500 text-white border-orange-500 shadow-sm"
+                            : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
+                        }`}
+                      >
+                        {["vegan","vegetarian"].includes(chip.id) && <Leaf className="w-3.5 h-3.5" />}
+                        {chip.id === "eggetarian" && <Egg className="w-3.5 h-3.5" />}
+                        {chip.id === "non-veg"    && <UtensilsCrossed className="w-3.5 h-3.5" />}
+                        {["indian","italian","mexican","chinese","thai","japanese"].includes(chip.id) && <Globe className="w-3.5 h-3.5" />}
+                        {["easy","medium","hard"].includes(chip.id) && <ChefHat className="w-3.5 h-3.5" />}
+                        {["under15","1530","30plus"].includes(chip.id) && <Timer className="w-3.5 h-3.5" />}
+                        {chip.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Active filter summary */}
