@@ -87,7 +87,7 @@ function FeatureCard({
         {icon}
       </div>
       <h3 className="font-bold text-lg mt-4 text-amber-900">{title}</h3>
-      <p className="text-sm text-gray-500 mt-2 leading-relaxed">{description}</p>
+      <p className="text-sm text-neutral-700 mt-2 leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -174,7 +174,7 @@ export default function FeedPage() {
           <h1 className="text-4xl font-bold text-amber-900 mb-3 leading-tight">
             Stop Losing Recipes You Love
           </h1>
-          <p className="text-base text-amber-800 mb-8 max-w-xl mx-auto leading-relaxed">
+          <p className="text-base text-neutral-700 mb-8 max-w-xl mx-auto leading-relaxed">
             Screenshot any recipe from Instagram or YouTube. AI organizes it for you instantly.
           </p>
 
@@ -295,13 +295,13 @@ export default function FeedPage() {
       <section className="py-12 px-4 bg-background" id="explore">
         <div className="max-w-6xl mx-auto">
 
-          <div className="flex items-center justify-between mb-6">
+          <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-amber-900">Explore Recipes</h2>
             {!loading && (
-              <span className="text-sm text-neutral-400">
+              <p className="text-sm text-neutral-500 mt-1">
                 {recipes.length} recipe{recipes.length !== 1 ? "s" : ""}
-                {hasFilters ? " found" : ""}
-              </span>
+                {hasFilters ? " found" : " in the community"}
+              </p>
             )}
           </div>
 
@@ -387,7 +387,7 @@ export default function FeedPage() {
             <h2 className="text-2xl font-bold text-amber-900 mb-4">
               Import Recipes From Anywhere
             </h2>
-            <p className="text-amber-800/70 leading-relaxed mb-6">
+            <p className="text-neutral-700 leading-relaxed mb-6">
               Screenshot a recipe from Instagram, YouTube, or any app. Upload it and our AI
               instantly extracts the title, ingredients, and steps into a clean recipe card.
             </p>
@@ -461,10 +461,11 @@ export default function FeedPage() {
             <p className="text-lg text-white/85 mb-8">
               Join the community and never lose a recipe again.
             </p>
-            <Link href="/signup">
-              <button className="bg-white text-orange-600 font-bold rounded-xl px-8 py-3.5 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 text-sm">
-                Create Free Account
-              </button>
+            <Link
+              href="/signup"
+              className="inline-block bg-white text-orange-500 font-bold rounded-xl px-8 py-3.5 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 text-sm no-underline"
+            >
+              Create Free Account
             </Link>
           </div>
         </section>
@@ -473,7 +474,7 @@ export default function FeedPage() {
       {/* ════════════════════════════════════════════════════════════════
           SECTION 6 — FOOTER
       ════════════════════════════════════════════════════════════════ */}
-      <footer className="mt-auto border-t border-amber-100 bg-amber-50 py-10 px-4">
+      <footer className="mt-auto border-t border-neutral-200 bg-white py-10 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-8">
             <div>
@@ -481,33 +482,33 @@ export default function FeedPage() {
                 <span className="text-2xl">🫙</span>
                 <p className="text-amber-900 font-bold text-lg">Recipe Jar</p>
               </div>
-              <p className="text-sm text-amber-700/70">Save, share, and rediscover recipes.</p>
+              <p className="text-sm text-neutral-600">Save, share, and rediscover recipes.</p>
             </div>
             <div className="flex gap-8 text-sm">
               <div className="flex flex-col gap-2">
-                <p className="font-semibold text-amber-900 mb-1">Browse</p>
-                <Link href="/" className="text-amber-700/70 hover:text-orange-500 transition-colors">Feed</Link>
+                <p className="font-semibold text-neutral-900 mb-1">Browse</p>
+                <Link href="/" className="text-neutral-600 hover:text-orange-500 transition-colors">Feed</Link>
                 {user && (
-                  <Link href="/add-recipe" className="text-amber-700/70 hover:text-orange-500 transition-colors">Add Recipe</Link>
+                  <Link href="/add-recipe" className="text-neutral-600 hover:text-orange-500 transition-colors">Add Recipe</Link>
                 )}
               </div>
               <div className="flex flex-col gap-2">
-                <p className="font-semibold text-amber-900 mb-1">Account</p>
+                <p className="font-semibold text-neutral-900 mb-1">Account</p>
                 <Link
                   href={user ? "/profile" : "/login"}
-                  className="text-amber-700/70 hover:text-orange-500 transition-colors"
+                  className="text-neutral-600 hover:text-orange-500 transition-colors"
                 >
                   {user ? "My Profile" : "Sign In"}
                 </Link>
                 {!user && (
-                  <Link href="/signup" className="text-amber-700/70 hover:text-orange-500 transition-colors">
+                  <Link href="/signup" className="text-neutral-600 hover:text-orange-500 transition-colors">
                     Create Account
                   </Link>
                 )}
               </div>
             </div>
           </div>
-          <div className="border-t border-amber-200 pt-5 text-xs text-amber-700/50">
+          <div className="border-t border-neutral-200 pt-5 text-xs text-neutral-400">
             {new Date().getFullYear()} Recipe Jar. All rights reserved.
           </div>
         </div>
