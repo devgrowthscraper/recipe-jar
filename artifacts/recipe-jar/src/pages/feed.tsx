@@ -321,7 +321,7 @@ export default function FeedPage() {
               </div>
             ) : (
               <div className="max-w-2xl mx-auto py-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1">
                   <Link
                     href={user ? "/add-recipe" : "/login"}
                     className="flex items-center gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
