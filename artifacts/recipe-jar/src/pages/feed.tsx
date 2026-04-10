@@ -342,7 +342,7 @@ export default function FeedPage() {
                       <Camera className="w-5 h-5 text-purple-500 group-hover:text-white transition-colors" />
                     </div>
                     <div>
-                      <p className="font-bold text-amber-900 text-sm mb-0.5">Import A Screenshot</p>
+                      <p className="font-bold text-amber-900 text-sm mb-0.5">Import a Screenshot</p>
                       <p className="text-sm text-neutral-500 leading-relaxed">Upload a screenshot and AI extracts it into a recipe card</p>
                     </div>
                   </Link>
