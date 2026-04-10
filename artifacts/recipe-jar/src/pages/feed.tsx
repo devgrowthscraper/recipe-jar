@@ -324,7 +324,7 @@ export default function FeedPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1">
                   <Link
                     href={user ? "/add-recipe" : "/login"}
-                    className="flex items-center gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
+                    className="flex items-start gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
                   >
                     <div className="w-12 h-12 rounded-xl bg-orange-100 flex-shrink-0 flex items-center justify-center group-hover:bg-orange-500 transition-colors">
                       <PenLine className="w-5 h-5 text-orange-500 group-hover:text-white transition-colors" />
@@ -336,7 +336,7 @@ export default function FeedPage() {
                   </Link>
                   <Link
                     href={user ? "/add-recipe" : "/login"}
-                    className="flex items-center gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-purple-100 hover:shadow-md hover:border-purple-300 transition-all group"
+                    className="flex items-start gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-purple-100 hover:shadow-md hover:border-purple-300 transition-all group"
                   >
                     <div className="w-12 h-12 rounded-xl bg-purple-100 flex-shrink-0 flex items-center justify-center group-hover:bg-purple-500 transition-colors">
                       <Camera className="w-5 h-5 text-purple-500 group-hover:text-white transition-colors" />
