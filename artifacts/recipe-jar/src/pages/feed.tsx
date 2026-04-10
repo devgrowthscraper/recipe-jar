@@ -1,79 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import {
   Search, Camera, Sparkles, BookOpen, PenLine, CheckCircle2,
-  ArrowRight, UtensilsCrossed, TrendingUp, Timer, ChefHat,
-  Globe, Flame, Leaf, Egg, Sprout, SlidersHorizontal,
+  ArrowRight, UtensilsCrossed,
 } from "lucide-react";
 import { supabase, Recipe } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
 import { RecipeCard } from "@/components/RecipeCard";
-
-// ── Chip definitions (pills — cuisine, time, difficulty, sort) ────────────────
-type ChipDef = {
-  id: string;
-  label: string;
-  sort?: "most_liked";
-  field?: "cuisine_tag" | "difficulty_tag" | "time_tag" | "diet_tag";
-  value?: string;
-  values?: string[];
-};
-
-// ── Quick filters (always-visible top row) ────────────────────────────────────
-const QUICK_CHIPS: ChipDef[] = [
-  { id: "most-liked", label: "Most Liked", sort: "most_liked" },
-  { id: "quick",      label: "Quick Meals", field: "time_tag", value: "Under 15 min" },
-  { id: "under30",    label: "Under 30 Min", field: "time_tag", values: ["Under 15 min", "15-30 min"] },
-];
-
-// ── Grouped filter sections ───────────────────────────────────────────────────
-type FilterGroup = { label: string; chips: ChipDef[] };
-
-const FILTER_GROUPS: FilterGroup[] = [
-  {
-    label: "Diet",
-    chips: [
-      { id: "vegan",      label: "Vegan",       field: "diet_tag", value: "Vegan" },
-      { id: "vegetarian", label: "Vegetarian",   field: "diet_tag", value: "Vegetarian" },
-      { id: "eggetarian", label: "Eggetarian",   field: "diet_tag", value: "Eggetarian" },
-      { id: "non-veg",    label: "Non-Veg",      field: "diet_tag", value: "Non-Vegetarian" },
-    ],
-  },
-  {
-    label: "Cuisine",
-    chips: [
-      { id: "indian",    label: "Indian",    field: "cuisine_tag", value: "Indian" },
-      { id: "italian",   label: "Italian",   field: "cuisine_tag", value: "Italian" },
-      { id: "mexican",   label: "Mexican",   field: "cuisine_tag", value: "Mexican" },
-      { id: "chinese",   label: "Chinese",   field: "cuisine_tag", value: "Chinese" },
-      { id: "thai",      label: "Thai",      field: "cuisine_tag", value: "Thai" },
-      { id: "american",  label: "American",  field: "cuisine_tag", value: "American" },
-      { id: "japanese",  label: "Japanese",  field: "cuisine_tag", value: "Japanese" },
-    ],
-  },
-  {
-    label: "Difficulty",
-    chips: [
-      { id: "easy",   label: "Easy",   field: "difficulty_tag", value: "Easy" },
-      { id: "medium", label: "Medium", field: "difficulty_tag", value: "Medium" },
-      { id: "hard",   label: "Hard",   field: "difficulty_tag", value: "Hard" },
-    ],
-  },
-  {
-    label: "Cook Time",
-    chips: [
-      { id: "under15", label: "Under 15 Min", field: "time_tag", value: "Under 15 min" },
-      { id: "1530",    label: "15–30 Min",    field: "time_tag", value: "15-30 min" },
-      { id: "30plus",  label: "30+ Min",      field: "time_tag", value: "30+ min" },
-    ],
-  },
-];
-
-// All filter defs combined for query building
-const ALL_FILTERS: ChipDef[] = [
-  ...QUICK_CHIPS,
-  ...FILTER_GROUPS.flatMap((g) => g.chips),
-];
 
 // ── Skeleton card ─────────────────────────────────────────────────────────────
 function SkeletonCard() {
@@ -115,64 +48,29 @@ function FeatureCard({
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function FeedPage() {
   const { user } = useAuth();
+  const [, navigate] = useLocation();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [activeChips, setActiveChips] = useState<Set<string>>(new Set());
-  const [showFilters, setShowFilters] = useState(false);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
 
-  // Debounce: auto-search 350ms after typing stops
-  useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearch(search), 350);
-    return () => clearTimeout(t);
-  }, [search]);
-
-  // Explicit trigger: icon click or Enter key
   function handleSearch() {
-    setDebouncedSearch(search);
+    const q = search.trim();
+    navigate(q ? `/recipes?search=${encodeURIComponent(q)}` : "/recipes");
   }
 
-  function toggleChip(id: string) {
-    setActiveChips((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
-
-  const isSortedByLiked = activeChips.has("most-liked");
-  const activeFilterDefs = ALL_FILTERS.filter((c) => !c.sort && activeChips.has(c.id));
-
-  const fetchRecipes = useCallback(async () => {
-    setLoading(true);
-    let query = supabase
+  useEffect(() => {
+    supabase
       .from("recipes")
       .select("*, profiles(id, username, avatar_url)")
-      .order(isSortedByLiked ? "likes_count" : "created_at", { ascending: false });
-
-    if (debouncedSearch) {
-      query = query.or(
-        `title.ilike.%${debouncedSearch}%,ingredients.ilike.%${debouncedSearch}%`,
-      );
-    }
-
-    for (const f of activeFilterDefs) {
-      if (f.values) {
-        query = (query as any).in(f.field, f.values);
-      } else if (f.field && f.value) {
-        query = query.eq(f.field, f.value);
-      }
-    }
-
-    const { data } = await query.limit(30);
-    setRecipes(data || []);
-    setLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, activeChips]);
+      .order("created_at", { ascending: false })
+      .limit(6)
+      .then(({ data }) => {
+        setRecipes(data || []);
+        setLoading(false);
+      });
+  }, []);
 
   const fetchUserInteractions = useCallback(async () => {
     if (!user) return;
@@ -184,11 +82,7 @@ export default function FeedPage() {
     setLikedIds(new Set((likesRes.data || []).map((r) => r.recipe_id)));
   }, [user]);
 
-  useEffect(() => { fetchRecipes(); }, [fetchRecipes]);
   useEffect(() => { fetchUserInteractions(); }, [fetchUserInteractions]);
-
-  const hasFilters = debouncedSearch || activeFilterDefs.length > 0;
-  const activeCount = activeChips.size;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -196,7 +90,7 @@ export default function FeedPage() {
       {/* ════════════════════════════════════════════════════════════════
           SECTION 1 — HERO
       ════════════════════════════════════════════════════════════════ */}
-      <section className="bg-gradient-to-b from-orange-50 to-amber-50/60 py-12 px-4">
+      <section className="bg-gradient-to-b from-orange-50 to-amber-50/60 py-12 px-4 pb-16">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl font-bold text-amber-900 mb-3 leading-tight">
             Stop Losing Recipes You Love
@@ -205,139 +99,57 @@ export default function FeedPage() {
             Screenshot any recipe from Instagram or YouTube. AI organizes it for you instantly.
           </p>
 
-          {/* Unified search + filter bar */}
+          {/* Search bar — navigates to /recipes */}
           <div className="max-w-2xl mx-auto mb-4">
             <div className="flex items-center bg-white rounded-2xl shadow-lg overflow-hidden">
-
-              {/* Filter area — far left */}
-              <button
-                onClick={() => setShowFilters((v) => !v)}
-                className={`flex-shrink-0 flex items-center gap-2 px-5 py-4 border-r border-gray-200 text-sm font-semibold transition-colors duration-200 ${
-                  showFilters || activeChips.size > 0
-                    ? "text-orange-500"
-                    : "text-neutral-500 hover:text-orange-500"
-                }`}
-              >
-                <SlidersHorizontal className="w-4 h-4" />
-                {activeChips.size > 0 ? (
-                  <span className="text-xs font-bold text-orange-500">{activeChips.size}</span>
-                ) : (
-                  <span>Filter</span>
-                )}
-              </button>
-
-              {/* Search input — middle */}
               <input
                 type="text"
-                data-testid="input-search"
                 placeholder="Search butter chicken, pasta, tofu..."
                 value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  if (!e.target.value) setDebouncedSearch("");
-                }}
+                onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="flex-1 px-4 py-4 text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none bg-transparent"
+                className="flex-1 px-5 py-4 text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none bg-transparent"
               />
-
-              {/* Search icon — far right */}
               <button
                 onClick={handleSearch}
                 className="flex-shrink-0 mx-3 w-10 h-10 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center transition-colors duration-200"
               >
                 <Search className="w-4 h-4 text-white" />
               </button>
-
             </div>
           </div>
-
-          {/* ── Grouped filters ── */}
-          {showFilters && (
-          <div className="max-w-2xl mx-auto flex flex-col gap-3 text-left mt-3">
-            {FILTER_GROUPS.map((group) => (
-              <div key={group.label} className="flex items-start gap-3">
-                <span className="text-xs font-bold text-neutral-500 uppercase tracking-wide pt-2 w-20 flex-shrink-0 text-right whitespace-nowrap">
-                  {group.label}
-                </span>
-                <div className="flex gap-2 flex-wrap">
-                  {group.chips.map((chip) => {
-                    const active = activeChips.has(chip.id);
-                    return (
-                      <button
-                        key={chip.id}
-                        data-testid={`chip-${chip.id}`}
-                        onClick={() => toggleChip(chip.id)}
-                        className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
-                          active
-                            ? "bg-orange-500 text-white border-orange-500 shadow-sm"
-                            : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
-                        }`}
-                      >
-                        {chip.id === "vegan"       && <Sprout className="w-3.5 h-3.5" />}
-                        {chip.id === "vegetarian"  && <Leaf className="w-3.5 h-3.5" />}
-                        {chip.id === "eggetarian" && <Egg className="w-3.5 h-3.5" />}
-                        {chip.id === "non-veg"    && <UtensilsCrossed className="w-3.5 h-3.5" />}
-                        {["indian","italian","mexican","chinese","thai","japanese"].includes(chip.id) && <Globe className="w-3.5 h-3.5" />}
-                        {["easy","medium","hard"].includes(chip.id) && <ChefHat className="w-3.5 h-3.5" />}
-                        {["under15","1530","30plus"].includes(chip.id) && <Timer className="w-3.5 h-3.5" />}
-                        {chip.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-          )}
-
-          {/* Active filter summary */}
-          {activeCount > 0 && (
-            <div className="mt-4 flex items-center justify-center gap-2">
-              <span className="text-xs text-amber-700 font-medium">
-                {activeCount} filter{activeCount > 1 ? "s" : ""} active
-              </span>
-              <button
-                onClick={() => setActiveChips(new Set())}
-                className="text-xs text-orange-500 hover:text-orange-600 font-semibold underline underline-offset-2 transition-colors"
-              >
-                Clear all
-              </button>
-            </div>
-          )}
         </div>
 
-        {/* ── Recipe grid — directly below search bar ── */}
-        <div className="max-w-6xl mx-auto mt-6 px-0">
+        {/* ── 6 preview recipe cards ── */}
+        <div className="max-w-6xl mx-auto mt-6">
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
             </div>
-          ) : recipes.length === 0 && hasFilters ? (
-            <div className="text-center py-10">
-              <p className="text-neutral-500 font-medium mb-3">
-                No recipes found{debouncedSearch ? ` for "${debouncedSearch}"` : ""}
-              </p>
-              <button
-                onClick={() => { setSearch(""); setDebouncedSearch(""); setActiveChips(new Set()); }}
-                className="px-4 py-2 rounded-xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600 transition-colors"
-              >
-                Clear filters
-              </button>
-            </div>
-          ) : recipes.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  recipe={recipe}
-                  isSaved={savedIds.has(recipe.id)}
-                  isLiked={likedIds.has(recipe.id)}
-                  onLikeToggle={fetchUserInteractions}
-                  onSaveToggle={fetchUserInteractions}
-                />
-              ))}
-            </div>
-          ) : null}
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {recipes.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    isSaved={savedIds.has(recipe.id)}
+                    isLiked={likedIds.has(recipe.id)}
+                    onLikeToggle={fetchUserInteractions}
+                    onSaveToggle={fetchUserInteractions}
+                  />
+                ))}
+              </div>
+              <div className="text-center mt-8">
+                <Link
+                  href="/recipes"
+                  className="inline-block rounded-xl bg-white border border-gray-200 px-6 py-3 text-orange-500 font-medium hover:bg-orange-50 transition-colors shadow-sm"
+                >
+                  View all recipes
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
@@ -515,7 +327,7 @@ export default function FeedPage() {
             <div className="flex gap-8 text-sm">
               <div className="flex flex-col gap-2">
                 <p className="font-semibold text-neutral-900 mb-1">Browse</p>
-                <Link href="/" className="text-neutral-600 hover:text-orange-500 transition-colors">Feed</Link>
+                <Link href="/recipes" className="text-neutral-600 hover:text-orange-500 transition-colors">Recipes</Link>
                 {user && (
                   <Link href="/add-recipe" className="text-neutral-600 hover:text-orange-500 transition-colors">Add Recipe</Link>
                 )}
