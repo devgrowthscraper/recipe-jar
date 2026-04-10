@@ -271,7 +271,7 @@ export default function FeedPage() {
               iconBg="bg-orange-100"
               icon={<Camera className="w-8 h-8 text-orange-500" />}
               title="Capture Recipes"
-              description="Spot a recipe anywhere on your phone. Take a screenshot, upload it, and our AI instantly pulls out the title, ingredients, and steps."
+              description="See a recipe on Instagram or YouTube? Screenshot it and upload. Our AI reads the image and extracts everything."
             />
             <FeatureCard
               iconBg="bg-purple-100"
