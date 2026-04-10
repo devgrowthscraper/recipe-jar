@@ -476,7 +476,7 @@ Melt chocolate with warm cream for dipping sauce',
 1 tsp cumin
 Sour cream and fresh coriander to serve',
    'Mix shredded chicken with onion, cumin, and half the enchilada sauce
-Warm tortillas briefly so they're pliable
+Warm tortillas briefly so they''re pliable
 Fill each tortilla with chicken mixture and roll tightly
 Place seam-down in a greased baking dish
 Pour remaining enchilada sauce over the top
