@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import {
   Search, Camera, Sparkles, BookOpen, PenLine, CheckCircle2,
   ArrowRight, UtensilsCrossed, TrendingUp, Timer, ChefHat,
-  Globe, Flame, Leaf, Egg, Sprout,
+  Globe, Flame, Leaf, Egg, Sprout, SlidersHorizontal,
 } from "lucide-react";
 import { supabase, Recipe } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
@@ -117,6 +117,7 @@ export default function FeedPage() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [activeChips, setActiveChips] = useState<Set<string>>(new Set());
+  const [showFilters, setShowFilters] = useState(false);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
 
@@ -208,8 +209,29 @@ export default function FeedPage() {
             />
           </div>
 
+          {/* ── Filter toggle button ── */}
+          <div className="flex justify-center mb-1">
+            <button
+              onClick={() => setShowFilters((v) => !v)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
+                showFilters || activeChips.size > 0
+                  ? "bg-orange-500 text-white border-orange-500 shadow-sm"
+                  : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
+              }`}
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              Filters
+              {activeChips.size > 0 && (
+                <span className="ml-0.5 bg-white text-orange-500 rounded-full text-xs font-bold w-4 h-4 flex items-center justify-center">
+                  {activeChips.size}
+                </span>
+              )}
+            </button>
+          </div>
+
           {/* ── Grouped filters ── */}
-          <div className="max-w-2xl mx-auto flex flex-col gap-3 text-left">
+          {showFilters && (
+          <div className="max-w-2xl mx-auto flex flex-col gap-3 text-left mt-3">
             {FILTER_GROUPS.map((group) => (
               <div key={group.label} className="flex items-start gap-3">
                 <span className="text-xs font-bold text-neutral-500 uppercase tracking-wide pt-2 w-20 flex-shrink-0 text-right whitespace-nowrap">
@@ -244,6 +266,7 @@ export default function FeedPage() {
               </div>
             ))}
           </div>
+          )}
 
           {/* Active filter summary */}
           {activeCount > 0 && (
