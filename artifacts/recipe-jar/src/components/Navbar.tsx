@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { UtensilsCrossed, Menu, X, PlusCircle, LogOut, User } from "lucide-react";
+import { UtensilsCrossed, Menu, PlusCircle, LogOut, User } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -10,18 +10,10 @@ export function Navbar() {
   const { user, profile, signOut } = useAuth();
   const [open, setOpen] = useState(false);
 
-  const navLinks = user
-    ? [
-        { href: "/", label: "Feed" },
-        { href: "/add-recipe", label: "Add Recipe" },
-        { href: "/profile", label: "My Profile" },
-      ]
-    : [{ href: "/", label: "Feed" }];
-
   const isActive = (href: string) => location === href;
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/20 backdrop-blur-lg bg-white/70">
+    <nav className="sticky top-0 z-50 border-b border-black/5 backdrop-blur-lg bg-white/80 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
@@ -33,29 +25,56 @@ export function Navbar() {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              data-testid={`nav-link-${link.label.toLowerCase().replace(" ", "-")}`}
-              className={`text-sm font-medium transition-all duration-200 relative pb-0.5 ${
-                isActive(link.href)
-                  ? "text-orange-500 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-orange-500 after:rounded-full"
-                  : "text-neutral-600 hover:text-orange-500"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {/* Feed link — always visible */}
+          <Link
+            href="/"
+            data-testid="nav-link-feed"
+            className={`text-sm font-medium transition-all duration-200 relative pb-0.5 ${
+              isActive("/")
+                ? "text-orange-500 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-orange-500 after:rounded-full"
+                : "text-neutral-600 hover:text-orange-500"
+            }`}
+          >
+            Feed
+          </Link>
 
-          {user && profile ? (
+          {/* Logged-in links */}
+          {user && (
+            <>
+              <Link
+                href="/add-recipe"
+                data-testid="nav-link-add-recipe"
+                className={`text-sm font-medium transition-all duration-200 relative pb-0.5 ${
+                  isActive("/add-recipe")
+                    ? "text-orange-500 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-orange-500 after:rounded-full"
+                    : "text-neutral-600 hover:text-orange-500"
+                }`}
+              >
+                Add Recipe
+              </Link>
+              <Link
+                href="/profile"
+                data-testid="nav-link-my-profile"
+                className={`text-sm font-medium transition-all duration-200 relative pb-0.5 ${
+                  isActive("/profile")
+                    ? "text-orange-500 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-orange-500 after:rounded-full"
+                    : "text-neutral-600 hover:text-orange-500"
+                }`}
+              >
+                My Profile
+              </Link>
+            </>
+          )}
+
+          {/* Right side: avatar+logout OR sign in */}
+          {user ? (
             <div className="flex items-center gap-3">
               <Link href="/profile">
                 <div
                   data-testid="nav-avatar"
                   className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-sm font-bold cursor-pointer hover:scale-105 transition-transform"
                 >
-                  {profile.username.charAt(0).toUpperCase()}
+                  {profile?.username?.charAt(0).toUpperCase() ?? "?"}
                 </div>
               </Link>
               <button
@@ -96,31 +115,51 @@ export function Navbar() {
               </div>
 
               <div className="flex flex-col gap-2">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                      isActive(link.href)
-                        ? "bg-orange-50 text-orange-600"
-                        : "text-neutral-600 hover:bg-orange-50 hover:text-orange-500"
-                    }`}
-                  >
-                    {link.label === "Add Recipe" && <PlusCircle className="w-4 h-4" />}
-                    {link.label === "My Profile" && <User className="w-4 h-4" />}
-                    {link.label}
-                  </Link>
-                ))}
+                <Link
+                  href="/"
+                  onClick={() => setOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    isActive("/") ? "bg-orange-50 text-orange-600" : "text-neutral-600 hover:bg-orange-50 hover:text-orange-500"
+                  }`}
+                >
+                  Feed
+                </Link>
+
+                {user && (
+                  <>
+                    <Link
+                      href="/add-recipe"
+                      onClick={() => setOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                        isActive("/add-recipe") ? "bg-orange-50 text-orange-600" : "text-neutral-600 hover:bg-orange-50 hover:text-orange-500"
+                      }`}
+                    >
+                      <PlusCircle className="w-4 h-4" />
+                      Add Recipe
+                    </Link>
+                    <Link
+                      href="/profile"
+                      onClick={() => setOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                        isActive("/profile") ? "bg-orange-50 text-orange-600" : "text-neutral-600 hover:bg-orange-50 hover:text-orange-500"
+                      }`}
+                    >
+                      <User className="w-4 h-4" />
+                      My Profile
+                    </Link>
+                  </>
+                )}
               </div>
 
-              {user && profile ? (
+              {user ? (
                 <div className="flex flex-col gap-3 pt-4 border-t border-neutral-100">
                   <div className="flex items-center gap-3 px-4">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-sm font-bold">
-                      {profile.username.charAt(0).toUpperCase()}
+                      {profile?.username?.charAt(0).toUpperCase() ?? "?"}
                     </div>
-                    <span className="text-sm font-medium text-neutral-700">@{profile.username}</span>
+                    <span className="text-sm font-medium text-neutral-700">
+                      {profile ? `@${profile.username}` : "Loading..."}
+                    </span>
                   </div>
                   <button
                     onClick={() => { signOut(); setOpen(false); }}
