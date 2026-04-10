@@ -2,58 +2,75 @@ import { useState, useEffect, useCallback } from "react";
 import { Link } from "wouter";
 import {
   Search, Camera, Sparkles, BookOpen, PenLine, CheckCircle2,
-  ArrowRight, UtensilsCrossed, TrendingUp, Timer, ChefHat,
-  Globe, Flame,
+  ArrowRight, UtensilsCrossed,
 } from "lucide-react";
 import { supabase, Recipe } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
 import { RecipeCard } from "@/components/RecipeCard";
 
-// ── Chip definitions (pills — cuisine, time, difficulty, sort) ────────────────
-type ChipDef = {
+// ── Grouped filter definitions ────────────────────────────────────────────────
+type FilterChip = {
   id: string;
   label: string;
-  sort?: "most_liked";
-  field?: "cuisine_tag" | "difficulty_tag" | "time_tag" | "diet_tag";
+  isAll?: true;
+  field?: "diet_tag" | "cuisine_tag" | "difficulty_tag" | "time_tag";
   value?: string;
   values?: string[];
 };
 
-const CHIPS: ChipDef[] = [
-  { id: "most-liked", label: "Most Liked",   sort: "most_liked" },
-  { id: "quick",      label: "Quick Meals",  field: "time_tag",       value: "Under 15 min" },
-  { id: "under30",    label: "Under 30 Min", field: "time_tag",       values: ["Under 15 min", "15-30 min"] },
-  { id: "easy",       label: "Easy",         field: "difficulty_tag", value: "Easy" },
-  { id: "indian",     label: "Indian",       field: "cuisine_tag",    value: "Indian" },
-  { id: "italian",    label: "Italian",      field: "cuisine_tag",    value: "Italian" },
-  { id: "mexican",    label: "Mexican",      field: "cuisine_tag",    value: "Mexican" },
-  { id: "chinese",    label: "Chinese",      field: "cuisine_tag",    value: "Chinese" },
-  { id: "thai",       label: "Thai",         field: "cuisine_tag",    value: "Thai" },
-];
-
-// ── Diet filter tiles ─────────────────────────────────────────────────────────
-type DietTile = {
+type FilterGroup = {
   id: string;
-  emoji: string;
   label: string;
-  field: "diet_tag";
-  value: string;
-  bg: string;
-  activeBg: string;
+  chips: FilterChip[];
 };
 
-const DIET_TILES: DietTile[] = [
-  { id: "non-veg",      emoji: "🍗", label: "Non-Veg",      field: "diet_tag", value: "Non-Vegetarian", bg: "bg-red-50",    activeBg: "bg-red-500"   },
-  { id: "eggetarian",   emoji: "🍳", label: "Eggetarian",   field: "diet_tag", value: "Eggetarian",     bg: "bg-yellow-50", activeBg: "bg-yellow-500"},
-  { id: "vegetarian",   emoji: "🥗", label: "Vegetarian",   field: "diet_tag", value: "Vegetarian",     bg: "bg-green-50",  activeBg: "bg-green-500" },
-  { id: "vegan",        emoji: "🌱", label: "Vegan",         field: "diet_tag", value: "Vegan",          bg: "bg-teal-50",   activeBg: "bg-teal-500"  },
+const FILTER_GROUPS: FilterGroup[] = [
+  {
+    id: "diet",
+    label: "Diet",
+    chips: [
+      { id: "diet-all",    label: "All",             isAll: true },
+      { id: "diet-veg",    label: "Vegetarian",      field: "diet_tag", value: "Vegetarian"     },
+      { id: "diet-vegan",  label: "Vegan",            field: "diet_tag", value: "Vegan"          },
+      { id: "diet-egg",    label: "Eggetarian",       field: "diet_tag", value: "Eggetarian"     },
+      { id: "diet-nonveg", label: "Non-Vegetarian",   field: "diet_tag", value: "Non-Vegetarian" },
+    ],
+  },
+  {
+    id: "cuisine",
+    label: "Cuisine",
+    chips: [
+      { id: "cuisine-all",      label: "All",         isAll: true },
+      { id: "cuisine-indian",   label: "Indian",      field: "cuisine_tag", value: "Indian"     },
+      { id: "cuisine-mexican",  label: "Mexican",     field: "cuisine_tag", value: "Mexican"    },
+      { id: "cuisine-chinese",  label: "Chinese",     field: "cuisine_tag", value: "Chinese"    },
+      { id: "cuisine-japanese", label: "Japanese",    field: "cuisine_tag", value: "Japanese"   },
+    ],
+  },
+  {
+    id: "difficulty",
+    label: "Difficulty",
+    chips: [
+      { id: "diff-all",    label: "All",    isAll: true },
+      { id: "diff-easy",   label: "Easy",   field: "difficulty_tag", value: "Easy"   },
+      { id: "diff-medium", label: "Medium", field: "difficulty_tag", value: "Medium" },
+      { id: "diff-hard",   label: "Hard",   field: "difficulty_tag", value: "Hard"   },
+    ],
+  },
+  {
+    id: "cook-time",
+    label: "Cook Time",
+    chips: [
+      { id: "time-all",   label: "All",       isAll: true },
+      { id: "time-15",    label: "<15 min",   field: "time_tag", value: "Under 15 min"                       },
+      { id: "time-30",    label: "15–30 min", field: "time_tag", value: "15-30 min"                          },
+      { id: "time-30plus",label: "30+ min",   field: "time_tag", values: ["30-60 min", "Over 1 hour"]        },
+    ],
+  },
 ];
 
-// All filter defs combined for query building
-const ALL_FILTERS: ChipDef[] = [
-  ...CHIPS,
-  ...DIET_TILES.map((d) => ({ id: d.id, label: d.label, field: d.field, value: d.value })),
-];
+// Flat list of all non-All chips for query building
+const ALL_FILTER_CHIPS: FilterChip[] = FILTER_GROUPS.flatMap(g => g.chips.filter(c => !c.isAll));
 
 // ── Skeleton card ─────────────────────────────────────────────────────────────
 function SkeletonCard() {
@@ -108,24 +125,31 @@ export default function FeedPage() {
     return () => clearTimeout(t);
   }, [search]);
 
-  function toggleChip(id: string) {
+  // Toggle a grouped chip. "All" clears all siblings in its group.
+  function toggleChip(groupId: string, chipId: string, isAll: boolean) {
     setActiveChips((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
+      const group = FILTER_GROUPS.find(g => g.id === groupId);
+      if (!group) return next;
+      const siblingIds = group.chips.filter(c => !c.isAll).map(c => c.id);
+      if (isAll) {
+        siblingIds.forEach(id => next.delete(id));
+      } else {
+        if (next.has(chipId)) next.delete(chipId);
+        else next.add(chipId);
+      }
       return next;
     });
   }
 
-  const isSortedByLiked = activeChips.has("most-liked");
-  const activeFilterDefs = ALL_FILTERS.filter((c) => !c.sort && activeChips.has(c.id));
+  const activeFilterDefs = ALL_FILTER_CHIPS.filter(c => activeChips.has(c.id));
 
   const fetchRecipes = useCallback(async () => {
     setLoading(true);
     let query = supabase
       .from("recipes")
       .select("*, profiles(id, username, avatar_url)")
-      .order(isSortedByLiked ? "likes_count" : "created_at", { ascending: false });
+      .order("created_at", { ascending: false });
 
     if (debouncedSearch) {
       query = query.or(
@@ -161,7 +185,6 @@ export default function FeedPage() {
   useEffect(() => { fetchUserInteractions(); }, [fetchUserInteractions]);
 
   const hasFilters = debouncedSearch || activeFilterDefs.length > 0;
-  const activeCount = activeChips.size;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -191,70 +214,46 @@ export default function FeedPage() {
             />
           </div>
 
-          {/* ── Diet filter tiles ── */}
-          <div className="flex justify-center gap-3 mb-5 flex-wrap">
-            {DIET_TILES.map((tile) => {
-              const active = activeChips.has(tile.id);
+          {/* ── Grouped filter chips ── */}
+          <div className="max-w-2xl mx-auto text-left">
+            {FILTER_GROUPS.map((group) => {
+              const groupHasActive = group.chips.some(c => !c.isAll && activeChips.has(c.id));
               return (
-                <button
-                  key={tile.id}
-                  data-testid={`chip-${tile.id}`}
-                  onClick={() => toggleChip(tile.id)}
-                  className={`flex flex-col items-center gap-1.5 w-20 py-3 rounded-2xl border-2 transition-all duration-200 group ${
-                    active
-                      ? "border-orange-400 bg-orange-50 shadow-md"
-                      : "border-neutral-200 bg-white hover:border-orange-300 hover:bg-orange-50/50"
-                  }`}
-                >
-                  <span className="text-2xl leading-none">{tile.emoji}</span>
-                  <span className={`text-xs font-semibold leading-tight ${active ? "text-orange-600" : "text-neutral-600 group-hover:text-orange-500"}`}>
-                    {tile.label}
-                  </span>
-                </button>
+                <div key={group.id}>
+                  <p className="text-sm font-medium text-gray-500 mt-4 mb-2">{group.label}</p>
+                  <div className="flex gap-2 flex-wrap">
+                    {group.chips.map((chip) => {
+                      const active = chip.isAll ? !groupHasActive : activeChips.has(chip.id);
+                      return (
+                        <button
+                          key={chip.id}
+                          data-testid={`chip-${chip.id}`}
+                          onClick={() => toggleChip(group.id, chip.id, !!chip.isAll)}
+                          className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
+                            active
+                              ? "bg-orange-500 text-white border-orange-500 shadow-sm"
+                              : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
+                          }`}
+                        >
+                          {chip.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
-          </div>
 
-          {/* ── Cuisine / time / sort chips ── */}
-          <div className="max-w-2xl mx-auto flex gap-2 overflow-x-auto pb-1 justify-center flex-wrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {CHIPS.map((chip) => {
-              const active = activeChips.has(chip.id);
-              return (
-                <button
-                  key={chip.id}
-                  data-testid={`chip-${chip.id}`}
-                  onClick={() => toggleChip(chip.id)}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
-                    active
-                      ? "bg-orange-500 text-white border-orange-500 shadow-sm"
-                      : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
-                  }`}
-                >
-                  {chip.id === "most-liked" && <TrendingUp className="w-3.5 h-3.5" />}
-                  {chip.id === "quick" && <Flame className="w-3.5 h-3.5" />}
-                  {chip.id === "under30" && <Timer className="w-3.5 h-3.5" />}
-                  {chip.id === "easy" && <ChefHat className="w-3.5 h-3.5" />}
-                  {["indian","italian","mexican","chinese","thai"].includes(chip.id) && <Globe className="w-3.5 h-3.5" />}
-                  {chip.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Active filter summary */}
-          {activeCount > 0 && (
-            <div className="mt-4 flex items-center justify-center gap-2">
-              <span className="text-xs text-amber-700 font-medium">
-                {activeCount} filter{activeCount > 1 ? "s" : ""} active
-              </span>
+            {/* Clear all — only shown when any filter is active */}
+            {activeFilterDefs.length > 0 && (
               <button
                 onClick={() => setActiveChips(new Set())}
-                className="text-xs text-orange-500 hover:text-orange-600 font-semibold underline underline-offset-2 transition-colors"
+                className="mt-4 text-xs text-orange-500 hover:text-orange-600 font-semibold underline underline-offset-2 transition-colors"
               >
-                Clear all
+                Clear all filters
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </section>
 
