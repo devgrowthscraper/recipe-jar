@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import {
   UtensilsCrossed, Bookmark, Heart, LogOut,
   Pencil, Trash2, Plus, ChevronDown, AlertCircle,
-  Settings
+  Settings, Loader2
 } from "lucide-react";
 import { supabase, Recipe } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
@@ -25,32 +25,33 @@ export default function ProfilePage() {
   const [savedRecipes, setSavedRecipes] = useState<Recipe[]>([]);
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
-
-  // Fade-out state for unsave
   const [fadingIds, setFadingIds] = useState<Set<string>>(new Set());
-
-  // Delete confirm state
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  // Settings
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [editUsername, setEditUsername] = useState("");
   const [editAvatarUrl, setEditAvatarUrl] = useState("");
   const [avatarError, setAvatarError] = useState(false);
   const [savingSettings, setSavingSettings] = useState(false);
 
+  // Redirect if logged out after auth resolves
   useEffect(() => {
     if (!authLoading && !user) setLocation("/login");
   }, [user, authLoading, setLocation]);
 
+  // Sync settings fields when profile loads
   useEffect(() => {
     if (profile) {
       setEditUsername(profile.username);
       setEditAvatarUrl(profile.avatar_url || "");
+    } else if (user) {
+      // Fallback to email prefix if profile row doesn't exist yet
+      setEditUsername(user.email?.split("@")[0]?.replace(/[^a-z0-9_]/gi, "").toLowerCase() || "");
     }
-  }, [profile]);
+  }, [profile, user]);
 
+  // Fetch recipes/saves/likes
   useEffect(() => {
     if (!user) return;
     async function fetchData() {
@@ -68,7 +69,6 @@ export default function ProfilePage() {
           .order("saved_at", { ascending: false }),
         supabase.from("likes").select("recipe_id").eq("user_id", user!.id),
       ]);
-
       setMyRecipes(myRes.data || []);
       setSavedRecipes(
         (savedRes.data || [])
@@ -81,15 +81,28 @@ export default function ProfilePage() {
     fetchData();
   }, [user]);
 
-  if (authLoading || !user || !profile) return null;
+  // ── Loading / redirect states ───────────────────────────────
+  if (authLoading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-orange-400" />
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
+  // Derive display info — works with OR without a profile row
+  const displayUsername = profile?.username || user.email?.split("@")[0] || "User";
+  const displayInitial = displayUsername.charAt(0).toUpperCase();
+  const avatarUrl = profile?.avatar_url || null;
+  const memberSince = profile?.created_at
+    ? new Date(profile.created_at).toLocaleDateString("en-US", { month: "long", year: "numeric" })
+    : new Date(user.created_at || Date.now()).toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   const likesReceived = myRecipes.reduce((sum, r) => sum + (r.likes_count || 0), 0);
-  const memberSince = new Date(profile.created_at).toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
 
-  // ── Handlers ─────────────────────────────────────────────────
+  // ── Handlers ────────────────────────────────────────────────
   async function handleUnsave(recipeId: string) {
     setFadingIds((prev) => new Set([...prev, recipeId]));
     await supabase.from("saved_recipes").delete().eq("user_id", user.id).eq("recipe_id", recipeId);
@@ -119,8 +132,7 @@ export default function ProfilePage() {
     if (!editUsername.trim()) return;
     setSavingSettings(true);
 
-    // Check username uniqueness (if changed)
-    if (editUsername.trim() !== profile.username) {
+    if (profile && editUsername.trim() !== profile.username) {
       const { data: existing } = await supabase
         .from("profiles")
         .select("id")
@@ -136,11 +148,11 @@ export default function ProfilePage() {
 
     const { error } = await supabase
       .from("profiles")
-      .update({
+      .upsert({
+        id: user.id,
         username: editUsername.trim(),
         avatar_url: editAvatarUrl.trim() || null,
-      })
-      .eq("id", user.id);
+      });
 
     if (error) {
       toast({ title: "Error saving settings", description: error.message, variant: "destructive" });
@@ -152,7 +164,7 @@ export default function ProfilePage() {
     setSavingSettings(false);
   }
 
-  // ── Render ───────────────────────────────────────────────────
+  // ── Render ──────────────────────────────────────────────────
   return (
     <>
       {/* Delete confirm modal */}
@@ -186,27 +198,26 @@ export default function ProfilePage() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-12">
 
-        {/* ── Profile Header ── */}
+        {/* ── Banner + Avatar ── */}
         <div className="relative mb-16">
-          {/* Banner */}
           <div className="h-32 bg-gradient-to-r from-orange-400 to-amber-500 rounded-b-3xl" />
 
-          {/* Avatar — overlaps banner */}
+          {/* Avatar overlapping the banner */}
           <div className="absolute left-6 sm:left-8 bottom-0 translate-y-1/2">
-            {profile.avatar_url ? (
+            {avatarUrl ? (
               <img
-                src={profile.avatar_url}
-                alt={profile.username}
+                src={avatarUrl}
+                alt={displayUsername}
                 className="w-24 h-24 rounded-full object-cover ring-4 ring-white shadow-lg"
               />
             ) : (
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-300 to-orange-600 ring-4 ring-white shadow-lg flex items-center justify-center text-white text-3xl font-bold">
-                {profile.username.charAt(0).toUpperCase()}
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-300 to-orange-600 ring-4 ring-white shadow-lg flex items-center justify-center text-white text-4xl font-bold select-none">
+                {displayInitial}
               </div>
             )}
           </div>
 
-          {/* Sign out — top right of banner */}
+          {/* Sign out button top-right of banner */}
           <button
             data-testid="button-logout"
             onClick={() => { signOut(); setLocation("/"); }}
@@ -220,35 +231,33 @@ export default function ProfilePage() {
         {/* Username + member since */}
         <div className="px-1 mb-6">
           <h1 className="text-2xl font-bold text-amber-900" data-testid="text-profile-username">
-            @{profile.username}
+            @{displayUsername}
           </h1>
-          <p className="text-sm text-gray-400 mt-0.5">Member since {memberSince}</p>
+          <p className="text-sm text-neutral-400 mt-0.5">Member since {memberSince}</p>
         </div>
 
-        {/* ── Stats row ── */}
+        {/* ── Stat cards ── */}
         <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
           {[
             { icon: <UtensilsCrossed className="w-5 h-5 text-orange-400" />, value: myRecipes.length, label: "Recipes Posted" },
             { icon: <Bookmark className="w-5 h-5 text-orange-400" />, value: savedRecipes.length, label: "Recipes Saved" },
             { icon: <Heart className="w-5 h-5 text-orange-400" />, value: likesReceived, label: "Likes Received" },
           ].map(({ icon, value, label }) => (
-            <div key={label} className="bg-white rounded-2xl shadow-sm border border-neutral-50 p-4 text-center">
+            <div key={label} className="bg-white rounded-2xl shadow-sm border border-neutral-100 p-4 text-center">
               <div className="flex justify-center mb-1">{icon}</div>
               <p className="text-2xl font-bold text-orange-500">{value}</p>
-              <p className="text-xs text-gray-500 uppercase tracking-wider mt-0.5 leading-tight">{label}</p>
+              <p className="text-[11px] text-neutral-500 uppercase tracking-wider mt-0.5 leading-tight">{label}</p>
             </div>
           ))}
         </div>
 
-        {/* ── Tab toggles ── */}
+        {/* ── Tabs ── */}
         <div className="flex gap-1 bg-neutral-100 rounded-2xl p-1.5 mb-6 w-fit">
           <button
             data-testid="tab-my-recipes"
             onClick={() => setTab("myRecipes")}
             className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-              tab === "myRecipes"
-                ? "bg-white text-orange-600 shadow-sm"
-                : "text-neutral-500 hover:text-neutral-700"
+              tab === "myRecipes" ? "bg-white text-orange-600 shadow-sm" : "text-neutral-500 hover:text-neutral-700"
             }`}
           >
             <UtensilsCrossed className="w-4 h-4" />
@@ -258,9 +267,7 @@ export default function ProfilePage() {
             data-testid="tab-saved"
             onClick={() => setTab("saved")}
             className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-              tab === "saved"
-                ? "bg-white text-orange-600 shadow-sm"
-                : "text-neutral-500 hover:text-neutral-700"
+              tab === "saved" ? "bg-white text-orange-600 shadow-sm" : "text-neutral-500 hover:text-neutral-700"
             }`}
           >
             <Bookmark className="w-4 h-4" />
@@ -299,12 +306,7 @@ export default function ProfilePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {myRecipes.map((recipe) => (
                 <div key={recipe.id} className="relative group">
-                  <RecipeCard
-                    recipe={recipe}
-                    isSaved={false}
-                    isLiked={likedIds.has(recipe.id)}
-                  />
-                  {/* Edit / Delete overlay */}
+                  <RecipeCard recipe={recipe} isSaved={false} isLiked={likedIds.has(recipe.id)} />
                   <div className="absolute top-2 right-2 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <Link href={`/edit-recipe/${recipe.id}`}>
                       <button
@@ -349,12 +351,7 @@ export default function ProfilePage() {
                   }`}
                 >
                   <div className="relative group">
-                    <RecipeCard
-                      recipe={recipe}
-                      isSaved={true}
-                      isLiked={likedIds.has(recipe.id)}
-                    />
-                    {/* Unsave overlay button */}
+                    <RecipeCard recipe={recipe} isSaved={true} isLiked={likedIds.has(recipe.id)} />
                     <button
                       onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleUnsave(recipe.id); }}
                       className="absolute top-2 right-2 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500 text-white text-xs font-medium shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-orange-600"
@@ -369,7 +366,7 @@ export default function ProfilePage() {
           )
         )}
 
-        {/* ── Settings collapsible ── */}
+        {/* ── Settings accordion ── */}
         <div className="mt-10 bg-white rounded-2xl border border-neutral-100 shadow-sm overflow-hidden">
           <button
             onClick={() => setSettingsOpen((o) => !o)}
@@ -386,9 +383,8 @@ export default function ProfilePage() {
 
           {settingsOpen && (
             <form onSubmit={handleSaveSettings} className="px-5 pb-5 flex flex-col gap-4 border-t border-neutral-100 pt-4">
-              {/* Username */}
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="settings-username" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="settings-username" className="text-sm font-medium text-neutral-700">
                   Username
                 </Label>
                 <Input
@@ -404,9 +400,8 @@ export default function ProfilePage() {
                 <p className="text-xs text-neutral-400">Only lowercase letters, numbers, and underscores.</p>
               </div>
 
-              {/* Avatar URL */}
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="settings-avatar" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="settings-avatar" className="text-sm font-medium text-neutral-700">
                   Avatar URL <span className="text-neutral-400 font-normal">(optional)</span>
                 </Label>
                 <Input

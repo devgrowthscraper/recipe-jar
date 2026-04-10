@@ -1,22 +1,28 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { UtensilsCrossed, Menu, PlusCircle, LogOut, User } from "lucide-react";
+import { UtensilsCrossed, Menu, PlusCircle, LogOut, User, Loader2 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export function Navbar() {
   const [location] = useLocation();
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, loading, signOut } = useAuth();
   const [open, setOpen] = useState(false);
 
   const isActive = (href: string) => location === href;
 
+  // Derive the avatar initial — fallback to email's first letter while profile loads
+  const avatarInitial = profile?.username?.charAt(0).toUpperCase()
+    || user?.email?.charAt(0).toUpperCase()
+    || null;
+
   return (
     <nav className="sticky top-0 z-50 border-b border-black/5 backdrop-blur-lg bg-white/80 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-sm">
             <UtensilsCrossed className="w-5 h-5 text-white" />
           </div>
@@ -25,7 +31,8 @@ export function Navbar() {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
-          {/* Feed link — always visible */}
+
+          {/* Feed — always visible */}
           <Link
             href="/"
             data-testid="nav-link-feed"
@@ -66,22 +73,24 @@ export function Navbar() {
             </>
           )}
 
-          {/* Right side: avatar+logout OR sign in */}
-          {user ? (
+          {/* Avatar + logout OR Sign In */}
+          {loading ? (
+            <Loader2 className="w-5 h-5 animate-spin text-orange-300" />
+          ) : user ? (
             <div className="flex items-center gap-3">
               <Link href="/profile">
                 <div
                   data-testid="nav-avatar"
                   className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-sm font-bold cursor-pointer hover:scale-105 transition-transform"
                 >
-                  {profile?.username?.charAt(0).toUpperCase() ?? "?"}
+                  {avatarInitial ?? <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 </div>
               </Link>
               <button
                 data-testid="button-logout"
                 onClick={signOut}
                 className="text-neutral-400 hover:text-red-500 transition-colors"
-                title="Logout"
+                title="Sign out"
               >
                 <LogOut className="w-4 h-4" />
               </button>
@@ -155,10 +164,10 @@ export function Navbar() {
                 <div className="flex flex-col gap-3 pt-4 border-t border-neutral-100">
                   <div className="flex items-center gap-3 px-4">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-sm font-bold">
-                      {profile?.username?.charAt(0).toUpperCase() ?? "?"}
+                      {avatarInitial ?? <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                     </div>
                     <span className="text-sm font-medium text-neutral-700">
-                      {profile ? `@${profile.username}` : "Loading..."}
+                      {profile ? `@${profile.username}` : user.email}
                     </span>
                   </div>
                   <button
