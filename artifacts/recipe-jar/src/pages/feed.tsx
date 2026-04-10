@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import {
   Search, Camera, Sparkles, BookOpen, PenLine, CheckCircle2,
   ArrowRight, UtensilsCrossed, TrendingUp, Timer, ChefHat,
-  Globe, Flame, Leaf, Egg,
+  Globe, Flame, Leaf, Egg, Sprout,
 } from "lucide-react";
 import { supabase, Recipe } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
@@ -212,7 +212,7 @@ export default function FeedPage() {
           <div className="max-w-2xl mx-auto flex flex-col gap-3 text-left">
             {FILTER_GROUPS.map((group) => (
               <div key={group.label} className="flex items-start gap-3">
-                <span className="text-xs font-bold text-neutral-500 uppercase tracking-wide pt-2 w-16 flex-shrink-0 text-right">
+                <span className="text-xs font-bold text-neutral-500 uppercase tracking-wide pt-2 w-20 flex-shrink-0 text-right whitespace-nowrap">
                   {group.label}
                 </span>
                 <div className="flex gap-2 flex-wrap">
@@ -229,7 +229,8 @@ export default function FeedPage() {
                             : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
                         }`}
                       >
-                        {["vegan","vegetarian"].includes(chip.id) && <Leaf className="w-3.5 h-3.5" />}
+                        {chip.id === "vegan"       && <Sprout className="w-3.5 h-3.5" />}
+                        {chip.id === "vegetarian"  && <Leaf className="w-3.5 h-3.5" />}
                         {chip.id === "eggetarian" && <Egg className="w-3.5 h-3.5" />}
                         {chip.id === "non-veg"    && <UtensilsCrossed className="w-3.5 h-3.5" />}
                         {["indian","italian","mexican","chinese","thai","japanese"].includes(chip.id) && <Globe className="w-3.5 h-3.5" />}
