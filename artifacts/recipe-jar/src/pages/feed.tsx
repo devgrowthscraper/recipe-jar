@@ -42,12 +42,10 @@ const FILTER_GROUPS: FilterGroup[] = [
   {
     label: "Cuisine",
     chips: [
-      { id: "indian",   label: "Indian",   field: "cuisine_tag", value: "Indian" },
-      { id: "italian",  label: "Italian",  field: "cuisine_tag", value: "Italian" },
-      { id: "mexican",  label: "Mexican",  field: "cuisine_tag", value: "Mexican" },
-      { id: "chinese",  label: "Chinese",  field: "cuisine_tag", value: "Chinese" },
-      { id: "thai",     label: "Thai",     field: "cuisine_tag", value: "Thai" },
-      { id: "japanese", label: "Japanese", field: "cuisine_tag", value: "Japanese" },
+      { id: "indian",  label: "Indian",  field: "cuisine_tag", value: "Indian" },
+      { id: "italian", label: "Italian", field: "cuisine_tag", value: "Italian" },
+      { id: "chinese", label: "Chinese", field: "cuisine_tag", value: "Chinese" },
+      { id: "thai",    label: "Thai",    field: "cuisine_tag", value: "Thai" },
     ],
   },
   {
@@ -210,35 +208,11 @@ export default function FeedPage() {
             />
           </div>
 
-          {/* ── Quick filters row ── */}
-          <div className="flex justify-center gap-2 flex-wrap mb-4">
-            {QUICK_CHIPS.map((chip) => {
-              const active = activeChips.has(chip.id);
-              return (
-                <button
-                  key={chip.id}
-                  data-testid={`chip-${chip.id}`}
-                  onClick={() => toggleChip(chip.id)}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
-                    active
-                      ? "bg-orange-500 text-white border-orange-500 shadow-sm"
-                      : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
-                  }`}
-                >
-                  {chip.id === "most-liked" && <TrendingUp className="w-3.5 h-3.5" />}
-                  {chip.id === "quick"      && <Flame className="w-3.5 h-3.5" />}
-                  {chip.id === "under30"    && <Timer className="w-3.5 h-3.5" />}
-                  {chip.label}
-                </button>
-              );
-            })}
-          </div>
-
           {/* ── Grouped filters ── */}
           <div className="max-w-2xl mx-auto flex flex-col gap-3 text-left">
             {FILTER_GROUPS.map((group) => (
               <div key={group.label} className="flex items-start gap-3">
-                <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wide pt-2 w-16 flex-shrink-0 text-right">
+                <span className="text-xs font-bold text-neutral-500 uppercase tracking-wide pt-2 w-16 flex-shrink-0 text-right">
                   {group.label}
                 </span>
                 <div className="flex gap-2 flex-wrap">
