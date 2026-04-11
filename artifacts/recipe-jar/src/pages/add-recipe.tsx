@@ -443,8 +443,8 @@ export default function AddRecipePage() {
                     className="w-full aspect-[4/3] border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2 text-neutral-400 hover:border-amber-300 hover:text-amber-500 hover:bg-amber-50/40 transition-all duration-200"
                   >
                     <Camera className="w-6 h-6" />
-                    <span className="text-sm font-medium">Add a photo</span>
-                    <span className="text-xs text-neutral-300">4:3 works best</span>
+                    <span className="text-sm font-semibold">Please add a photo</span>
+                    <span className="text-xs text-neutral-400">4:3 works best</span>
                   </button>
                 )}
 
