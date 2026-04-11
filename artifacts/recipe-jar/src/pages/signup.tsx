@@ -1,13 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import {
-  UtensilsCrossed, Mail, Lock, Eye, EyeOff, User,
-  Camera, Sparkles, BookOpen,
-} from "lucide-react";
+import { UtensilsCrossed, Eye, EyeOff, Camera, Sparkles, BookOpen } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth-context";
 
@@ -87,9 +82,9 @@ export default function SignupPage() {
           <p className="text-white/85 text-base leading-relaxed mb-10">
             Save recipes from Instagram and YouTube. AI organizes them for you.
           </p>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             {FEATURES.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-3 bg-white/15 rounded-xl px-5 py-3 backdrop-blur-sm">
+              <div key={label} className="flex items-center gap-3 bg-white/15 rounded-xl px-4 py-3 backdrop-blur-sm">
                 <Icon className="w-5 h-5 text-white flex-shrink-0" />
                 <span className="text-sm font-semibold text-white">{label}</span>
               </div>
@@ -117,38 +112,34 @@ export default function SignupPage() {
                 <h1 className="text-2xl font-bold text-amber-900 mb-1">Create Your Account</h1>
                 <p className="text-sm text-gray-500 mb-6">Join the community and start saving recipes</p>
 
-                <form onSubmit={handleSignup} className="flex flex-col gap-5">
-                  <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="email" className="text-sm font-medium text-neutral-700">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                      <Input
-                        id="email"
-                        type="email"
-                        data-testid="input-email"
-                        placeholder="you@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="pl-10 rounded-xl border-gray-200 py-3 px-4 focus:ring-2 focus:ring-orange-300"
-                      />
-                    </div>
+                <form onSubmit={handleSignup} className="space-y-5">
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+                    <input
+                      id="email"
+                      type="email"
+                      data-testid="input-email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="w-full rounded-xl border border-gray-200 py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 bg-white"
+                    />
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="password" className="text-sm font-medium text-neutral-700">Password</Label>
+                  <div>
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                      <Input
+                      <input
                         id="password"
                         type={showPassword ? "text" : "password"}
                         data-testid="input-password"
-                        placeholder="Min. 6 characters"
+                        placeholder="Enter your password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         minLength={6}
-                        className="pl-10 pr-10 rounded-xl border-gray-200 py-3 px-4 focus:ring-2 focus:ring-orange-300"
+                        className="w-full rounded-xl border border-gray-200 py-3 px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 bg-white"
                       />
                       <button
                         type="button"
@@ -160,14 +151,16 @@ export default function SignupPage() {
                     </div>
                   </div>
 
-                  <Button
-                    type="submit"
-                    data-testid="button-submit-signup"
-                    disabled={loading}
-                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3 font-semibold transition-all duration-200"
-                  >
-                    {loading ? "Creating account..." : "Create Account"}
-                  </Button>
+                  <div className="mt-6">
+                    <Button
+                      type="submit"
+                      data-testid="button-submit-signup"
+                      disabled={loading}
+                      className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3.5 font-semibold transition-all duration-200"
+                    >
+                      {loading ? "Creating account..." : "Create Account"}
+                    </Button>
+                  </div>
                 </form>
 
                 <p className="text-center text-sm text-neutral-500 mt-5">
@@ -195,35 +188,34 @@ export default function SignupPage() {
                 <h1 className="text-2xl font-bold text-amber-900 mb-1">Choose a Username</h1>
                 <p className="text-sm text-gray-500 mb-6">This is how others will find you</p>
 
-                <form onSubmit={handleSetUsername} className="flex flex-col gap-5">
-                  <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="username" className="text-sm font-medium text-neutral-700">Username</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                      <Input
-                        id="username"
-                        type="text"
-                        data-testid="input-username"
-                        placeholder="yourname"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
-                        required
-                        minLength={3}
-                        maxLength={30}
-                        className="pl-10 rounded-xl border-gray-200 py-3 px-4 focus:ring-2 focus:ring-orange-300"
-                      />
-                    </div>
-                    <p className="text-xs text-neutral-400">Only lowercase letters, numbers, and underscores.</p>
+                <form onSubmit={handleSetUsername} className="space-y-5">
+                  <div>
+                    <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1.5">Username</label>
+                    <input
+                      id="username"
+                      type="text"
+                      data-testid="input-username"
+                      placeholder="yourname"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+                      required
+                      minLength={3}
+                      maxLength={30}
+                      className="w-full rounded-xl border border-gray-200 py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 bg-white"
+                    />
+                    <p className="text-xs text-neutral-400 mt-1.5">Only lowercase letters, numbers, and underscores.</p>
                   </div>
 
-                  <Button
-                    type="submit"
-                    data-testid="button-submit-username"
-                    disabled={loading || username.length < 3}
-                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3 font-semibold transition-all duration-200"
-                  >
-                    {loading ? "Setting up..." : "Get Started"}
-                  </Button>
+                  <div className="mt-6">
+                    <Button
+                      type="submit"
+                      data-testid="button-submit-username"
+                      disabled={loading || username.length < 3}
+                      className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3.5 font-semibold transition-all duration-200"
+                    >
+                      {loading ? "Setting up..." : "Get Started"}
+                    </Button>
+                  </div>
                 </form>
               </>
             )}
