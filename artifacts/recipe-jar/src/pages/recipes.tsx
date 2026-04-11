@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   Search, SlidersHorizontal, UtensilsCrossed, ChefHat,
-  Globe, Timer, Leaf, Egg, Sprout,
+  Globe, Timer, Leaf, Egg, Sprout, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { supabase, Recipe } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
@@ -113,6 +113,7 @@ export default function RecipesPage() {
   const [loading, setLoading] = useState(true);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   // Debounce
   useEffect(() => {
@@ -300,29 +301,86 @@ export default function RecipesPage() {
         </div>
       </div>
 
-      {/* ── Recipe grid ── */}
-      <div className="px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* ── Recipe grid / carousel ── */}
+      <div className="py-8">
+
+        {/* Empty / loading states */}
+        {loading ? (
+          <>
+            {/* Mobile skeleton carousel */}
+            <div className="md:hidden flex overflow-x-auto gap-4 px-4 no-scrollbar pb-2">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="w-72 flex-shrink-0"><SkeletonCard /></div>
+              ))}
+            </div>
+            {/* Desktop skeleton grid */}
+            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6 px-4 max-w-6xl mx-auto">
               {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
             </div>
-          ) : recipes.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-neutral-500 font-medium mb-3">
-                No recipes found{debouncedSearch ? ` for "${debouncedSearch}"` : ""}
-              </p>
-              {hasFilters && (
-                <button
-                  onClick={() => { setSearch(""); setDebouncedSearch(""); setActiveChips(new Set()); }}
-                  className="px-4 py-2 rounded-xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600 transition-colors"
-                >
-                  Clear filters
-                </button>
-              )}
+          </>
+        ) : recipes.length === 0 ? (
+          <div className="text-center py-16 px-4">
+            <p className="text-neutral-500 font-medium mb-3">
+              No recipes found{debouncedSearch ? ` for "${debouncedSearch}"` : ""}
+            </p>
+            {hasFilters && (
+              <button
+                onClick={() => { setSearch(""); setDebouncedSearch(""); setActiveChips(new Set()); }}
+                className="px-4 py-2 rounded-xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600 transition-colors"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
+        ) : (
+          <>
+            {/* ── Mobile: horizontal swipe carousel ─────────────────── */}
+            <div className="md:hidden relative">
+              {/* Left arrow — visible on sm (tablet-ish), hidden on xs */}
+              <button
+                onClick={() => carouselRef.current?.scrollBy({ left: -288, behavior: "smooth" })}
+                className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 bg-white/90 shadow-md rounded-full items-center justify-center hover:bg-white transition-colors"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft className="w-5 h-5 text-neutral-600" />
+              </button>
+
+              <div
+                ref={carouselRef}
+                className="flex overflow-x-auto gap-4 px-4 pb-4 no-scrollbar"
+                style={{ scrollSnapType: "x mandatory" }}
+              >
+                {recipes.map((recipe) => (
+                  <div
+                    key={recipe.id}
+                    className="w-72 flex-shrink-0"
+                    style={{ scrollSnapAlign: "start" }}
+                  >
+                    <RecipeCard
+                      recipe={recipe}
+                      isSaved={savedIds.has(recipe.id)}
+                      isLiked={likedIds.has(recipe.id)}
+                      onLikeToggle={fetchUserInteractions}
+                      onSaveToggle={fetchUserInteractions}
+                    />
+                  </div>
+                ))}
+                {/* Trailing padding spacer so last card isn't flush to edge */}
+                <div className="w-4 flex-shrink-0" />
+              </div>
+
+              {/* Right arrow — visible on sm, hidden on xs */}
+              <button
+                onClick={() => carouselRef.current?.scrollBy({ left: 288, behavior: "smooth" })}
+                className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 bg-white/90 shadow-md rounded-full items-center justify-center hover:bg-white transition-colors"
+                aria-label="Scroll right"
+              >
+                <ChevronRight className="w-5 h-5 text-neutral-600" />
+              </button>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            {/* ── Desktop: 3-column grid ─────────────────────────────── */}
+            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6 px-4 max-w-6xl mx-auto">
               {recipes.map((recipe) => (
                 <RecipeCard
                   key={recipe.id}
@@ -334,8 +392,8 @@ export default function RecipesPage() {
                 />
               ))}
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
 
     </div>
