@@ -203,10 +203,18 @@ export default function AddRecipePage() {
   // ── Submit ─────────────────────────────────────────────────────
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.title.trim() || !form.ingredients.trim() || !form.steps.trim()) {
+    if (!form.title.trim() || !form.description.trim() || !form.ingredients.trim() || !form.steps.trim()) {
       toast({
         title: "Required fields missing",
-        description: "Title, ingredients, and steps are required.",
+        description: "Title, description, ingredients, and steps are required.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!form.imageUrl.trim()) {
+      toast({
+        title: "Photo required",
+        description: "Please add a recipe photo before publishing.",
         variant: "destructive",
       });
       return;
@@ -229,7 +237,7 @@ export default function AddRecipePage() {
       .insert({
         user_id: user.id,
         title: form.title.trim(),
-        description: form.description.trim() || null,
+        description: form.description.trim(),
         ingredients: form.ingredients.trim(),
         steps: form.steps.trim(),
         image_url: form.imageUrl.trim() || null,
@@ -372,7 +380,7 @@ export default function AddRecipePage() {
 
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="description" className="text-sm font-medium text-gray-700">
-                  Description <span className="text-neutral-400 font-normal">(optional)</span>
+                  Description <span className="text-red-500">*</span>
                 </Label>
                 <Textarea
                   id="description"
@@ -380,6 +388,7 @@ export default function AddRecipePage() {
                   placeholder="A short description of this recipe..."
                   value={form.description}
                   onChange={(e) => updateForm("description", e.target.value)}
+                  required
                   rows={3}
                   className={`${inputClass} resize-none`}
                 />
@@ -388,7 +397,7 @@ export default function AddRecipePage() {
               <div className="flex flex-col gap-1.5">
                 <Label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
                   <Camera className="w-4 h-4 text-neutral-400" />
-                  Recipe Photo <span className="text-neutral-400 font-normal">(optional)</span>
+                  Recipe Photo <span className="text-red-500">*</span>
                 </Label>
 
                 {/* Hidden file input */}
