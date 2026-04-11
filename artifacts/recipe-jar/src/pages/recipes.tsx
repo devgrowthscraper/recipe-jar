@@ -181,30 +181,8 @@ export default function RecipesPage() {
     <div className="min-h-screen bg-background">
 
       {/* ── Search + filter header ── */}
-      <div className="bg-gradient-to-b from-orange-50 to-amber-50/60 px-4 pt-8 pb-6">
+      <div className="bg-orange-50/50 px-4 py-6">
         <div className="max-w-3xl mx-auto">
-
-          {/* Recipe count */}
-          <div className="mb-4 text-center min-h-[20px]">
-            {!loading && (
-              <p className="text-sm text-neutral-500 font-medium">
-                {hasFilters
-                  ? (
-                    <>
-                      <span className="text-orange-500 font-semibold">{recipes.length}</span>
-                      {" "}recipe{recipes.length !== 1 ? "s" : ""} found
-                      {debouncedSearch && (
-                        <span className="text-neutral-400"> for "{debouncedSearch}"</span>
-                      )}
-                    </>
-                  )
-                  : (
-                    <><span className="text-orange-500 font-semibold">{recipes.length}</span> recipes</>
-                  )
-                }
-              </p>
-            )}
-          </div>
 
           {/* Unified search + filter bar */}
           <div className="flex items-center bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -301,8 +279,20 @@ export default function RecipesPage() {
         </div>
       </div>
 
+      {/* ── Results count ── */}
+      {!loading && recipes.length > 0 && (
+        <div className="px-4 pt-5 pb-0 max-w-6xl mx-auto">
+          <p className="text-sm text-gray-400">
+            {hasFilters || debouncedSearch
+              ? `${recipes.length} result${recipes.length !== 1 ? "s" : ""} for "${debouncedSearch || "filters"}"`
+              : `Showing ${recipes.length} recipes`
+            }
+          </p>
+        </div>
+      )}
+
       {/* ── Recipe grid / carousel ── */}
-      <div className="py-8">
+      <div className="mt-6 pb-8">
 
         {/* Empty / loading states */}
         {loading ? (
