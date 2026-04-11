@@ -423,7 +423,7 @@ export default function AddRecipePage() {
             </div>
             <div className="text-center">
               <p className="font-semibold text-neutral-700">Drop an image here or click to upload</p>
-              <p className="text-sm text-neutral-500 mt-1">Works with recipe photos, Instagram posts, or cookbook pages</p>
+              <p className="text-sm text-neutral-500 mt-1">Any recipe image works. Photos, screenshots, or scans.</p>
             </div>
             <span className="text-xs text-neutral-400">JPG, PNG, WEBP accepted</span>
           </div>
