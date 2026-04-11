@@ -82,32 +82,68 @@ export default function AddRecipePage() {
     reader.readAsDataURL(file);
   }
 
+  // Compress image via Canvas to max 1024px wide, JPEG 0.8 quality
+  async function compressImage(file: File): Promise<{ base64: string; mimeType: string }> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const MAX = 1024;
+        let { width, height } = img;
+        if (width > MAX) { height = Math.round(height * MAX / width); width = MAX; }
+        const canvas = document.createElement("canvas");
+        canvas.width  = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) { reject(new Error("Canvas not available")); return; }
+        ctx.drawImage(img, 0, 0, width, height);
+        URL.revokeObjectURL(url);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+        resolve({ base64: dataUrl.split(",")[1], mimeType: "image/jpeg" });
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Image load failed")); };
+      img.src = url;
+    });
+  }
+
+  async function doExtractRequest(base64: string, mimeType: string) {
+    const res = await fetch("/api/ai/extract-image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageBase64: base64, mimeType }),
+      signal: AbortSignal.timeout(35_000),
+    });
+    const data = await res.json();
+    if (res.status === 504 || data?.error === "timeout") throw new Error("timeout");
+    if (!res.ok || data?.error) throw new Error(data?.error || "extraction_failed");
+    return data;
+  }
+
   async function handleExtract() {
     if (!screenshot) return;
     setExtracting(true);
     setExtractError("");
 
     try {
-      const reader = new FileReader();
-      const base64 = await new Promise<string>((resolve, reject) => {
-        reader.onload = (e) => {
-          const result = e.target?.result as string;
-          resolve(result.split(",")[1]); // strip data:image/...;base64,
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(screenshot);
-      });
+      const { base64, mimeType } = await compressImage(screenshot);
 
-      const res = await fetch("/api/ai/extract-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64: base64, mimeType: screenshot.type }),
-      });
-      const data = await res.json();
-
-      if (!res.ok || data?.error) {
-        throw new Error(data?.error || "Extraction failed");
+      let data: Record<string, string> | null = null;
+      try {
+        data = await doExtractRequest(base64, mimeType);
+      } catch (firstErr) {
+        console.warn("[extract] first attempt failed, retrying:", firstErr);
+        try {
+          data = await doExtractRequest(base64, mimeType);
+        } catch (retryErr: unknown) {
+          const msg = retryErr instanceof Error ? retryErr.message : String(retryErr);
+          if (msg === "timeout" || msg.includes("TimeoutError")) {
+            throw new Error("timeout");
+          }
+          throw new Error("api_error");
+        }
       }
+
+      if (!data?.title) throw new Error("parse_error");
 
       setForm({
         title: data.title || "",
@@ -118,8 +154,16 @@ export default function AddRecipePage() {
       });
       setExtractSuccess(true);
       setActiveTab("write");
-    } catch {
-      setExtractError("Couldn't read this image clearly. Try a different image or write the recipe manually.");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("[extract] failed:", msg);
+      if (msg === "timeout" || msg.includes("TimeoutError")) {
+        setExtractError("Processing took too long. Try a smaller or clearer image.");
+      } else if (msg === "parse_error") {
+        setExtractError("AI response was unexpected. Please try a different image.");
+      } else {
+        setExtractError("Could not process this image. Please try again.");
+      }
     } finally {
       setExtracting(false);
     }

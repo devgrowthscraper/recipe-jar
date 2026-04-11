@@ -1,0 +1,42 @@
+The image import feature works with some images but fails with others. Fix the entire image import flow:
+
+1. IMAGE COMPRESSION ON CLIENT SIDE:
+   Before sending the image to the server, compress and resize it in the browser:
+   - Create a Canvas element
+   - Draw the uploaded image onto the canvas, resized to max 1024px width while maintaining aspect ratio
+   - Export as JPEG with 0.8 quality using canvas.toDataURL('image/jpeg', 0.8)
+   - Use this compressed base64 string for the API call instead of the original full-size image
+   - This ensures even large phone photos work without timing out
+
+2. UPDATE THE OPENAI PROMPT for image extraction to be more flexible. Replace the current prompt with:
+   "Look at this image. It may be a recipe photo, a screenshot from social media, a cookbook page, or a photo of cooked food. Extract any recipe information you can find. If it is just a food photo with no written recipe visible, identify the dish and create a reasonable recipe for it. Return ONLY a valid JSON object with these fields: title (string), description (string, 1-2 sentences), ingredients (string, one ingredient per line separated by newlines), steps (string, one step per line separated by newlines). Return only valid JSON. Do not wrap in markdown backticks. Do not include any text before or after the JSON."
+
+3. FIX JSON PARSING:
+   When parsing the OpenAI response, handle these edge cases:
+   - Strip markdown backticks if present (remove ```json and ``` from the response)
+   - Strip any text before the first { and after the last }
+   - Try JSON.parse, if it fails, try to extract JSON using regex
+   - Log the raw response to console before parsing so we can debug
+
+4. INCREASE TIMEOUT to 30 seconds for the OpenAI API call
+
+5. RETRY LOGIC: If the first API call fails, automatically retry once with the same image before showing an error
+
+6. BETTER ERROR MESSAGES:
+   - Timeout: "Processing took too long. Try a smaller or clearer image."
+   - API error: "Could not process this image. Please try again."
+   - Parse error: "AI response was unexpected. Please try a different image."
+   - Show the actual error in console.log for debugging
+
+7. LOADING STATE: While the AI is processing, show:
+   - The uploaded image preview on the left
+   - On the right: a spinning loader with text "AI is reading your recipe..." and a subtle progress animation
+   - Disable the upload area while processing
+
+8. SUCCESS STATE: When extraction succeeds:
+   - Show a green success banner "Recipe extracted! Review and edit below."
+   - Automatically switch to the "Write Recipe" tab
+   - Pre-fill all form fields (title, description, ingredients, steps) with the extracted data
+   - User can review, edit, and then publish
+
+Do not change anything else.
