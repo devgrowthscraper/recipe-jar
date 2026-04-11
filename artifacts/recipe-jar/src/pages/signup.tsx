@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth-context";
 
 const FEATURES = [
-  { icon: Camera,   label: "Screenshot Import"  },
+  { icon: Camera,   label: "Image Import"  },
   { icon: Sparkles, label: "AI Auto-tagging"    },
   { icon: BookOpen, label: "Personal Cookbook"  },
 ];

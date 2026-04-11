@@ -119,7 +119,7 @@ export default function AddRecipePage() {
       setExtractSuccess(true);
       setActiveTab("write");
     } catch {
-      setExtractError("Couldn't read this screenshot clearly. Try a different image or write the recipe manually.");
+      setExtractError("Couldn't read this image clearly. Try a different image or write the recipe manually.");
     } finally {
       setExtracting(false);
     }
@@ -257,7 +257,7 @@ export default function AddRecipePage() {
           }`}
         >
           <Sparkles className="w-4 h-4" />
-          Import from Screenshot
+          Import from Image
         </button>
       </div>
 
@@ -422,8 +422,8 @@ export default function AddRecipePage() {
               <Upload className="w-7 h-7 text-orange-400" />
             </div>
             <div className="text-center">
-              <p className="font-semibold text-neutral-700">Drop a screenshot here or click to upload</p>
-              <p className="text-sm text-neutral-500 mt-1">Works with Instagram, YouTube, or any recipe screenshot</p>
+              <p className="font-semibold text-neutral-700">Drop an image here or click to upload</p>
+              <p className="text-sm text-neutral-500 mt-1">Works with recipe photos, Instagram posts, or cookbook pages</p>
             </div>
             <span className="text-xs text-neutral-400">JPG, PNG, WEBP accepted</span>
           </div>
@@ -460,7 +460,7 @@ export default function AddRecipePage() {
                 <div className="sm:w-1/2 bg-neutral-50 flex items-center justify-center p-4 min-h-[200px]">
                   <img
                     src={screenshotPreview}
-                    alt="Uploaded screenshot"
+                    alt="Uploaded image"
                     className="max-h-[220px] w-full object-contain rounded-xl"
                   />
                 </div>
@@ -505,7 +505,7 @@ export default function AddRecipePage() {
                         <Sparkles className="w-6 h-6 text-orange-400" />
                       </div>
                       <div className="text-center">
-                        <p className="font-semibold text-amber-900">Screenshot ready</p>
+                        <p className="font-semibold text-amber-900">Image ready</p>
                         <p className="text-xs text-neutral-500 mt-1">AI will extract the recipe for you</p>
                       </div>
                       <Button

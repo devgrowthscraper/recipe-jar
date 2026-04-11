@@ -48,7 +48,7 @@ export default function FeedPage() {
             Stop Losing Recipes You Love
           </h1>
           <p className="text-base text-neutral-700 mb-8 max-w-xl mx-auto leading-relaxed">
-            Screenshot any recipe from Instagram or YouTube. AI organizes it for you instantly.
+            Snap a photo of any recipe from Instagram, YouTube, or your own kitchen. AI organizes it for you instantly.
           </p>
 
           {/* Search + filter bar — both redirect to /recipes */}
@@ -100,7 +100,7 @@ export default function FeedPage() {
               iconBg="bg-orange-100"
               icon={<Camera className="w-7 h-7 text-orange-500" />}
               title="Capture Recipes"
-              description="Screenshot any recipe from Instagram or YouTube. Upload it and AI extracts everything instantly."
+              description="Snap any recipe from Instagram or YouTube. Upload it and AI extracts everything instantly."
             />
             <FeatureCard
               iconBg="bg-purple-100"
@@ -164,8 +164,8 @@ export default function FeedPage() {
                 <Camera className="w-5 h-5 text-purple-500 group-hover:text-white transition-colors" />
               </div>
               <div>
-                <p className="font-bold text-amber-900 text-base mb-0.5">Import a Screenshot</p>
-                <p className="text-sm text-neutral-500 leading-relaxed font-semibold">Upload a screenshot and AI extracts it into your recipe card</p>
+                <p className="font-bold text-amber-900 text-base mb-0.5">Import from Image</p>
+                <p className="text-sm text-neutral-500 leading-relaxed font-semibold">Upload any recipe image and AI extracts it into your recipe card</p>
               </div>
             </Link>
           </div>
@@ -182,14 +182,15 @@ export default function FeedPage() {
               Import Recipes From Anywhere
             </h2>
             <p className="text-neutral-600 leading-relaxed mb-6">
-              Screenshot a recipe from Instagram, YouTube, or any app. Upload it and our AI
+              Upload any recipe image from Instagram, YouTube, or your cookbook. Our AI
               instantly extracts the title, ingredients, and steps into a clean recipe card.
             </p>
             <ul className="flex flex-col gap-3">
               {[
-                "Works with Instagram screenshots",
-                "Works with YouTube screenshots",
-                "AI extracts ingredients and steps automatically",
+                "Works with Instagram posts",
+                "Works with YouTube thumbnails",
+                "Works with photos of cookbook pages",
+                "Works with your own cooking photos",
               ].map((item) => (
                 <li key={item} className="flex items-center gap-3 text-sm text-neutral-600 font-medium">
                   <CheckCircle2 className="w-4 h-4 text-orange-500 flex-shrink-0" />
