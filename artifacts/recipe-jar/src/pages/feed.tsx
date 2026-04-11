@@ -42,7 +42,7 @@ export default function FeedPage() {
       {/* ════════════════════════════════════════════════════════════════
           SECTION 1 — HERO
       ════════════════════════════════════════════════════════════════ */}
-      <section className="bg-gradient-to-b from-orange-50 to-amber-50/60 py-16 px-4">
+      <section className="bg-gradient-to-b from-amber-50 to-orange-50/40 py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl font-bold text-amber-900 mb-3 leading-tight">
             Stop Losing Recipes You Love
@@ -51,20 +51,17 @@ export default function FeedPage() {
             Snap a photo of any recipe from Instagram, YouTube, or your own kitchen. AI organizes it for you instantly.
           </p>
 
-          {/* Search + filter bar — both redirect to /recipes */}
+          {/* Search + filter bar */}
           <div className="max-w-2xl mx-auto">
             <div className="flex items-center bg-white rounded-2xl shadow-lg overflow-hidden">
-
-              {/* Filter button — opens /recipes with filters */}
               <button
                 onClick={handleFilterClick}
-                className="flex-shrink-0 flex items-center gap-2 px-5 py-4 border-r border-gray-200 text-sm font-semibold text-neutral-500 hover:text-orange-500 transition-colors duration-200"
+                className="flex-shrink-0 flex items-center gap-2 px-5 py-4 border-r border-gray-200 text-sm font-semibold text-neutral-500 hover:text-amber-600 transition-colors duration-200"
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 <span>Filter</span>
               </button>
 
-              {/* Search input */}
               <input
                 type="text"
                 placeholder="Search butter chicken, pasta, tofu..."
@@ -74,14 +71,12 @@ export default function FeedPage() {
                 className="flex-1 px-4 py-4 text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none bg-transparent"
               />
 
-              {/* Search icon */}
               <button
                 onClick={handleSearch}
-                className="flex-shrink-0 mx-3 w-10 h-10 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center transition-colors duration-200"
+                className="flex-shrink-0 mx-3 w-10 h-10 bg-amber-500 hover:bg-amber-600 rounded-full flex items-center justify-center transition-colors duration-200"
               >
                 <Search className="w-4 h-4 text-white" />
               </button>
-
             </div>
           </div>
         </div>
@@ -97,8 +92,8 @@ export default function FeedPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <FeatureCard
-              iconBg="bg-orange-100"
-              icon={<Camera className="w-7 h-7 text-orange-500" />}
+              iconBg="bg-amber-100"
+              icon={<Camera className="w-7 h-7 text-amber-600" />}
               title="Capture Recipes"
               description="Snap any recipe from Instagram or YouTube. Upload it and AI extracts everything instantly."
             />
@@ -139,17 +134,17 @@ export default function FeedPage() {
       {/* ════════════════════════════════════════════════════════════════
           SECTION 3 — WRITE / IMPORT CTA CARDS
       ════════════════════════════════════════════════════════════════ */}
-      <section className="py-16 px-4 bg-orange-50">
+      <section className="py-16 px-4 bg-amber-50">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold text-amber-900 text-center">Bring Your Recipes Home</h2>
           <p className="text-base text-gray-500 text-center mt-2">From your memory or your camera roll, adding recipes takes seconds.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
             <Link
               href={user ? "/add-recipe" : "/login"}
-              className="flex items-start gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
+              className="flex items-start gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-amber-100 hover:shadow-md hover:border-amber-300 transition-all group"
             >
-              <div className="w-12 h-12 rounded-xl bg-orange-100 flex-shrink-0 flex items-center justify-center group-hover:bg-orange-500 transition-colors">
-                <PenLine className="w-5 h-5 text-orange-500 group-hover:text-white transition-colors" />
+              <div className="w-12 h-12 rounded-xl bg-amber-100 flex-shrink-0 flex items-center justify-center group-hover:bg-amber-500 transition-colors">
+                <PenLine className="w-5 h-5 text-amber-600 group-hover:text-white transition-colors" />
               </div>
               <div>
                 <p className="font-bold text-amber-900 text-base mb-0.5">Write a Recipe</p>
@@ -193,21 +188,21 @@ export default function FeedPage() {
                 "Works with your own cooking photos",
               ].map((item) => (
                 <li key={item} className="flex items-center gap-3 text-sm text-neutral-600 font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-amber-500 flex-shrink-0" />
                   {item}
                 </li>
               ))}
             </ul>
             <Link
               href={user ? "/add-recipe" : "/login"}
-              className="inline-flex items-center gap-2 mt-8 px-5 py-2.5 rounded-xl bg-orange-500 text-white font-bold text-sm hover:bg-orange-600 transition-colors shadow-md"
+              className="inline-flex items-center gap-2 mt-8 px-5 py-2.5 rounded-xl bg-amber-500 text-white font-bold text-sm hover:bg-amber-600 transition-colors shadow-md"
             >
               Try It Now <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
           {/* Visual mockup */}
-          <div className="flex items-center justify-center gap-5 select-none bg-orange-50/60 rounded-3xl p-8">
+          <div className="flex items-center justify-center gap-5 select-none bg-amber-50/60 rounded-3xl p-8">
             <div className="relative">
               <div className="w-36 bg-neutral-200 rounded-2xl p-3 rotate-3 shadow-md border border-neutral-300">
                 <div className="h-2.5 bg-neutral-400 rounded-full w-3/4 mb-2 opacity-60" />
@@ -222,11 +217,11 @@ export default function FeedPage() {
                 <Sparkles className="w-3.5 h-3.5 text-white" />
               </div>
             </div>
-            <ArrowRight className="w-6 h-6 text-orange-400 flex-shrink-0" />
-            <div className="w-40 bg-white rounded-2xl p-4 shadow-lg border border-orange-100">
-              <div className="h-2.5 bg-orange-200 rounded-full w-2/3 mb-2" />
-              <div className="h-16 bg-orange-50 rounded-xl mb-3 flex items-center justify-center">
-                <UtensilsCrossed className="w-6 h-6 text-orange-300" />
+            <ArrowRight className="w-6 h-6 text-amber-400 flex-shrink-0" />
+            <div className="w-40 bg-white rounded-2xl p-4 shadow-lg border border-amber-100">
+              <div className="h-2.5 bg-amber-200 rounded-full w-2/3 mb-2" />
+              <div className="h-16 bg-amber-50 rounded-xl mb-3 flex items-center justify-center">
+                <UtensilsCrossed className="w-6 h-6 text-amber-300" />
               </div>
               <div className="h-1.5 bg-neutral-100 rounded-full mb-1.5" />
               <div className="h-1.5 bg-neutral-100 rounded-full w-5/6 mb-1.5" />
@@ -235,8 +230,8 @@ export default function FeedPage() {
                 <div className="h-4 rounded-full bg-green-100 w-14 flex items-center justify-center">
                   <span className="text-[9px] text-green-600 font-semibold">Vegan</span>
                 </div>
-                <div className="h-4 rounded-full bg-orange-100 w-12 flex items-center justify-center">
-                  <span className="text-[9px] text-orange-600 font-semibold">Easy</span>
+                <div className="h-4 rounded-full bg-amber-100 w-12 flex items-center justify-center">
+                  <span className="text-[9px] text-amber-700 font-semibold">Easy</span>
                 </div>
               </div>
             </div>
@@ -249,7 +244,7 @@ export default function FeedPage() {
       ════════════════════════════════════════════════════════════════ */}
       {!user && (
         <section className="py-8 px-4">
-          <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-3xl py-16 px-6 text-center max-w-5xl mx-auto shadow-xl">
+          <div className="bg-gradient-to-r from-amber-500 to-yellow-400 rounded-3xl py-16 px-6 text-center max-w-5xl mx-auto shadow-xl">
             <h2 className="text-3xl font-bold text-white mb-3">
               Ready To Build Your Cookbook?
             </h2>
@@ -258,7 +253,7 @@ export default function FeedPage() {
             </p>
             <Link
               href="/signup"
-              className="inline-block bg-white text-orange-500 font-bold rounded-xl px-8 py-3.5 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 text-sm no-underline"
+              className="inline-block bg-white text-amber-600 font-bold rounded-xl px-8 py-3.5 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 text-sm no-underline"
             >
               Create Free Account
             </Link>
@@ -282,21 +277,21 @@ export default function FeedPage() {
             <div className="flex gap-8 text-sm">
               <div className="flex flex-col gap-2">
                 <p className="font-semibold text-neutral-900 mb-1">Browse</p>
-                <Link href="/recipes" className="text-neutral-600 hover:text-orange-500 transition-colors">Recipes</Link>
+                <Link href="/recipes" className="text-neutral-600 hover:text-amber-600 transition-colors">Recipes</Link>
                 {user && (
-                  <Link href="/add-recipe" className="text-neutral-600 hover:text-orange-500 transition-colors">Add Recipe</Link>
+                  <Link href="/add-recipe" className="text-neutral-600 hover:text-amber-600 transition-colors">Add Recipe</Link>
                 )}
               </div>
               <div className="flex flex-col gap-2">
                 <p className="font-semibold text-neutral-900 mb-1">Account</p>
                 <Link
                   href={user ? "/profile" : "/login"}
-                  className="text-neutral-600 hover:text-orange-500 transition-colors"
+                  className="text-neutral-600 hover:text-amber-600 transition-colors"
                 >
                   {user ? "My Profile" : "Sign In"}
                 </Link>
                 {!user && (
-                  <Link href="/signup" className="text-neutral-600 hover:text-orange-500 transition-colors">
+                  <Link href="/signup" className="text-neutral-600 hover:text-amber-600 transition-colors">
                     Create Account
                   </Link>
                 )}

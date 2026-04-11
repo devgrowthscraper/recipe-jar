@@ -85,7 +85,7 @@ export default function ProfilePage() {
   if (authLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-orange-400" />
+        <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
       </div>
     );
   }
@@ -200,7 +200,7 @@ export default function ProfilePage() {
 
         {/* ── Banner + Avatar ── */}
         <div className="relative mb-16">
-          <div className="h-32 bg-gradient-to-r from-orange-400 to-amber-500 rounded-b-3xl" />
+          <div className="h-32 bg-gradient-to-r from-amber-400 to-amber-600 rounded-b-3xl" />
 
           {/* Avatar overlapping the banner */}
           <div className="absolute left-6 sm:left-8 bottom-0 translate-y-1/2">
@@ -211,7 +211,7 @@ export default function ProfilePage() {
                 className="w-24 h-24 rounded-full object-cover ring-4 ring-white shadow-lg"
               />
             ) : (
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-300 to-orange-600 ring-4 ring-white shadow-lg flex items-center justify-center text-white text-4xl font-bold select-none">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-300 to-amber-600 ring-4 ring-white shadow-lg flex items-center justify-center text-white text-4xl font-bold select-none">
                 {displayInitial}
               </div>
             )}
@@ -239,13 +239,13 @@ export default function ProfilePage() {
         {/* ── Stat cards ── */}
         <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
           {[
-            { icon: <UtensilsCrossed className="w-5 h-5 text-orange-400" />, value: myRecipes.length, label: "Recipes Posted" },
-            { icon: <Bookmark className="w-5 h-5 text-orange-400" />, value: savedRecipes.length, label: "Recipes Saved" },
-            { icon: <Heart className="w-5 h-5 text-orange-400" />, value: likesReceived, label: "Likes Received" },
+            { icon: <UtensilsCrossed className="w-5 h-5 text-amber-500" />, value: myRecipes.length, label: "Recipes Posted" },
+            { icon: <Bookmark className="w-5 h-5 text-amber-500" />, value: savedRecipes.length, label: "Recipes Saved" },
+            { icon: <Heart className="w-5 h-5 text-amber-500" />, value: likesReceived, label: "Likes Received" },
           ].map(({ icon, value, label }) => (
             <div key={label} className="bg-white rounded-2xl shadow-sm border border-neutral-100 p-4 text-center">
               <div className="flex justify-center mb-1">{icon}</div>
-              <p className="text-2xl font-bold text-orange-500">{value}</p>
+              <p className="text-2xl font-bold text-amber-600">{value}</p>
               <p className="text-[11px] text-neutral-500 uppercase tracking-wider mt-0.5 leading-tight">{label}</p>
             </div>
           ))}
@@ -257,7 +257,7 @@ export default function ProfilePage() {
             data-testid="tab-my-recipes"
             onClick={() => setTab("myRecipes")}
             className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-              tab === "myRecipes" ? "bg-white text-orange-600 shadow-sm" : "text-neutral-500 hover:text-neutral-700"
+              tab === "myRecipes" ? "bg-white text-amber-600 shadow-sm" : "text-neutral-500 hover:text-neutral-700"
             }`}
           >
             <UtensilsCrossed className="w-4 h-4" />
@@ -267,7 +267,7 @@ export default function ProfilePage() {
             data-testid="tab-saved"
             onClick={() => setTab("saved")}
             className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-              tab === "saved" ? "bg-white text-orange-600 shadow-sm" : "text-neutral-500 hover:text-neutral-700"
+              tab === "saved" ? "bg-white text-amber-600 shadow-sm" : "text-neutral-500 hover:text-neutral-700"
             }`}
           >
             <Bookmark className="w-4 h-4" />
@@ -291,13 +291,13 @@ export default function ProfilePage() {
         ) : tab === "myRecipes" ? (
           myRecipes.length === 0 ? (
             <div className="text-center py-16">
-              <div className="w-20 h-20 rounded-full border-2 border-dashed border-orange-200 flex items-center justify-center mx-auto mb-5">
-                <Plus className="w-10 h-10 text-orange-300" />
+              <div className="w-20 h-20 rounded-full border-2 border-dashed border-amber-200 flex items-center justify-center mx-auto mb-5">
+                <Plus className="w-10 h-10 text-amber-300" />
               </div>
               <h3 className="text-lg font-semibold text-amber-900 mb-2">Share your first recipe</h3>
               <p className="text-neutral-500 text-sm mb-6">Your culinary creations will appear here.</p>
               <Link href="/add-recipe">
-                <Button className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl px-6 font-semibold">
+                <Button className="bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl px-6 font-semibold">
                   Add Recipe
                 </Button>
               </Link>
@@ -330,13 +330,13 @@ export default function ProfilePage() {
         ) : (
           savedRecipes.length === 0 ? (
             <div className="text-center py-16">
-              <div className="w-20 h-20 rounded-full border-2 border-dashed border-orange-200 flex items-center justify-center mx-auto mb-5">
-                <Bookmark className="w-10 h-10 text-orange-300" />
+              <div className="w-20 h-20 rounded-full border-2 border-dashed border-amber-200 flex items-center justify-center mx-auto mb-5">
+                <Bookmark className="w-10 h-10 text-amber-300" />
               </div>
               <h3 className="text-lg font-semibold text-amber-900 mb-2">Your cookbook is empty</h3>
               <p className="text-neutral-500 text-sm mb-6">Browse the feed and save recipes you love!</p>
               <Link href="/">
-                <Button className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl px-6 font-semibold">
+                <Button className="bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl px-6 font-semibold">
                   Browse Recipes
                 </Button>
               </Link>
@@ -354,7 +354,7 @@ export default function ProfilePage() {
                     <RecipeCard recipe={recipe} isSaved={true} isLiked={likedIds.has(recipe.id)} />
                     <button
                       onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleUnsave(recipe.id); }}
-                      className="absolute top-2 right-2 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500 text-white text-xs font-medium shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-orange-600"
+                      className="absolute top-2 right-2 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500 text-white text-xs font-medium shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-amber-600"
                     >
                       <Bookmark className="w-3.5 h-3.5" fill="currentColor" />
                       Unsave
@@ -395,7 +395,7 @@ export default function ProfilePage() {
                   minLength={3}
                   maxLength={30}
                   required
-                  className="rounded-xl border-neutral-200 focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  className="rounded-xl border-neutral-200 focus:ring-2 focus:ring-amber-300 focus:border-amber-400"
                 />
                 <p className="text-xs text-neutral-400">Only lowercase letters, numbers, and underscores.</p>
               </div>
@@ -410,7 +410,7 @@ export default function ProfilePage() {
                   placeholder="https://example.com/avatar.jpg"
                   value={editAvatarUrl}
                   onChange={(e) => { setEditAvatarUrl(e.target.value); setAvatarError(false); }}
-                  className="rounded-xl border-neutral-200 focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  className="rounded-xl border-neutral-200 focus:ring-2 focus:ring-amber-300 focus:border-amber-400"
                 />
                 {editAvatarUrl && !avatarError && (
                   <img
@@ -432,7 +432,7 @@ export default function ProfilePage() {
                 type="submit"
                 data-testid="button-save-settings"
                 disabled={savingSettings}
-                className="w-fit bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl px-6 font-semibold"
+                className="w-fit bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl px-6 font-semibold"
               >
                 {savingSettings ? "Saving..." : "Save Changes"}
               </Button>

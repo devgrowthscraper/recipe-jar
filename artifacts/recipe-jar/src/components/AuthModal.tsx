@@ -20,8 +20,8 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
       <DialogContent className="sm:max-w-md rounded-2xl" data-testid="modal-auth">
         <DialogHeader className="text-center pb-2">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-orange-50 flex items-center justify-center">
-              <Heart className="w-8 h-8 text-orange-500" />
+            <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center">
+              <Heart className="w-8 h-8 text-amber-500" />
             </div>
           </div>
           <DialogTitle className="text-xl font-bold text-amber-900">
@@ -36,7 +36,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
           <Link href="/login" onClick={onClose}>
             <Button
               data-testid="button-modal-login"
-              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-3 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2"
             >
               <LogIn className="w-4 h-4" />
               Log In
@@ -46,7 +46,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
             <Button
               data-testid="button-modal-signup"
               variant="outline"
-              className="w-full rounded-xl py-3 text-sm font-semibold border-orange-200 text-orange-600 hover:bg-orange-50 transition-all duration-200 flex items-center justify-center gap-2"
+              className="w-full rounded-xl py-3 text-sm font-semibold border-amber-200 text-amber-700 hover:bg-amber-50 transition-all duration-200 flex items-center justify-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
               Sign Up

@@ -134,7 +134,7 @@ export default function EditRecipePage() {
   }
 
   const inputClass =
-    "rounded-xl border-neutral-200 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 transition-all";
+    "rounded-xl border-neutral-200 focus:ring-2 focus:ring-amber-300 focus:border-amber-400 transition-all";
 
   // ── Loading ───────────────────────────────────────────────────
   if (fetching) {
@@ -163,7 +163,7 @@ export default function EditRecipePage() {
       {/* Loading overlay */}
       {(submitting || tagging) && (
         <div className="fixed inset-0 z-50 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-xl animate-pulse">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-xl animate-pulse">
             <Sparkles className="w-7 h-7 text-white" />
           </div>
           <p className="text-base font-semibold text-amber-900">
@@ -174,7 +174,7 @@ export default function EditRecipePage() {
 
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-md">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-md">
           <Pencil className="w-5 h-5 text-white" />
         </div>
         <div>
@@ -289,9 +289,9 @@ export default function EditRecipePage() {
         </div>
 
         {/* AI re-tag note */}
-        <div className="flex items-center gap-2 bg-orange-50 rounded-xl px-4 py-3 border border-orange-100">
-          <Sparkles className="w-4 h-4 text-orange-500 flex-shrink-0" />
-          <p className="text-xs text-orange-700">
+        <div className="flex items-center gap-2 bg-amber-50 rounded-xl px-4 py-3 border border-amber-100">
+          <Sparkles className="w-4 h-4 text-amber-500 flex-shrink-0" />
+          <p className="text-xs text-amber-700">
             If you changed the title or ingredients, AI will automatically re-tag this recipe.
           </p>
         </div>
@@ -309,7 +309,7 @@ export default function EditRecipePage() {
             type="submit"
             data-testid="button-submit-recipe"
             disabled={submitting || tagging}
-            className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl font-semibold shadow-lg shadow-orange-100 flex items-center justify-center gap-2"
+            className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl font-semibold shadow-lg shadow-amber-100 flex items-center justify-center gap-2"
           >
             {submitting || tagging ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>

@@ -83,12 +83,12 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  /* Warm cream background */
-  --background: 48 100% 97%;
+  /* Warm peach background */
+  --background: 28 75% 95%;
   --foreground: 30 30% 15%;
-  --border: 35 30% 88%;
-  --input: 35 30% 82%;
-  --ring: 24 95% 53%;
+  --border: 30 30% 88%;
+  --input: 30 25% 82%;
+  --ring: 43 96% 54%;
 
   /* White cards */
   --card: 0 0% 100%;
@@ -108,17 +108,17 @@
   --popover-foreground: 30 30% 15%;
   --popover-border: 35 25% 90%;
 
-  /* Orange primary */
-  --primary: 24 95% 53%;
+  /* Amber primary */
+  --primary: 43 96% 54%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 48 100% 94%;
+  --secondary: 43 80% 94%;
   --secondary-foreground: 30 50% 20%;
 
-  --muted: 48 60% 95%;
+  --muted: 30 50% 95%;
   --muted-foreground: 30 15% 50%;
 
-  --accent: 48 100% 92%;
+  --accent: 43 80% 92%;
   --accent-foreground: 30 50% 20%;
 
   --destructive: 0 84% 60%;

@@ -12,7 +12,6 @@ export function Navbar() {
 
   const isActive = (href: string) => location === href;
 
-  // Derive the avatar initial — fallback to email's first letter while profile loads
   const avatarInitial = profile?.username?.charAt(0).toUpperCase()
     || user?.email?.charAt(0).toUpperCase()
     || null;
@@ -23,7 +22,7 @@ export function Navbar() {
 
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-sm">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-sm">
             <UtensilsCrossed className="w-5 h-5 text-white" />
           </div>
           <span className="text-xl font-bold text-amber-900">Recipe Jar</span>
@@ -32,20 +31,18 @@ export function Navbar() {
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
 
-          {/* Recipes — always visible */}
           <Link
             href="/recipes"
             data-testid="nav-link-recipes"
             className={`text-sm font-medium transition-all duration-200 relative pb-0.5 ${
               isActive("/recipes")
-                ? "text-orange-500 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-orange-500 after:rounded-full"
-                : "text-neutral-600 hover:text-orange-500"
+                ? "text-amber-600 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-500 after:rounded-full"
+                : "text-neutral-600 hover:text-amber-600"
             }`}
           >
             Recipes
           </Link>
 
-          {/* Logged-in links */}
           {user && (
             <>
               <Link
@@ -53,8 +50,8 @@ export function Navbar() {
                 data-testid="nav-link-add-recipe"
                 className={`text-sm font-medium transition-all duration-200 relative pb-0.5 ${
                   isActive("/add-recipe")
-                    ? "text-orange-500 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-orange-500 after:rounded-full"
-                    : "text-neutral-600 hover:text-orange-500"
+                    ? "text-amber-600 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-500 after:rounded-full"
+                    : "text-neutral-600 hover:text-amber-600"
                 }`}
               >
                 Add Recipe
@@ -64,8 +61,8 @@ export function Navbar() {
                 data-testid="nav-link-my-profile"
                 className={`text-sm font-medium transition-all duration-200 relative pb-0.5 ${
                   isActive("/profile")
-                    ? "text-orange-500 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-orange-500 after:rounded-full"
-                    : "text-neutral-600 hover:text-orange-500"
+                    ? "text-amber-600 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-500 after:rounded-full"
+                    : "text-neutral-600 hover:text-amber-600"
                 }`}
               >
                 My Profile
@@ -73,15 +70,14 @@ export function Navbar() {
             </>
           )}
 
-          {/* Avatar + logout OR Sign In */}
           {loading ? (
-            <Loader2 className="w-5 h-5 animate-spin text-orange-300" />
+            <Loader2 className="w-5 h-5 animate-spin text-amber-300" />
           ) : user ? (
             <div className="flex items-center gap-3">
               <Link href="/profile">
                 <div
                   data-testid="nav-avatar"
-                  className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-sm font-bold cursor-pointer hover:scale-105 transition-transform"
+                  className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white text-sm font-bold cursor-pointer hover:scale-105 transition-transform"
                 >
                   {avatarInitial ?? <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 </div>
@@ -99,7 +95,7 @@ export function Navbar() {
             <Link href="/login">
               <Button
                 data-testid="button-sign-in"
-                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl px-5 py-2 text-sm font-semibold transition-all duration-200"
+                className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white rounded-xl px-5 py-2 text-sm font-semibold transition-all duration-200 shadow-sm"
               >
                 Sign In
               </Button>
@@ -110,14 +106,14 @@ export function Navbar() {
         {/* Mobile hamburger */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <button data-testid="button-menu" className="p-2 rounded-lg hover:bg-orange-50 transition-colors">
+            <button data-testid="button-menu" className="p-2 rounded-lg hover:bg-amber-50 transition-colors">
               <Menu className="w-5 h-5 text-amber-900" />
             </button>
           </SheetTrigger>
           <SheetContent side="right" className="w-72 bg-white/95 backdrop-blur-xl">
             <div className="flex flex-col gap-6 pt-8">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center">
                   <UtensilsCrossed className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-lg font-bold text-amber-900">Recipe Jar</span>
@@ -128,7 +124,7 @@ export function Navbar() {
                   href="/recipes"
                   onClick={() => setOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                    isActive("/recipes") ? "bg-orange-50 text-orange-600" : "text-neutral-600 hover:bg-orange-50 hover:text-orange-500"
+                    isActive("/recipes") ? "bg-amber-50 text-amber-600" : "text-neutral-600 hover:bg-amber-50 hover:text-amber-600"
                   }`}
                 >
                   Recipes
@@ -140,7 +136,7 @@ export function Navbar() {
                       href="/add-recipe"
                       onClick={() => setOpen(false)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                        isActive("/add-recipe") ? "bg-orange-50 text-orange-600" : "text-neutral-600 hover:bg-orange-50 hover:text-orange-500"
+                        isActive("/add-recipe") ? "bg-amber-50 text-amber-600" : "text-neutral-600 hover:bg-amber-50 hover:text-amber-600"
                       }`}
                     >
                       <PlusCircle className="w-4 h-4" />
@@ -150,7 +146,7 @@ export function Navbar() {
                       href="/profile"
                       onClick={() => setOpen(false)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                        isActive("/profile") ? "bg-orange-50 text-orange-600" : "text-neutral-600 hover:bg-orange-50 hover:text-orange-500"
+                        isActive("/profile") ? "bg-amber-50 text-amber-600" : "text-neutral-600 hover:bg-amber-50 hover:text-amber-600"
                       }`}
                     >
                       <User className="w-4 h-4" />
@@ -163,7 +159,7 @@ export function Navbar() {
               {user ? (
                 <div className="flex flex-col gap-3 pt-4 border-t border-neutral-100">
                   <div className="flex items-center gap-3 px-4">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-sm font-bold">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white text-sm font-bold">
                       {avatarInitial ?? <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                     </div>
                     <span className="text-sm font-medium text-neutral-700">
@@ -181,7 +177,7 @@ export function Navbar() {
               ) : (
                 <div className="pt-4 border-t border-neutral-100">
                   <Link href="/login" onClick={() => setOpen(false)}>
-                    <Button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-semibold">
+                    <Button className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white rounded-xl font-semibold">
                       Sign In
                     </Button>
                   </Link>

@@ -246,7 +246,7 @@ export default function AddRecipePage() {
   }
 
   const inputClass =
-    "rounded-xl border-neutral-200 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 transition-all";
+    "rounded-xl border-neutral-200 focus:ring-2 focus:ring-amber-300 focus:border-amber-400 transition-all";
 
   // ── RENDER ────────────────────────────────────────────────────
   return (
@@ -254,7 +254,7 @@ export default function AddRecipePage() {
       {/* Loading overlay */}
       {(submitting || tagging) && (
         <div className="fixed inset-0 z-50 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-xl animate-pulse">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-xl animate-pulse">
             <Sparkles className="w-7 h-7 text-white" />
           </div>
           <p className="text-base font-semibold text-amber-900">
@@ -266,7 +266,7 @@ export default function AddRecipePage() {
 
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-md">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-md">
           <Plus className="w-5 h-5 text-white" />
         </div>
         <div>
@@ -283,7 +283,7 @@ export default function AddRecipePage() {
           onClick={() => setActiveTab("write")}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
             activeTab === "write"
-              ? "bg-white text-orange-600 shadow-sm"
+              ? "bg-white text-amber-600 shadow-sm"
               : "text-neutral-500 hover:text-neutral-700"
           }`}
         >
@@ -296,7 +296,7 @@ export default function AddRecipePage() {
           onClick={() => setActiveTab("import")}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
             activeTab === "import"
-              ? "bg-white text-orange-600 shadow-sm"
+              ? "bg-white text-amber-600 shadow-sm"
               : "text-neutral-500 hover:text-neutral-700"
           }`}
         >
@@ -426,9 +426,9 @@ export default function AddRecipePage() {
             </div>
 
             {/* AI tagging note */}
-            <div className="flex items-center gap-2 bg-orange-50 rounded-xl px-4 py-3 border border-orange-100">
-              <Sparkles className="w-4 h-4 text-orange-500 flex-shrink-0" />
-              <p className="text-xs text-orange-700">
+            <div className="flex items-center gap-2 bg-amber-50 rounded-xl px-4 py-3 border border-amber-100">
+              <Sparkles className="w-4 h-4 text-amber-500 flex-shrink-0" />
+              <p className="text-xs text-amber-700">
                 AI will automatically suggest cuisine, difficulty, time, and diet tags after publishing.
               </p>
             </div>
@@ -437,7 +437,7 @@ export default function AddRecipePage() {
               type="submit"
               data-testid="button-submit-recipe"
               disabled={submitting || tagging}
-              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-4 text-base font-semibold shadow-lg shadow-orange-200 transition-all duration-200 hover:shadow-xl flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-4 text-base font-semibold shadow-lg shadow-amber-200 transition-all duration-200 hover:shadow-xl flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
               {submitting || tagging ? "Publishing..." : "Publish Recipe"}
@@ -458,12 +458,12 @@ export default function AddRecipePage() {
             onClick={() => fileInputRef.current?.click()}
             className={`border-2 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all duration-200 ${
               isDragging
-                ? "border-orange-400 bg-orange-50"
-                : "border-gray-300 bg-white hover:border-orange-300 hover:bg-orange-50/50"
+                ? "border-amber-400 bg-amber-50"
+                : "border-gray-300 bg-white hover:border-amber-300 hover:bg-amber-50/50"
             }`}
           >
-            <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center">
-              <Upload className="w-7 h-7 text-orange-400" />
+            <div className="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center">
+              <Upload className="w-7 h-7 text-amber-400" />
             </div>
             <div className="text-center">
               <p className="font-semibold text-neutral-700">Drop an image here or click to upload</p>
@@ -490,7 +490,7 @@ export default function AddRecipePage() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="text-sm text-orange-500 hover:text-orange-600 underline underline-offset-2 font-medium"
+              className="text-sm text-amber-600 hover:text-amber-700 underline underline-offset-2 font-medium"
             >
               Or browse for a file
             </button>
@@ -513,8 +513,8 @@ export default function AddRecipePage() {
                 <div className="sm:w-1/2 p-6 flex flex-col items-center justify-center gap-4 border-t sm:border-t-0 sm:border-l border-neutral-100">
                   {extracting ? (
                     <>
-                      <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center">
-                        <Loader2 className="w-6 h-6 text-orange-500 animate-spin" />
+                      <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center">
+                        <Loader2 className="w-6 h-6 text-amber-500 animate-spin" />
                       </div>
                       <div className="text-center">
                         <p className="font-semibold text-amber-900">AI is reading your recipe...</p>
@@ -545,8 +545,8 @@ export default function AddRecipePage() {
                     </>
                   ) : (
                     <>
-                      <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center">
-                        <Sparkles className="w-6 h-6 text-orange-400" />
+                      <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center">
+                        <Sparkles className="w-6 h-6 text-amber-400" />
                       </div>
                       <div className="text-center">
                         <p className="font-semibold text-amber-900">Image ready</p>
@@ -556,7 +556,7 @@ export default function AddRecipePage() {
                         type="button"
                         data-testid="button-extract-recipe"
                         onClick={handleExtract}
-                        className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2"
+                        className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2"
                       >
                         <Sparkles className="w-4 h-4" />
                         Extract Recipe

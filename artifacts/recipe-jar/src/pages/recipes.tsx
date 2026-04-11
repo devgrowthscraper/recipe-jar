@@ -181,7 +181,7 @@ export default function RecipesPage() {
     <div className="min-h-screen bg-background">
 
       {/* ── Search + filter header ── */}
-      <div className="bg-orange-50/50 px-4 py-6">
+      <div className="bg-amber-50/50 px-4 py-6">
         <div className="max-w-3xl mx-auto">
 
           {/* Unified search + filter bar */}
@@ -190,13 +190,13 @@ export default function RecipesPage() {
               onClick={() => setShowFilters((v) => !v)}
               className={`flex-shrink-0 flex items-center gap-2 px-5 py-4 border-r border-gray-200 text-sm font-semibold transition-colors duration-200 ${
                 showFilters || activeChips.size > 0
-                  ? "text-orange-500"
-                  : "text-neutral-500 hover:text-orange-500"
+                  ? "text-amber-600"
+                  : "text-neutral-500 hover:text-amber-600"
               }`}
             >
               <SlidersHorizontal className="w-4 h-4" />
               {activeChips.size > 0 ? (
-                <span className="text-xs font-bold text-orange-500">{activeChips.size}</span>
+                <span className="text-xs font-bold text-amber-600">{activeChips.size}</span>
               ) : (
                 <span>Filter</span>
               )}
@@ -217,7 +217,7 @@ export default function RecipesPage() {
 
             <button
               onClick={handleSearch}
-              className="flex-shrink-0 mx-3 w-10 h-10 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center transition-colors duration-200"
+              className="flex-shrink-0 mx-3 w-10 h-10 bg-amber-500 hover:bg-amber-600 rounded-full flex items-center justify-center transition-colors duration-200"
             >
               <Search className="w-4 h-4 text-white" />
             </button>
@@ -241,8 +241,8 @@ export default function RecipesPage() {
                           onClick={() => toggleChip(chip.id)}
                           className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
                             active
-                              ? "bg-orange-500 text-white border-orange-500 shadow-sm"
-                              : "bg-white text-neutral-600 border-neutral-200 hover:border-orange-300 hover:text-orange-600"
+                              ? "bg-amber-500 text-white border-amber-500 shadow-sm"
+                              : "bg-white text-neutral-600 border-neutral-200 hover:border-amber-300 hover:text-amber-600"
                           }`}
                         >
                           {chip.id === "vegan"      && <Sprout className="w-3.5 h-3.5" />}
@@ -270,7 +270,7 @@ export default function RecipesPage() {
               </span>
               <button
                 onClick={() => setActiveChips(new Set())}
-                className="text-xs text-orange-500 hover:text-orange-600 font-semibold underline underline-offset-2 transition-colors"
+                className="text-xs text-amber-600 hover:text-amber-700 font-semibold underline underline-offset-2 transition-colors"
               >
                 Clear all
               </button>
@@ -316,7 +316,7 @@ export default function RecipesPage() {
             {hasFilters && (
               <button
                 onClick={() => { setSearch(""); setDebouncedSearch(""); setActiveChips(new Set()); }}
-                className="px-4 py-2 rounded-xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600 transition-colors"
+                className="px-4 py-2 rounded-xl bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition-colors"
               >
                 Clear filters
               </button>

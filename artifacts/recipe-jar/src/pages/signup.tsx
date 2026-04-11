@@ -73,7 +73,7 @@ export default function SignupPage() {
     <div className="min-h-screen flex">
 
       {/* ── Left: marketing panel ── */}
-      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-orange-400 to-amber-500 flex-col items-center justify-center p-12 text-white">
+      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-amber-400 to-amber-600 flex-col items-center justify-center p-12 text-white">
         <div className="max-w-sm text-center">
           <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
             <UtensilsCrossed className="w-8 h-8 text-white" />
@@ -99,7 +99,7 @@ export default function SignupPage() {
 
           {/* Mini logo */}
           <div className="flex items-center gap-2 mb-8">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-md">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-md">
               <UtensilsCrossed className="w-4 h-4 text-white" />
             </div>
             <span className="text-lg font-bold text-amber-900">Recipe Jar</span>
@@ -123,7 +123,7 @@ export default function SignupPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="w-full rounded-xl border border-gray-200 py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 bg-white"
+                      className="w-full rounded-xl border border-gray-200 py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 bg-white"
                     />
                   </div>
 
@@ -139,7 +139,7 @@ export default function SignupPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         minLength={6}
-                        className="w-full rounded-xl border border-gray-200 py-3 px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 bg-white"
+                        className="w-full rounded-xl border border-gray-200 py-3 px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 bg-white"
                       />
                       <button
                         type="button"
@@ -156,7 +156,7 @@ export default function SignupPage() {
                       type="submit"
                       data-testid="button-submit-signup"
                       disabled={loading}
-                      className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3.5 font-semibold transition-all duration-200"
+                      className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-3.5 font-semibold transition-all duration-200"
                     >
                       {loading ? "Creating account..." : "Create Account"}
                     </Button>
@@ -165,7 +165,7 @@ export default function SignupPage() {
 
                 <p className="text-center text-sm text-neutral-500 mt-5">
                   Already have an account?{" "}
-                  <Link href="/login" className="text-orange-500 font-medium hover:text-orange-600">
+                  <Link href="/login" className="text-amber-600 font-medium hover:text-amber-700">
                     Sign in
                   </Link>
                 </p>
@@ -201,7 +201,7 @@ export default function SignupPage() {
                       required
                       minLength={3}
                       maxLength={30}
-                      className="w-full rounded-xl border border-gray-200 py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 bg-white"
+                      className="w-full rounded-xl border border-gray-200 py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 bg-white"
                     />
                     <p className="text-xs text-neutral-400 mt-1.5">Only lowercase letters, numbers, and underscores.</p>
                   </div>
@@ -211,7 +211,7 @@ export default function SignupPage() {
                       type="submit"
                       data-testid="button-submit-username"
                       disabled={loading || username.length < 3}
-                      className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3.5 font-semibold transition-all duration-200"
+                      className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-3.5 font-semibold transition-all duration-200"
                     >
                       {loading ? "Setting up..." : "Get Started"}
                     </Button>

@@ -127,12 +127,12 @@ export default function RecipeDetailPage() {
   if (!recipe) {
     return (
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 text-center">
-        <div className="w-20 h-20 rounded-3xl bg-orange-50 flex items-center justify-center mx-auto mb-5">
-          <ChefHat className="w-10 h-10 text-orange-300" />
+        <div className="w-20 h-20 rounded-3xl bg-amber-50 flex items-center justify-center mx-auto mb-5">
+          <ChefHat className="w-10 h-10 text-amber-300" />
         </div>
         <h2 className="text-xl font-bold text-amber-900 mb-2">Recipe not found</h2>
         <p className="text-neutral-500 mb-6">This recipe may have been removed.</p>
-        <Button onClick={() => setLocation("/")} className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl">
+        <Button onClick={() => setLocation("/")} className="bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl">
           Back to Feed
         </Button>
       </div>
@@ -186,7 +186,7 @@ export default function RecipeDetailPage() {
         <Link href="/">
           <button
             data-testid="button-back"
-            className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-orange-500 transition-colors mb-6 group"
+            className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-amber-600 transition-colors mb-6 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back to Feed
@@ -203,8 +203,8 @@ export default function RecipeDetailPage() {
             />
           </div>
         ) : (
-          <div className="w-full h-[200px] rounded-2xl mb-6 bg-gradient-to-r from-orange-100 via-amber-50 to-yellow-50 flex items-center justify-center">
-            <UtensilsCrossed className="w-16 h-16 text-orange-200" />
+          <div className="w-full h-[200px] rounded-2xl mb-6 bg-gradient-to-r from-amber-100 via-amber-50 to-yellow-50 flex items-center justify-center">
+            <UtensilsCrossed className="w-16 h-16 text-amber-200" />
           </div>
         )}
 
@@ -223,7 +223,7 @@ export default function RecipeDetailPage() {
           {(recipe.cuisine_tag || recipe.difficulty_tag || recipe.time_tag || recipe.diet_tag) && (
             <div className="flex flex-wrap gap-2 mt-3">
               {recipe.cuisine_tag && (
-                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-orange-50 text-orange-700">
+                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-amber-50 text-amber-700">
                   {recipe.cuisine_tag}
                 </span>
               )}
@@ -255,7 +255,7 @@ export default function RecipeDetailPage() {
           {/* Ingredients */}
           <div className="mb-8">
             <h2 className="text-xl font-bold text-amber-900 flex items-center gap-2 mb-4">
-              <ShoppingBasket className="w-5 h-5 text-orange-500" />
+              <ShoppingBasket className="w-5 h-5 text-amber-600" />
               Ingredients
             </h2>
             <ul className="flex flex-col divide-y divide-neutral-50">
@@ -263,10 +263,10 @@ export default function RecipeDetailPage() {
                 <li
                   key={i}
                   className={`flex items-center gap-3 py-1.5 px-2 rounded-lg text-sm text-neutral-700 leading-relaxed ${
-                    i % 2 === 0 ? "bg-orange-50/30" : ""
+                    i % 2 === 0 ? "bg-amber-50/30" : ""
                   }`}
                 >
-                  <span className="w-2 h-2 rounded-full bg-orange-400 flex-shrink-0" />
+                  <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0" />
                   {ingredient}
                 </li>
               ))}
@@ -276,13 +276,13 @@ export default function RecipeDetailPage() {
           {/* Steps */}
           <div>
             <h2 className="text-xl font-bold text-amber-900 flex items-center gap-2 mb-5">
-              <ChefHat className="w-5 h-5 text-orange-500" />
+              <ChefHat className="w-5 h-5 text-amber-600" />
               Steps
             </h2>
             <ol className="flex flex-col gap-4">
               {steps.map((step, i) => (
                 <li key={i} className="flex items-start gap-4">
-                  <span className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <span className="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
                     {i + 1}
                   </span>
                   <p className="text-neutral-700 leading-relaxed text-sm pt-1">{step}</p>
@@ -296,7 +296,7 @@ export default function RecipeDetailPage() {
           {/* Posted by */}
           {recipe.profiles && (
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-300 to-orange-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                 {recipe.profiles.username.charAt(0).toUpperCase()}
               </div>
               <div>
@@ -333,8 +333,8 @@ export default function RecipeDetailPage() {
             onClick={handleSave}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-200 text-sm font-medium ${
               isSaved
-                ? "bg-orange-50 border-orange-200 text-orange-500"
-                : "bg-white border-neutral-200 text-neutral-600 hover:border-orange-200 hover:text-orange-400"
+                ? "bg-amber-50 border-amber-200 text-amber-600"
+                : "bg-white border-neutral-200 text-neutral-600 hover:border-amber-200 hover:text-amber-400"
             }`}
           >
             <Bookmark className="w-4 h-4" fill={isSaved ? "currentColor" : "none"} />
@@ -358,7 +358,7 @@ export default function RecipeDetailPage() {
               <Link href={`/edit-recipe/${recipe.id}`}>
                 <button
                   data-testid="button-edit"
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-200 text-neutral-600 hover:border-orange-300 hover:text-orange-500 transition-all duration-200 text-sm font-medium bg-white"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-200 text-neutral-600 hover:border-amber-300 hover:text-amber-600 transition-all duration-200 text-sm font-medium bg-white"
                 >
                   <Pencil className="w-4 h-4" />
                   <span className="hidden sm:inline">Edit</span>
