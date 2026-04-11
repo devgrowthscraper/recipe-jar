@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   Search, Camera, Sparkles, BookOpen, PenLine, CheckCircle2,
-  ArrowRight, UtensilsCrossed, SlidersHorizontal,
+  ArrowRight, UtensilsCrossed, SlidersHorizontal, Heart, Users,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -11,12 +11,12 @@ function FeatureCard({
   icon, iconBg, title, description,
 }: { icon: React.ReactNode; iconBg: string; title: string; description: string }) {
   return (
-    <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
-      <div className={`w-16 h-16 mx-auto rounded-2xl flex items-center justify-center ${iconBg}`}>
+    <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100 min-h-[220px]">
+      <div className={`w-14 h-14 mx-auto rounded-2xl flex items-center justify-center ${iconBg}`}>
         {icon}
       </div>
       <h3 className="font-bold text-lg mt-4 text-amber-900">{title}</h3>
-      <p className="text-sm text-neutral-700 mt-2 leading-relaxed font-medium">{description}</p>
+      <p className="text-sm text-gray-500 mt-2 leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -88,31 +88,49 @@ export default function FeedPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════════════════
-          SECTION 2 — HOW IT WORKS
+          SECTION 2 — FEATURES (6 cards)
       ════════════════════════════════════════════════════════════════ */}
       <section className="py-14 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-amber-900 text-center mb-10">
-            How Recipe Jar Works
+            Everything you need to save and share recipes
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <FeatureCard
               iconBg="bg-orange-100"
-              icon={<Camera className="w-8 h-8 text-orange-500" />}
-              title="Capture Recipes"
-              description="See a recipe on Instagram or YouTube? Screenshot it and upload. Our AI reads the image and extracts everything."
+              icon={<Camera className="w-7 h-7 text-orange-500" />}
+              title="Capture recipes"
+              description="Screenshot any recipe from Instagram or YouTube. Upload it and AI extracts everything instantly."
             />
             <FeatureCard
               iconBg="bg-purple-100"
-              icon={<Sparkles className="w-8 h-8 text-purple-500" />}
-              title="AI Organizes It For You"
-              description="AI automatically tags your recipe by cuisine, difficulty, cook time, and diet type. No manual sorting needed."
+              icon={<Sparkles className="w-7 h-7 text-purple-500" />}
+              title="AI auto-tagging"
+              description="Every recipe gets tagged by cuisine, difficulty, cook time, and diet type automatically."
             />
             <FeatureCard
               iconBg="bg-teal-100"
-              icon={<BookOpen className="w-8 h-8 text-teal-500" />}
-              title="Your Personal Cookbook"
-              description="All your recipes in one place. Search, filter, and find exactly what you want when it is time to cook."
+              icon={<BookOpen className="w-7 h-7 text-teal-500" />}
+              title="Personal cookbook"
+              description="All your saved recipes in one place. Search, filter, and find them in seconds."
+            />
+            <FeatureCard
+              iconBg="bg-pink-100"
+              icon={<Heart className="w-7 h-7 text-pink-500" />}
+              title="Like and save"
+              description="Heart the recipes you love. Bookmark your favorites and build your personal collection easily."
+            />
+            <FeatureCard
+              iconBg="bg-blue-100"
+              icon={<Search className="w-7 h-7 text-blue-500" />}
+              title="Smart search"
+              description="Search by recipe name, ingredient, or cuisine. Smart filters help you find dishes fast."
+            />
+            <FeatureCard
+              iconBg="bg-green-100"
+              icon={<Users className="w-7 h-7 text-green-500" />}
+              title="Community recipes"
+              description="Browse recipes shared by home cooks worldwide. Discover new dishes and share yours too."
             />
           </div>
         </div>
