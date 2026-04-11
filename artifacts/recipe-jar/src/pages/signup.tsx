@@ -79,14 +79,14 @@ export default function SignupPage() {
             <UtensilsCrossed className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl font-bold mb-3">Welcome to Recipe Jar</h2>
-          <p className="text-white/85 text-base leading-relaxed mb-10">
+          <p className="text-white text-base font-semibold leading-relaxed mb-10">
             Save recipes from Instagram and YouTube. AI organizes them for you.
           </p>
           <div className="flex flex-col gap-3">
             {FEATURES.map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-3 bg-white/15 rounded-xl px-4 py-3 backdrop-blur-sm">
                 <Icon className="w-5 h-5 text-white flex-shrink-0" />
-                <span className="text-sm font-semibold text-white">{label}</span>
+                <span className="text-sm font-bold text-white">{label}</span>
               </div>
             ))}
           </div>

@@ -36,7 +36,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
           <Link href="/login" onClick={onClose}>
             <Button
               data-testid="button-modal-login"
-              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-3 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-3 text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2"
             >
               <LogIn className="w-4 h-4" />
               Log In
@@ -46,7 +46,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
             <Button
               data-testid="button-modal-signup"
               variant="outline"
-              className="w-full rounded-xl py-3 text-sm font-semibold border-amber-200 text-amber-700 hover:bg-amber-50 transition-all duration-200 flex items-center justify-center gap-2"
+              className="w-full rounded-xl py-3 text-sm font-bold border-amber-200 text-amber-700 hover:bg-amber-50 transition-all duration-200 flex items-center justify-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
               Sign Up
