@@ -282,7 +282,7 @@ export default function RecipesPage() {
       {/* ── Results count ── */}
       {!loading && recipes.length > 0 && (
         <div className="px-4 pt-5 pb-0 max-w-6xl mx-auto">
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-500 font-medium">
             {hasFilters || debouncedSearch
               ? `${recipes.length} result${recipes.length !== 1 ? "s" : ""} for "${debouncedSearch || "filters"}"`
               : `Showing ${recipes.length} recipes`
