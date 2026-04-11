@@ -139,9 +139,11 @@ export default function FeedPage() {
       {/* ════════════════════════════════════════════════════════════════
           SECTION 3 — WRITE / IMPORT CTA CARDS
       ════════════════════════════════════════════════════════════════ */}
-      <section className="py-10 px-4 bg-white">
+      <section className="py-16 px-4 bg-orange-50">
         <div className="max-w-2xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <h2 className="text-2xl font-bold text-amber-900 text-center">Bring Your Recipes Home</h2>
+          <p className="text-base text-gray-500 text-center mt-2">From your memory or your camera roll, adding recipes takes seconds.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
             <Link
               href={user ? "/add-recipe" : "/login"}
               className="flex items-start gap-4 bg-white rounded-2xl px-5 py-5 text-left shadow-sm border border-orange-100 hover:shadow-md hover:border-orange-300 transition-all group"
