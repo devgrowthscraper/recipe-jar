@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { UtensilsCrossed, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
+import {
+  UtensilsCrossed, Mail, Lock, Eye, EyeOff, User,
+  Camera, Sparkles, BookOpen,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth-context";
+
+const FEATURES = [
+  { icon: Camera,   label: "Screenshot import"  },
+  { icon: Sparkles, label: "AI auto-tagging"     },
+  { icon: BookOpen, label: "Personal cookbook"   },
+];
 
 export default function SignupPage() {
   const [, setLocation] = useLocation();
@@ -41,8 +50,6 @@ export default function SignupPage() {
     if (!userId) return;
     setLoading(true);
 
-    // Use a SECURITY DEFINER RPC so this works even when email confirmation
-    // is enabled and there is no active session yet.
     const { error } = await supabase.rpc("set_profile_username", {
       p_user_id: userId,
       p_username: username.trim(),
@@ -68,127 +75,162 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-sm">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-md">
-              <UtensilsCrossed className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-amber-900">Recipe Jar</span>
-          </Link>
+    <div className="min-h-screen flex">
 
-          {step === "signup" ? (
-            <>
-              <h1 className="text-xl font-bold text-amber-900 mt-6 mb-1">Create your account</h1>
-              <p className="text-sm text-neutral-500">Start saving recipes you love</p>
-            </>
-          ) : (
-            <>
-              <h1 className="text-xl font-bold text-amber-900 mt-6 mb-1">Choose a username</h1>
-              <p className="text-sm text-neutral-500">This is how others will find you</p>
-            </>
-          )}
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-lg border border-black/5 p-6">
-          {step === "signup" ? (
-            <form onSubmit={handleSignup} className="flex flex-col gap-5">
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="email" className="text-sm font-medium text-neutral-700">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                  <Input
-                    id="email"
-                    type="email"
-                    data-testid="input-email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="pl-10 rounded-xl border-neutral-200"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="password" className="text-sm font-medium text-neutral-700">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    data-testid="input-password"
-                    placeholder="Min. 6 characters"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={6}
-                    className="pl-10 pr-10 rounded-xl border-neutral-200"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                data-testid="button-submit-signup"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3 font-semibold transition-all duration-200"
-              >
-                {loading ? "Creating account..." : "Create Account"}
-              </Button>
-            </form>
-          ) : (
-            <form onSubmit={handleSetUsername} className="flex flex-col gap-5">
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="username" className="text-sm font-medium text-neutral-700">Username</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                  <Input
-                    id="username"
-                    type="text"
-                    data-testid="input-username"
-                    placeholder="yourname"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
-                    required
-                    minLength={3}
-                    maxLength={30}
-                    className="pl-10 rounded-xl border-neutral-200"
-                  />
-                </div>
-                <p className="text-xs text-neutral-400">Only lowercase letters, numbers, and underscores.</p>
-              </div>
-
-              <Button
-                type="submit"
-                data-testid="button-submit-username"
-                disabled={loading || username.length < 3}
-                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3 font-semibold transition-all duration-200"
-              >
-                {loading ? "Setting up..." : "Get Started"}
-              </Button>
-            </form>
-          )}
-        </div>
-
-        {step === "signup" && (
-          <p className="text-center text-sm text-neutral-500 mt-6">
-            Already have an account?{" "}
-            <Link href="/login" className="text-orange-500 font-medium hover:text-orange-600">
-              Sign in
-            </Link>
+      {/* ── Left: marketing panel ── */}
+      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-orange-400 to-amber-500 flex-col items-center justify-center p-12 text-white">
+        <div className="max-w-sm text-center">
+          <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
+            <UtensilsCrossed className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-3xl font-bold mb-3">Welcome to Recipe Jar</h2>
+          <p className="text-white/85 text-base leading-relaxed mb-10">
+            Save recipes from Instagram and YouTube. AI organizes them for you.
           </p>
-        )}
+          <div className="flex flex-col gap-4">
+            {FEATURES.map(({ icon: Icon, label }) => (
+              <div key={label} className="flex items-center gap-3 bg-white/15 rounded-xl px-5 py-3 backdrop-blur-sm">
+                <Icon className="w-5 h-5 text-white flex-shrink-0" />
+                <span className="text-sm font-semibold text-white">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+
+      {/* ── Right: form panel ── */}
+      <div className="w-full md:w-1/2 flex items-center justify-center p-6 bg-amber-50/40">
+        <div className="w-full max-w-md">
+
+          {/* Mini logo */}
+          <div className="flex items-center gap-2 mb-8">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-md">
+              <UtensilsCrossed className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-lg font-bold text-amber-900">Recipe Jar</span>
+          </div>
+
+          {/* Card */}
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            {step === "signup" ? (
+              <>
+                <h1 className="text-2xl font-bold text-amber-900 mb-1">Create Your Account</h1>
+                <p className="text-sm text-gray-500 mb-6">Join the community and start saving recipes</p>
+
+                <form onSubmit={handleSignup} className="flex flex-col gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="email" className="text-sm font-medium text-neutral-700">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <Input
+                        id="email"
+                        type="email"
+                        data-testid="input-email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="pl-10 rounded-xl border-gray-200 py-3 px-4 focus:ring-2 focus:ring-orange-300"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="password" className="text-sm font-medium text-neutral-700">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        data-testid="input-password"
+                        placeholder="Min. 6 characters"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        minLength={6}
+                        className="pl-10 pr-10 rounded-xl border-gray-200 py-3 px-4 focus:ring-2 focus:ring-orange-300"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    data-testid="button-submit-signup"
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3 font-semibold transition-all duration-200"
+                  >
+                    {loading ? "Creating account..." : "Create Account"}
+                  </Button>
+                </form>
+
+                <p className="text-center text-sm text-neutral-500 mt-5">
+                  Already have an account?{" "}
+                  <Link href="/login" className="text-orange-500 font-medium hover:text-orange-600">
+                    Sign in
+                  </Link>
+                </p>
+
+                <div className="flex items-center gap-3 my-4">
+                  <div className="flex-1 h-px bg-gray-200" />
+                  <span className="text-xs text-gray-400 font-medium">or</span>
+                  <div className="flex-1 h-px bg-gray-200" />
+                </div>
+
+                <Link
+                  href="/"
+                  className="block text-center text-sm text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  Continue as guest
+                </Link>
+              </>
+            ) : (
+              <>
+                <h1 className="text-2xl font-bold text-amber-900 mb-1">Choose a Username</h1>
+                <p className="text-sm text-gray-500 mb-6">This is how others will find you</p>
+
+                <form onSubmit={handleSetUsername} className="flex flex-col gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="username" className="text-sm font-medium text-neutral-700">Username</Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <Input
+                        id="username"
+                        type="text"
+                        data-testid="input-username"
+                        placeholder="yourname"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+                        required
+                        minLength={3}
+                        maxLength={30}
+                        className="pl-10 rounded-xl border-gray-200 py-3 px-4 focus:ring-2 focus:ring-orange-300"
+                      />
+                    </div>
+                    <p className="text-xs text-neutral-400">Only lowercase letters, numbers, and underscores.</p>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    data-testid="button-submit-username"
+                    disabled={loading || username.length < 3}
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl py-3 font-semibold transition-all duration-200"
+                  >
+                    {loading ? "Setting up..." : "Get Started"}
+                  </Button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }
