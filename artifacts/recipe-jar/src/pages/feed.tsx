@@ -93,43 +93,43 @@ export default function FeedPage() {
       <section className="py-14 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-amber-900 text-center mb-10">
-            Everything you need to save and share recipes
+            Why Home Cooks Love Recipe Jar
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <FeatureCard
               iconBg="bg-orange-100"
               icon={<Camera className="w-7 h-7 text-orange-500" />}
-              title="Capture recipes"
+              title="Capture Recipes"
               description="Screenshot any recipe from Instagram or YouTube. Upload it and AI extracts everything instantly."
             />
             <FeatureCard
               iconBg="bg-purple-100"
               icon={<Sparkles className="w-7 h-7 text-purple-500" />}
-              title="AI auto-tagging"
+              title="AI Auto-Tagging"
               description="Every recipe gets tagged by cuisine, difficulty, cook time, and diet type automatically."
             />
             <FeatureCard
               iconBg="bg-teal-100"
               icon={<BookOpen className="w-7 h-7 text-teal-500" />}
-              title="Personal cookbook"
-              description="All your saved recipes in one place. Search, filter, and find them in seconds."
+              title="Personal Cookbook"
+              description="All your saved recipes organized in one place. Search, filter, and find them in seconds."
             />
             <FeatureCard
               iconBg="bg-pink-100"
               icon={<Heart className="w-7 h-7 text-pink-500" />}
-              title="Like and save"
+              title="Like And Save"
               description="Heart the recipes you love. Bookmark your favorites and build your personal collection easily."
             />
             <FeatureCard
               iconBg="bg-blue-100"
               icon={<Search className="w-7 h-7 text-blue-500" />}
-              title="Smart search"
+              title="Smart Search"
               description="Search by recipe name, ingredient, or cuisine. Smart filters help you find dishes fast."
             />
             <FeatureCard
               iconBg="bg-green-100"
               icon={<Users className="w-7 h-7 text-green-500" />}
-              title="Community recipes"
+              title="Community Recipes"
               description="Browse recipes shared by home cooks worldwide. Discover new dishes and share yours too."
             />
           </div>
