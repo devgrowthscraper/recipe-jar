@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 const FEATURES = [
-  { icon: Camera,   label: "Screenshot import"  },
-  { icon: Sparkles, label: "AI auto-tagging"     },
-  { icon: BookOpen, label: "Personal cookbook"   },
+  { icon: Camera,   label: "Screenshot Import"  },
+  { icon: Sparkles, label: "AI Auto-tagging"    },
+  { icon: BookOpen, label: "Personal Cookbook"  },
 ];
 
 export default function LoginPage() {
