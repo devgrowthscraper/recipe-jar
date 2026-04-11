@@ -37,6 +37,7 @@ export default function AddRecipePage() {
   const [photoUploading, setPhotoUploading] = useState(false);
   const [photoError, setPhotoError] = useState("");
   const [importedPhoto, setImportedPhoto] = useState<File | null>(null);
+  const [importedPhotoUrl, setImportedPhotoUrl] = useState("");
 
   // Form fields
   const [form, setForm] = useState<RecipeForm>({
@@ -94,6 +95,8 @@ export default function AddRecipePage() {
     setPhotoPreview(null);
     setPhotoError("");
     updateForm("imageUrl", "");
+    setImportedPhoto(null);
+    setImportedPhotoUrl("");
     if (photoInputRef.current) photoInputRef.current.value = "";
   }
 
@@ -183,7 +186,7 @@ export default function AddRecipePage() {
         description: data.description || "",
         ingredients: data.ingredients || "",
         steps: data.steps || "",
-        imageUrl: form.imageUrl,
+        imageUrl: importedPhotoUrl || form.imageUrl,
       });
       setExtractSuccess(true);
       setActiveTab("write");
@@ -234,7 +237,7 @@ export default function AddRecipePage() {
     }
 
     // 1. Insert recipe (without tags first)
-    let finalImageUrl = form.imageUrl.trim();
+    let finalImageUrl = form.imageUrl.trim() || importedPhotoUrl.trim();
     if (importedPhoto && !finalImageUrl) {
       const ext = importedPhoto.name.split(".").pop() ?? "jpg";
       const path = `${user.id}/${Date.now()}.${ext}`;
@@ -249,6 +252,7 @@ export default function AddRecipePage() {
       const { data: urlData } = supabase.storage.from("recipe-images").getPublicUrl(uploadData.path);
       finalImageUrl = urlData.publicUrl;
       updateForm("imageUrl", finalImageUrl);
+      setImportedPhotoUrl(finalImageUrl);
     }
 
     const { data: recipe, error: insertError } = await supabase
@@ -301,6 +305,8 @@ export default function AddRecipePage() {
 
     toast({ title: "Recipe published!", description: `"${form.title.trim()}" is live on Recipe Jar.`, variant: "success" });
     setLocation("/");
+    setImportedPhoto(null);
+    setImportedPhotoUrl("");
   }
 
   const inputClass =
