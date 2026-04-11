@@ -1,8 +1,8 @@
 import { useState, useRef, useCallback } from "react";
 import { useLocation } from "wouter";
 import {
-  Sparkles, Upload, Pen, ImageIcon, AlertCircle,
-  CheckCircle, Loader2, Plus
+  Sparkles, Upload, Pen, AlertCircle,
+  CheckCircle, Loader2, Plus, Camera, X
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
@@ -28,10 +28,14 @@ export default function AddRecipePage() {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const photoInputRef = useRef<HTMLInputElement>(null);
+
   const [activeTab, setActiveTab] = useState<Tab>("write");
   const [submitting, setSubmitting] = useState(false);
   const [tagging, setTagging] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoError, setPhotoError] = useState("");
 
   // Form fields
   const [form, setForm] = useState<RecipeForm>({
@@ -59,10 +63,37 @@ export default function AddRecipePage() {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  // ── Image URL preview ──────────────────────────────────────────
-  function handleImageUrlChange(val: string) {
-    updateForm("imageUrl", val);
-    setImageError(false);
+  // ── Photo upload (Write tab) ───────────────────────────────────
+  async function handlePhotoSelect(file: File) {
+    setPhotoError("");
+    setPhotoUploading(true);
+    const localPreview = URL.createObjectURL(file);
+    setPhotoPreview(localPreview);
+    try {
+      const ext = file.name.split(".").pop() ?? "jpg";
+      const path = `${user.id}/${Date.now()}.${ext}`;
+      const { data, error } = await supabase.storage
+        .from("recipe-images")
+        .upload(path, file, { contentType: file.type, upsert: false });
+      if (error) throw error;
+      const { data: urlData } = supabase.storage
+        .from("recipe-images")
+        .getPublicUrl(data.path);
+      updateForm("imageUrl", urlData.publicUrl);
+    } catch (err: unknown) {
+      setPhotoPreview(null);
+      setPhotoError(err instanceof Error ? err.message : "Upload failed. Try again.");
+      updateForm("imageUrl", "");
+    } finally {
+      setPhotoUploading(false);
+    }
+  }
+
+  function handleRemovePhoto() {
+    setPhotoPreview(null);
+    setPhotoError("");
+    updateForm("imageUrl", "");
+    if (photoInputRef.current) photoInputRef.current.value = "";
   }
 
   // ── Screenshot drag-and-drop ──────────────────────────────────
@@ -355,33 +386,62 @@ export default function AddRecipePage() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="image-url" className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
-                  <ImageIcon className="w-4 h-4 text-neutral-400" />
-                  Image URL <span className="text-neutral-400 font-normal">(optional)</span>
+                <Label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+                  <Camera className="w-4 h-4 text-neutral-400" />
+                  Recipe Photo <span className="text-neutral-400 font-normal">(optional)</span>
                 </Label>
-                <Input
-                  id="image-url"
-                  data-testid="input-recipe-image"
-                  placeholder="Paste an image URL"
-                  value={form.imageUrl}
-                  onChange={(e) => handleImageUrlChange(e.target.value)}
-                  className={inputClass}
+
+                {/* Hidden file input */}
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handlePhotoSelect(file);
+                  }}
                 />
-                {/* Live preview */}
-                {form.imageUrl && !imageError && (
-                  <div className="mt-2 rounded-xl overflow-hidden border border-neutral-100 max-h-[200px]">
+
+                {photoPreview ? (
+                  /* Preview with remove button */
+                  <div className="relative h-32 rounded-xl overflow-hidden border border-neutral-200">
                     <img
-                      src={form.imageUrl}
-                      alt="Preview"
-                      className="w-full max-h-[200px] object-cover rounded-xl"
-                      onError={() => setImageError(true)}
+                      src={photoPreview}
+                      alt="Recipe photo preview"
+                      className="w-full h-full object-cover"
                     />
+                    {photoUploading && (
+                      <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
+                        <Loader2 className="w-5 h-5 text-amber-500 animate-spin" />
+                      </div>
+                    )}
+                    {!photoUploading && (
+                      <button
+                        type="button"
+                        onClick={handleRemovePhoto}
+                        className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors"
+                      >
+                        <X className="w-3.5 h-3.5 text-white" />
+                      </button>
+                    )}
                   </div>
+                ) : (
+                  /* Upload area */
+                  <button
+                    type="button"
+                    onClick={() => photoInputRef.current?.click()}
+                    className="h-32 w-full border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2 text-neutral-400 hover:border-amber-300 hover:text-amber-500 hover:bg-amber-50/40 transition-all duration-200"
+                  >
+                    <Camera className="w-6 h-6" />
+                    <span className="text-sm font-medium">Add a photo</span>
+                  </button>
                 )}
-                {form.imageUrl && imageError && (
-                  <p className="text-xs text-red-500 flex items-center gap-1 mt-1">
+
+                {photoError && (
+                  <p className="text-xs text-red-500 flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5" />
-                    Image could not be loaded. Check the URL.
+                    {photoError}
                   </p>
                 )}
               </div>
