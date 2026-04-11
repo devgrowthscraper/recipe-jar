@@ -36,6 +36,7 @@ export default function AddRecipePage() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoUploading, setPhotoUploading] = useState(false);
   const [photoError, setPhotoError] = useState("");
+  const [importedPhoto, setImportedPhoto] = useState<File | null>(null);
 
   // Form fields
   const [form, setForm] = useState<RecipeForm>({
@@ -106,6 +107,7 @@ export default function AddRecipePage() {
 
   function processScreenshot(file: File) {
     setScreenshot(file);
+    setImportedPhoto(file);
     setExtractSuccess(false);
     setExtractError("");
     const reader = new FileReader();
@@ -181,7 +183,7 @@ export default function AddRecipePage() {
         description: data.description || "",
         ingredients: data.ingredients || "",
         steps: data.steps || "",
-        imageUrl: "",
+        imageUrl: form.imageUrl,
       });
       setExtractSuccess(true);
       setActiveTab("write");
@@ -232,6 +234,23 @@ export default function AddRecipePage() {
     }
 
     // 1. Insert recipe (without tags first)
+    let finalImageUrl = form.imageUrl.trim();
+    if (importedPhoto && !finalImageUrl) {
+      const ext = importedPhoto.name.split(".").pop() ?? "jpg";
+      const path = `${user.id}/${Date.now()}.${ext}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("recipe-images")
+        .upload(path, importedPhoto, { contentType: importedPhoto.type, upsert: false });
+      if (uploadError) {
+        toast({ title: "Photo upload failed", description: uploadError.message, variant: "destructive" });
+        setSubmitting(false);
+        return;
+      }
+      const { data: urlData } = supabase.storage.from("recipe-images").getPublicUrl(uploadData.path);
+      finalImageUrl = urlData.publicUrl;
+      updateForm("imageUrl", finalImageUrl);
+    }
+
     const { data: recipe, error: insertError } = await supabase
       .from("recipes")
       .insert({
@@ -240,7 +259,7 @@ export default function AddRecipePage() {
         description: form.description.trim(),
         ingredients: form.ingredients.trim(),
         steps: form.steps.trim(),
-        image_url: form.imageUrl.trim() || null,
+        image_url: finalImageUrl || null,
         likes_count: 0,
       })
       .select()
