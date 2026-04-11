@@ -96,16 +96,19 @@ function SkeletonCard() {
 export default function RecipesPage() {
   const { user } = useAuth();
 
-  // Read initial search from URL param
-  const initialSearch = (() => {
-    try { return new URLSearchParams(window.location.search).get("search") ?? ""; }
+  // Read initial values from URL params
+  const getParam = (key: string) => {
+    try { return new URLSearchParams(window.location.search).get(key) ?? ""; }
     catch { return ""; }
-  })();
+  };
+
+  const initialSearch = getParam("search");
+  const initialFiltersOpen = getParam("filters") === "open";
 
   const [search, setSearch] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [activeChips, setActiveChips] = useState<Set<string>>(new Set());
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(initialFiltersOpen);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());

@@ -1,34 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   Search, Camera, Sparkles, BookOpen, PenLine, CheckCircle2,
-  ArrowRight, UtensilsCrossed,
+  ArrowRight, UtensilsCrossed, SlidersHorizontal,
 } from "lucide-react";
-import { supabase, Recipe } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
-import { RecipeCard } from "@/components/RecipeCard";
-
-// ── Skeleton card ─────────────────────────────────────────────────────────────
-function SkeletonCard() {
-  return (
-    <div className="bg-white rounded-2xl shadow border border-black/5 overflow-hidden animate-pulse">
-      <div className="h-48 bg-neutral-100" />
-      <div className="p-5 flex flex-col gap-3">
-        <div className="h-5 bg-neutral-100 rounded-full w-3/4" />
-        <div className="h-3 bg-neutral-100 rounded-full w-full" />
-        <div className="h-3 bg-neutral-100 rounded-full w-5/6" />
-        <div className="flex gap-2 mt-1">
-          <div className="h-5 bg-neutral-100 rounded-full w-16" />
-          <div className="h-5 bg-neutral-100 rounded-full w-14" />
-        </div>
-        <div className="flex justify-between items-center pt-2 border-t border-neutral-100 mt-2">
-          <div className="h-4 bg-neutral-100 rounded-full w-10" />
-          <div className="h-4 bg-neutral-100 rounded-full w-4" />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ── Feature card ──────────────────────────────────────────────────────────────
 function FeatureCard({
@@ -49,40 +25,16 @@ function FeatureCard({
 export default function FeedPage() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
-  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
 
   function handleSearch() {
     const q = search.trim();
     navigate(q ? `/recipes?search=${encodeURIComponent(q)}` : "/recipes");
   }
 
-  useEffect(() => {
-    supabase
-      .from("recipes")
-      .select("*, profiles(id, username, avatar_url)")
-      .order("created_at", { ascending: false })
-      .limit(6)
-      .then(({ data }) => {
-        setRecipes(data || []);
-        setLoading(false);
-      });
-  }, []);
-
-  const fetchUserInteractions = useCallback(async () => {
-    if (!user) return;
-    const [savedRes, likesRes] = await Promise.all([
-      supabase.from("saved_recipes").select("recipe_id").eq("user_id", user.id),
-      supabase.from("likes").select("recipe_id").eq("user_id", user.id),
-    ]);
-    setSavedIds(new Set((savedRes.data || []).map((r) => r.recipe_id)));
-    setLikedIds(new Set((likesRes.data || []).map((r) => r.recipe_id)));
-  }, [user]);
-
-  useEffect(() => { fetchUserInteractions(); }, [fetchUserInteractions]);
+  function handleFilterClick() {
+    navigate("/recipes?filters=open");
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -90,7 +42,7 @@ export default function FeedPage() {
       {/* ════════════════════════════════════════════════════════════════
           SECTION 1 — HERO
       ════════════════════════════════════════════════════════════════ */}
-      <section className="bg-gradient-to-b from-orange-50 to-amber-50/60 py-12 px-4 pb-16">
+      <section className="bg-gradient-to-b from-orange-50 to-amber-50/60 py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl font-bold text-amber-900 mb-3 leading-tight">
             Stop Losing Recipes You Love
@@ -99,57 +51,39 @@ export default function FeedPage() {
             Screenshot any recipe from Instagram or YouTube. AI organizes it for you instantly.
           </p>
 
-          {/* Search bar — navigates to /recipes */}
-          <div className="max-w-2xl mx-auto mb-4">
+          {/* Search + filter bar — both redirect to /recipes */}
+          <div className="max-w-2xl mx-auto">
             <div className="flex items-center bg-white rounded-2xl shadow-lg overflow-hidden">
+
+              {/* Filter button — opens /recipes with filters */}
+              <button
+                onClick={handleFilterClick}
+                className="flex-shrink-0 flex items-center gap-2 px-5 py-4 border-r border-gray-200 text-sm font-semibold text-neutral-500 hover:text-orange-500 transition-colors duration-200"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                <span>Filter</span>
+              </button>
+
+              {/* Search input */}
               <input
                 type="text"
                 placeholder="Search butter chicken, pasta, tofu..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="flex-1 px-5 py-4 text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none bg-transparent"
+                className="flex-1 px-4 py-4 text-base text-neutral-800 placeholder:text-neutral-400 focus:outline-none bg-transparent"
               />
+
+              {/* Search icon */}
               <button
                 onClick={handleSearch}
                 className="flex-shrink-0 mx-3 w-10 h-10 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center transition-colors duration-200"
               >
                 <Search className="w-4 h-4 text-white" />
               </button>
+
             </div>
           </div>
-        </div>
-
-        {/* ── 6 preview recipe cards ── */}
-        <div className="max-w-6xl mx-auto mt-6">
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
-            </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {recipes.map((recipe) => (
-                  <RecipeCard
-                    key={recipe.id}
-                    recipe={recipe}
-                    isSaved={savedIds.has(recipe.id)}
-                    isLiked={likedIds.has(recipe.id)}
-                    onLikeToggle={fetchUserInteractions}
-                    onSaveToggle={fetchUserInteractions}
-                  />
-                ))}
-              </div>
-              <div className="text-center mt-8">
-                <Link
-                  href="/recipes"
-                  className="inline-block rounded-xl bg-white border border-gray-200 px-6 py-3 text-orange-500 font-medium hover:bg-orange-50 transition-colors shadow-sm"
-                >
-                  View all recipes
-                </Link>
-              </div>
-            </>
-          )}
         </div>
       </section>
 
