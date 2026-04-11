@@ -404,8 +404,8 @@ export default function AddRecipePage() {
                 />
 
                 {photoPreview ? (
-                  /* Preview with remove button */
-                  <div className="relative h-32 rounded-xl overflow-hidden border border-neutral-200">
+                  /* Preview — 4:3 ratio to match card display */
+                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-neutral-200">
                     <img
                       src={photoPreview}
                       alt="Recipe photo preview"
@@ -427,14 +427,15 @@ export default function AddRecipePage() {
                     )}
                   </div>
                 ) : (
-                  /* Upload area */
+                  /* Upload area — shaped 4:3 to hint at ideal ratio */
                   <button
                     type="button"
                     onClick={() => photoInputRef.current?.click()}
-                    className="h-32 w-full border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2 text-neutral-400 hover:border-amber-300 hover:text-amber-500 hover:bg-amber-50/40 transition-all duration-200"
+                    className="w-full aspect-[4/3] border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2 text-neutral-400 hover:border-amber-300 hover:text-amber-500 hover:bg-amber-50/40 transition-all duration-200"
                   >
                     <Camera className="w-6 h-6" />
                     <span className="text-sm font-medium">Add a photo</span>
+                    <span className="text-xs text-neutral-300">4:3 works best</span>
                   </button>
                 )}
 
